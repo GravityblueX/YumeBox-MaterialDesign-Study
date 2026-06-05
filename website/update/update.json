@@ -3,7 +3,7 @@
   "channel": "preview",
   "tag": "v0.5.5-alpha",
   "versionName": "0.5.5-alpha",
-  "versionCode": 5501,
+  "versionCode": 5502,
   "releaseNotes": "- 新增关于页「检查更新」入口，并支持 5 分钟后台自动检查和封面预加载。\n- 更新弹窗支持展示版本、Tag、更新说明和封面图，图片失败时使用 Base64 兜底。\n- 更新包下载支持进度显示和取消下载，update.json 简化为 tag、releaseUrl、版本和图片字段。",
   "releaseUrl": "https://github.com/Yizuka17/YumeBox-MaterialDesign/releases/tag/v0.5.5-alpha",
   "coverUrl": "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/release-cover-v0.5.5.webp",
