@@ -20,7 +20,6 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import groovy.json.JsonOutput
 import java.util.*
 
 plugins {
@@ -111,57 +110,6 @@ val updateReleaseApkFileName = providers.gradleProperty("update.releaseApkFileNa
         ?.trim()
         ?.ifEmpty { null }
     ?: "YumeBoxMD3-release.apk"
-val updateTag = providers.gradleProperty("update.tag").orNull
-    ?.trim()
-    ?.ifEmpty { null }
-    ?: signingFileProps?.getProperty("update.tag")
-        ?.trim()
-        ?.ifEmpty { null }
-    ?: "v${gropify.project.version.name}"
-val updateManifestFileName = providers.gradleProperty("update.manifestFileName").orNull
-    ?.trim()
-    ?.ifEmpty { null }
-    ?: providers.gradleProperty("update.metaAssetName").orNull
-        ?.trim()
-        ?.ifEmpty { null }
-    ?: signingFileProps?.getProperty("update.manifestFileName")
-        ?.trim()
-        ?.ifEmpty { null }
-    ?: "update.json"
-val updateGithubOwner = providers.gradleProperty("update.githubOwner").orNull
-    ?.trim()
-    ?.ifEmpty { null }
-    ?: signingFileProps?.getProperty("update.githubOwner")
-        ?.trim()
-        ?.ifEmpty { null }
-    ?: "Yizuka17"
-val updateGithubRepo = providers.gradleProperty("update.githubRepo").orNull
-    ?.trim()
-    ?.ifEmpty { null }
-    ?: signingFileProps?.getProperty("update.githubRepo")
-        ?.trim()
-        ?.ifEmpty { null }
-    ?: "YumeBox-MaterialDesign"
-val updateReleaseNotes = providers.gradleProperty("update.releaseNotes").orNull
-    ?.trim()
-    ?: signingFileProps?.getProperty("update.releaseNotes")
-        ?.trim()
-    ?: ""
-val updateCoverAssetName = providers.gradleProperty("update.coverAssetName").orNull
-    ?.trim()
-    ?: signingFileProps?.getProperty("update.coverAssetName")
-        ?.trim()
-    ?: ""
-val updateCoverUrlOverride = providers.gradleProperty("update.coverUrl").orNull
-    ?.trim()
-    ?: signingFileProps?.getProperty("update.coverUrl")
-        ?.trim()
-    ?: ""
-val updateCoverDataUriFile = providers.gradleProperty("update.coverDataUriFile").orNull
-    ?.trim()
-    ?: signingFileProps?.getProperty("update.coverDataUriFile")
-        ?.trim()
-    ?: ""
 val appVersionCode = providers.gradleProperty("app.versionCode").orNull
     ?.trim()
     ?.toIntOrNull()
@@ -323,9 +271,14 @@ androidComponents {
             }?.identifier
             val abiName = injectedAbi ?: splitAbiName ?: "universal"
             val buildTypeName = variant.buildType ?: "release"
+            val outputFileName = if (buildTypeName == "release") {
+                updateReleaseApkFileName
+            } else {
+                "${gropify.project.name}-${abiName}-${buildTypeName}.apk"
+            }
             output.versionName.set(appVersionName)
             (output as com.android.build.api.variant.impl.VariantOutputImpl).outputFileName.set(
-                "${gropify.project.name}-${abiName}-${buildTypeName}.apk"
+                outputFileName
             )
         }
     }
@@ -412,76 +365,4 @@ dependencies {
 
 ksp {
     arg("compose-destinations.defaultTransitions", "none")
-}
-
-val generateReleaseUpdateManifest = tasks.register("generateReleaseUpdateManifest") {
-    group = "publishing"
-    description = "Generate update manifest JSON for release APKs."
-
-    val releaseOutputDir = layout.buildDirectory.dir("outputs/apk/release")
-    val websiteOutputFile = rootProject.layout.projectDirectory.file("website/update/$updateManifestFileName")
-    inputs.dir(releaseOutputDir)
-    outputs.file(releaseOutputDir.map { it.file(updateManifestFileName) })
-    outputs.file(websiteOutputFile)
-
-    doLast {
-        val outputDir = releaseOutputDir.get().asFile
-        val apks = outputDir
-            .listFiles { file ->
-                file.isFile &&
-                    file.extension.equals("apk", ignoreCase = true) &&
-                    file.name != updateReleaseApkFileName
-            }
-            ?.sortedBy(File::getName)
-            .orEmpty()
-
-        if (apks.isEmpty()) {
-            error("No release APK found in ${outputDir.absolutePath}")
-        }
-
-        val releaseUrl = "https://github.com/$updateGithubOwner/$updateGithubRepo/releases/tag/$updateTag"
-        val coverUrl = updateCoverUrlOverride
-            .ifBlank {
-                updateCoverAssetName.takeIf(String::isNotBlank)?.let { assetName ->
-                    val rawBranch = if (updateChannel.equals("preview", ignoreCase = true)) "Dev" else "Yume"
-                    "https://raw.githubusercontent.com/$updateGithubOwner/$updateGithubRepo/$rawBranch/website/update/$assetName"
-                }.orEmpty()
-            }
-        val coverDataUri = updateCoverDataUriFile
-            .takeIf(String::isNotBlank)
-            ?.let { rootProject.file(it) }
-            ?.takeIf(File::isFile)
-            ?.readText(Charsets.UTF_8)
-            ?.trim()
-            .orEmpty()
-        val releaseApk = apks.firstOrNull { apk -> apk.name.contains("release", ignoreCase = true) }
-            ?: apks.first()
-        val releaseApkOutput = outputDir.resolve(updateReleaseApkFileName)
-        releaseApk.copyTo(releaseApkOutput, overwrite = true)
-
-        val manifest = linkedMapOf(
-            "manifestUrl" to updateManifestUrl,
-            "channel" to updateChannel,
-            "tag" to updateTag,
-            "versionName" to appVersionName,
-            "versionCode" to appVersionCode,
-            "releaseNotes" to updateReleaseNotes,
-            "releaseUrl" to releaseUrl,
-            "coverUrl" to coverUrl,
-            "coverDataUri" to coverDataUri,
-        )
-
-        val manifestJson = JsonOutput.prettyPrint(JsonOutput.toJson(manifest)) + "\n"
-        val outputFile = outputDir.resolve(updateManifestFileName)
-        outputFile.writeText(manifestJson, Charsets.UTF_8)
-        websiteOutputFile.asFile.parentFile.mkdirs()
-        websiteOutputFile.asFile.writeText(manifestJson, Charsets.UTF_8)
-        logger.lifecycle("Copied release APK asset: ${releaseApkOutput.absolutePath}")
-        logger.lifecycle("Generated update manifest: ${outputFile.absolutePath}")
-        logger.lifecycle("Synced website update manifest: ${websiteOutputFile.asFile.absolutePath}")
-    }
-}
-
-tasks.matching { it.name == "assembleRelease" }.configureEach {
-    finalizedBy(generateReleaseUpdateManifest)
 }

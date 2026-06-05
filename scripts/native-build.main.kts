@@ -688,9 +688,9 @@ fun printUsage() {
           --go       Build Go native libraries
           --rust     Build Rust config compiler
           --cpp      Generate CMake/git info
-          --geo      Download and compress GeoIP/GeoSite/Country/ASN assets into app/assets with XZ
+          --geo      Download and compress GeoIP/GeoSite/Country/ASN assets with XZ
           --clean    Clean build outputs
-          --all      Build everything (default)
+          --all      Build Go, Rust, and C++ native libraries (default)
           --help     Show this help
     """.trimIndent())
 }
@@ -748,7 +748,7 @@ fun main(args: Array<String>) {
     val buildGo = args.isEmpty() || args.contains("--all") || args.contains("--go")
     val buildRust = args.isEmpty() || args.contains("--all") || args.contains("--rust")
     val buildCpp = args.isEmpty() || args.contains("--all") || args.contains("--cpp")
-    val downloadGeo = args.isEmpty() || args.contains("--all") || args.contains("--geo")
+    val downloadGeo = args.contains("--geo")
 
     if (buildGo) {
         GoBuilder(config, ndkTools).buildAll()

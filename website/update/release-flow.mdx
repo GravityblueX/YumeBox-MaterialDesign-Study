@@ -15,7 +15,7 @@ icon: "rocket"
 2. 运行 native 构建，让核心版本信息基于当前 commit 生成。
 3. 再运行 `.\gradlew.bat :app:assembleRelease`。
 
-原因是 native bridge 会读取当前 Git commit hash 写入核心版本信息。如果先构建 native、后提交，关于页里的 native hash 会落后于真正发布的提交。
+原因是 native bridge 会读取当前 Git commit hash 写入核心版本信息。如果先构建 native、后提交，关于页里的 native hash 会落后于真正发布的提交。发布前重构 native 推荐显式跑 Go、Rust、C++；Geo 资源只有显式传 `--geo` 时才会下载。
 
 正式发布和预发布走不同分支：
 
@@ -113,7 +113,7 @@ https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/u
 4. 运行 native 构建：
 
 ```powershell
-kotlin scripts/native-build.main.kts --all
+kotlin scripts/native-build.main.kts --go --rust --cpp
 ```
 
 5. 如果 native 产物需要入库，提交 native 产物。
@@ -127,7 +127,6 @@ kotlin scripts/native-build.main.kts --all
 
 ```text
 app/build/outputs/apk/release/YumeBoxMD3-release.apk
-app/build/outputs/apk/release/update.json
 website/update/update.json
 ```
 
@@ -136,14 +135,27 @@ website/update/update.json
 10. 浏览器打开 raw `update.json` 验证内容。
 11. 真机点击「检查更新」验证弹窗、封面、下载、取消下载和安装器拉起。
 
-发布信息可以临时写进本机 `signing.properties`，不要提交：
+`assembleRelease` 只生成 APK，不会生成或覆盖 `update.json`。`update.json` 需要单独生成：
+
+```powershell
+.\scripts\generate-update-manifest.ps1 `
+  -Apk "app\build\outputs\apk\release\YumeBoxMD3-release.apk" `
+  -Tag "v0.5.5" `
+  -VersionName "0.5.5" `
+  -VersionCode 5500 `
+  -Channel "stable" `
+  -ManifestUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/update.json" `
+  -ReleaseNotes "这里填写更新说明" `
+  -CoverUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/release-cover-v0.5.5.webp" `
+  -CoverDataUriFile "build\update-assets\release-cover.data-uri.txt" `
+  -Output "website\update\update.json"
+```
+
+写进 APK 的发布信息可以临时写进本机 `signing.properties`，不要提交：
 
 ```properties
 update.channel=stable
-update.tag=v0.5.5
-update.releaseNotes=这里填写更新说明
-update.coverUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/release-cover-v0.5.5.webp
-update.coverDataUriFile=build\update-assets\release-cover.data-uri.txt
+update.manifestUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/update.json
 ```
 
 ## 预发布
@@ -154,15 +166,11 @@ update.coverDataUriFile=build\update-assets\release-cover.data-uri.txt
 https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/update.json
 ```
 
-预发布发布信息可以临时写进本机 `signing.properties`，不要提交：
+预发布写进 APK 的发布信息可以临时写进本机 `signing.properties`，不要提交：
 
 ```properties
 update.channel=preview
 update.manifestUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/update.json
-update.tag=v0.5.5-pre.1
-update.releaseNotes=这里填写预发布说明
-update.coverUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/release-cover-v0.5.5-pre.1.webp
-update.coverDataUriFile=build\update-assets\release-cover.data-uri.txt
 ```
 
 然后同样运行：
@@ -173,37 +181,55 @@ update.coverDataUriFile=build\update-assets\release-cover.data-uri.txt
 
 生成后上传 `YumeBoxMD3-release.apk` 到对应 prerelease，再推送 `website/update/update.json` 到 `Dev` 分支。
 
+预发布 `update.json` 同样单独生成：
+
+```powershell
+.\scripts\generate-update-manifest.ps1 `
+  -Apk "app\build\outputs\apk\release\YumeBoxMD3-release.apk" `
+  -Tag "v0.5.5-pre.1" `
+  -VersionName "0.5.5-pre.1" `
+  -VersionCode 5501 `
+  -Channel "preview" `
+  -ManifestUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/update.json" `
+  -ReleaseNotes "这里填写预发布说明" `
+  -CoverUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Dev/website/update/release-cover-v0.5.5-pre.1.webp" `
+  -CoverDataUriFile "build\update-assets\release-cover.data-uri.txt" `
+  -Output "website\update\update.json"
+```
+
 注意 GitHub 的 `releases/latest` 不会指向 prerelease；预发布不要依赖 latest。
 
-## -Pupdate 指令
+## 更新配置
 
-写进 APK 的指令：
+写进 APK 的 Gradle 指令：
 
 ```powershell
 "-Pupdate.channel=stable"
 "-Pupdate.manifestUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/update.json"
 "-Pupdate.manifestMirrorTemplates=https://mirror.example.com/{url}"
 "-Pupdate.mirrorTemplates=https://mirror.example.com/{url}"
-```
-
-写进 `update.json` 的指令：
-
-```powershell
-"-Pupdate.tag=v0.5.5"
-"-Pupdate.releaseNotes=这里填写更新说明"
-"-Pupdate.coverUrl=https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/release-cover-v0.5.5.webp"
-"-Pupdate.coverDataUriFile=build\update-assets\release-cover.data-uri.txt"
-```
-
-影响生成结果的指令：
-
-```powershell
-"-Pupdate.githubOwner=Yizuka17"
-"-Pupdate.githubRepo=YumeBox-MaterialDesign"
 "-Pupdate.releaseApkFileName=YumeBoxMD3-release.apk"
 ```
 
-一句话区分：`manifestUrl` 是 App 去哪里找清单；`tag` 和 `releaseUrl` 决定 APK 下载地址；`releaseNotes` 和图片字段决定弹窗展示。
+这些值也可以写进本机 `signing.properties`，不要提交。`manifestUrl` 是 App 去哪里找清单；`mirrorTemplates` 是下载清单和 APK 时的镜像兜底；`releaseApkFileName` 是 release APK 输出文件名。
+
+生成 `update.json` 的脚本参数：
+
+```powershell
+.\scripts\generate-update-manifest.ps1 `
+  -Apk "app\build\outputs\apk\release\YumeBoxMD3-release.apk" `
+  -Tag "v0.5.5" `
+  -VersionName "0.5.5" `
+  -VersionCode 5500 `
+  -Channel "stable" `
+  -ManifestUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/update.json" `
+  -ReleaseNotes "这里填写更新说明" `
+  -CoverUrl "https://raw.githubusercontent.com/Yizuka17/YumeBox-MaterialDesign/Yume/website/update/release-cover-v0.5.5.webp" `
+  -CoverDataUriFile "build\update-assets\release-cover.data-uri.txt" `
+  -Output "website\update\update.json"
+```
+
+一句话区分：Gradle 只负责 APK 内置的清单入口和 APK 文件名；`generate-update-manifest.ps1` 负责 `tag`、`releaseUrl`、版本、更新说明和图片字段。
 
 ## Debug 真机安装
 
