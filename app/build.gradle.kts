@@ -177,6 +177,12 @@ val projectApplicationId = providers.gradleProperty("project.applicationId")
 
 fun String.asBuildConfigString(): String = "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
+fun Project.resolveProjectOrAbsoluteFile(path: String): File {
+    val normalizedPath = path.replace(Regex("""^([A-Za-z])\\+:"""), "$1:")
+    val file = File(normalizedPath)
+    return if (file.isAbsolute) file else file(normalizedPath)
+}
+
 android {
     namespace = gropify.project.namespace.base
 
@@ -293,7 +299,7 @@ android {
             !resolvedKeyPassword.isNullOrBlank()
         ) {
             create("release") {
-                storeFile = rootProject.file(resolvedStoreFilePath)
+                storeFile = rootProject.resolveProjectOrAbsoluteFile(resolvedStoreFilePath)
                 storePassword = resolvedStorePassword
                 keyAlias = resolvedKeyAlias
                 keyPassword = resolvedKeyPassword
