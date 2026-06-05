@@ -64,6 +64,7 @@ import com.github.yumelira.yumebox.presentation.theme.ProvideAndroidPlatformThem
 import com.github.yumelira.yumebox.presentation.theme.YumeTheme
 import com.github.yumelira.yumebox.screen.onboarding.OnboardingLauncher
 import com.github.yumelira.yumebox.screen.settings.AppSettingsViewModel
+import com.github.yumelira.yumebox.update.GitHubUpdateManager
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.generated.NavGraphs
 import com.tencent.mmkv.MMKV
@@ -96,6 +97,7 @@ class MainActivity : FragmentActivity() {
     private val proxyFacade: com.github.yumelira.yumebox.runtime.client.ProxyFacade by inject()
     private val serviceCache: MMKV by inject(qualifier = named("service_cache"))
     private val applicationScope: CoroutineScope by inject(qualifier = named(APPLICATION_SCOPE_NAME))
+    private val updateManager: GitHubUpdateManager by inject()
 
     private lateinit var intentController: IntentController
 
@@ -122,6 +124,7 @@ class MainActivity : FragmentActivity() {
             finish()
             return
         }
+        updateManager.startAutoCheck(applicationScope)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -316,4 +319,3 @@ class MainActivity : FragmentActivity() {
         }
     }
 }
-

@@ -20,60 +20,93 @@
 
 package com.github.yumelira.yumebox.screen.about
 
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.github.yumelira.yumebox.BuildConfig
 import com.github.yumelira.yumebox.R
 import com.github.yumelira.yumebox.common.util.openUrl
+import com.github.yumelira.yumebox.common.util.toast
 import com.github.yumelira.yumebox.core.bridge.Bridge
+import com.github.yumelira.yumebox.presentation.component.AppDialog
 import com.github.yumelira.yumebox.presentation.component.Card
+import com.github.yumelira.yumebox.presentation.component.DialogButtonRow
 import com.github.yumelira.yumebox.presentation.component.Title
 import com.github.yumelira.yumebox.presentation.component.combinePaddingValues
+import com.github.yumelira.yumebox.presentation.component.md3.YumeMd3FilledButton
 import com.github.yumelira.yumebox.presentation.component.md3.YumeMd3PreferenceItem
 import com.github.yumelira.yumebox.presentation.component.rememberStandalonePageMainPadding
 import com.github.yumelira.yumebox.presentation.icon.AppMd3Icons
 import com.github.yumelira.yumebox.presentation.theme.UiDp
+import com.github.yumelira.yumebox.update.GitHubUpdateViewModel
+import com.github.yumelira.yumebox.update.UpdateCandidate
+import com.github.yumelira.yumebox.update.UpdateDownloadProgress
+import com.github.panpf.sketch.AsyncImage as SketchAsyncImage
+import com.github.panpf.sketch.rememberAsyncImageState
+import com.github.panpf.sketch.request.ImageRequest
+import com.github.panpf.sketch.request.LoadState
+import com.github.panpf.sketch.state.IntColorDrawableStateImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.OpenSourceLicensesScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.oom_wg.purejoy.mlang.MLang
 import kotlinx.coroutines.CancellationException
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Destination<RootGraph>
 fun AboutScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
+    val updateViewModel = koinViewModel<GitHubUpdateViewModel>()
+    val updateUiState by updateViewModel.uiState.collectAsState()
+    val downloadProgress by updateViewModel.downloadProgress.collectAsState()
     val coreVersion by produceState(initialValue = MLang.About.App.VersionLoading) {
         value = try {
             Bridge.nativeCoreVersion()
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             MLang.About.App.VersionFailed
+        }
+    }
+
+    LaunchedEffect(updateUiState.message) {
+        updateUiState.message?.let { message ->
+            context.toast(message)
+            updateViewModel.consumeMessage()
         }
     }
 
@@ -141,6 +174,17 @@ fun AboutScreen(navigator: DestinationsNavigator) {
                     YumeMd3PreferenceItem(
                         title = "YumeBox MD3",
                         summary = "A Material Design 3 / Material You fork of YumeBox, an open-source Android client based on Mihomo",
+                    )
+                    YumeMd3PreferenceItem(
+                        title = MLang.About.License.CheckUpdate,
+                        summary = if (updateUiState.isChecking) {
+                            MLang.Component.Update.Message.Checking
+                        } else {
+                            MLang.About.License.CheckUpdateSummary
+                        },
+                        enabled = !updateUiState.isChecking && !downloadProgress.isDownloading,
+                        onClick = updateViewModel::checkForUpdate,
+                        trailingContent = { ChevronText() },
                         showDivider = false,
                     )
                 }
@@ -216,6 +260,14 @@ fun AboutScreen(navigator: DestinationsNavigator) {
             }
         }
     }
+
+    UpdateCandidateDialog(
+        candidate = updateUiState.candidate,
+        downloadProgress = downloadProgress,
+        onDismiss = updateViewModel::dismissCandidate,
+        onDownload = updateViewModel::downloadAndInstall,
+        onCancelDownload = updateViewModel::cancelDownload,
+    )
 }
 
 @Composable
@@ -243,5 +295,141 @@ private fun ChevronText() {
         imageVector = AppMd3Icons.Navigation.Forward,
         contentDescription = null,
         tint = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+@Composable
+private fun UpdateCandidateDialog(
+    candidate: UpdateCandidate?,
+    downloadProgress: UpdateDownloadProgress,
+    onDismiss: () -> Unit,
+    onDownload: (UpdateCandidate) -> Unit,
+    onCancelDownload: () -> Unit,
+) {
+    if (candidate == null) return
+
+    val releaseNotes = candidate.releaseNotes.ifBlank { MLang.Component.Update.Message.Available }
+    val message = buildString {
+        appendLine("${MLang.Component.Update.Message.CurrentVersion}: ${BuildConfig.VERSION_NAME}")
+        appendLine("${MLang.Component.Update.Message.RemoteVersion}: ${candidate.versionName}")
+        if (candidate.tag.isNotBlank()) {
+            appendLine("Tag: ${candidate.tag}")
+        }
+        appendLine()
+        append(releaseNotes)
+    }
+
+    AppDialog(
+        show = true,
+        title = MLang.Component.Update.Title.Available,
+        onDismissRequest = {
+            if (downloadProgress.isDownloading) {
+                onCancelDownload()
+            } else {
+                onDismiss()
+            }
+        },
+    ) {
+        if (downloadProgress.isDownloading) {
+            UpdateDownloadContent(
+                progress = downloadProgress,
+                onCancelDownload = onCancelDownload,
+            )
+        } else {
+            UpdateCoverImage(
+                cachedCoverUri = candidate.cachedCoverUri,
+                coverUrl = candidate.coverUrl,
+                coverDataUri = candidate.coverDataUri,
+            )
+            UpdateDialogMessage(message)
+            DialogButtonRow(
+                onCancel = onDismiss,
+                onConfirm = { onDownload(candidate) },
+                confirmText = MLang.Component.Update.Action.DownloadNow,
+            )
+        }
+    }
+}
+
+@Composable
+private fun UpdateCoverImage(
+    cachedCoverUri: String,
+    coverUrl: String,
+    coverDataUri: String,
+) {
+    if (cachedCoverUri.isBlank() && coverUrl.isBlank() && coverDataUri.isBlank()) return
+
+    val context = LocalContext.current
+    val placeholderColorInt = MaterialTheme.colorScheme.surfaceContainerHighest.toArgb()
+    var coverImage by remember(cachedCoverUri, coverUrl, coverDataUri) {
+        mutableStateOf(
+            cachedCoverUri.ifBlank {
+                coverUrl.ifBlank {
+                    coverDataUri
+                }
+            },
+        )
+    }
+    if (coverImage.isBlank()) return
+    val state = rememberAsyncImageState()
+
+    LaunchedEffect(state.loadState, coverImage, cachedCoverUri, coverUrl, coverDataUri) {
+        if (state.loadState is LoadState.Error) {
+            coverImage = when {
+                coverImage == cachedCoverUri && coverUrl.isNotBlank() -> coverUrl
+                coverImage != coverDataUri && coverDataUri.isNotBlank() -> coverDataUri
+                else -> coverImage
+            }
+        }
+    }
+
+    val request = ImageRequest(context, coverImage) {
+        placeholder(IntColorDrawableStateImage(placeholderColorInt))
+        error(IntColorDrawableStateImage(placeholderColorInt))
+        crossfade(true)
+    }
+
+    SketchAsyncImage(
+        request = request,
+        contentDescription = MLang.Component.Update.Message.CoverDesc,
+        contentScale = ContentScale.Crop,
+        state = state,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = UiDp.dp180)
+            .aspectRatio(16f / 9f)
+            .clip(RoundedCornerShape(UiDp.dp12)),
+    )
+    Spacer(modifier = Modifier.height(UiDp.dp12))
+}
+
+@Composable
+private fun UpdateDownloadContent(
+    progress: UpdateDownloadProgress,
+    onCancelDownload: () -> Unit,
+) {
+    Column {
+        UpdateDialogMessage(progress.message.ifBlank { MLang.Component.Update.Message.Downloading })
+        Spacer(modifier = Modifier.height(UiDp.dp12))
+        LinearProgressIndicator(
+            progress = { progress.progress.coerceIn(0, 100) / 100f },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(UiDp.dp12))
+        YumeMd3FilledButton(
+            text = MLang.Component.Update.Action.CancelDownload,
+            onClick = onCancelDownload,
+            destructive = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun UpdateDialogMessage(message: String) {
+    Text(
+        text = message,
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 }

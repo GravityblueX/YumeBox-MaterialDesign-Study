@@ -65,6 +65,7 @@ Component = {
     Update = {
         Action = {
             DownloadNow = "Download Now"
+            CancelDownload = "Cancel Download"
         }
         Title = {
             Available = "New Version Available"
@@ -92,6 +93,7 @@ Component = {
             MissingReleaseMetadata = "The latest release is missing update metadata"
             NoCompatibleAsset = "No compatible APK was found in the latest release"
             DownloadAlreadyRunning = "The update package is still downloading"
+            DownloadCancelled = "Download cancelled"
             InstallPromptOpened = "Download complete, installer opened"
             InstallFailed = "Failed to open installer: %s"
         }

@@ -31,13 +31,17 @@ import com.github.yumelira.yumebox.screen.settings.AppDataManagementViewModel
 import com.github.yumelira.yumebox.screen.settings.AppSettingsViewModel
 import com.github.yumelira.yumebox.screen.settings.NetworkSettingsViewModel
 import com.github.yumelira.yumebox.service.LogRecordServiceGateway
+import com.github.yumelira.yumebox.update.GitHubUpdateManager
+import com.github.yumelira.yumebox.update.GitHubUpdateViewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appIntegrationModule = module {
     single<LogRecordGateway> { LogRecordServiceGateway() }
+    single { GitHubUpdateManager(androidContext()) }
 }
 
 val appViewModelModule = module {
@@ -48,6 +52,7 @@ val appViewModelModule = module {
     viewModel { AccessControlViewModel(androidApplication(), get(), get()) }
     viewModel { AppDataManagementViewModel(get(), get()) }
     viewModel { LogViewModel(get()) }
+    viewModel { GitHubUpdateViewModel(get()) }
 }
 
 val appModule: List<Module> = coreDiModules + listOf(

@@ -65,6 +65,7 @@ Component = {
     Update = {
         Action = {
             DownloadNow = "立即下载"
+            CancelDownload = "取消下载"
         }
         Title = {
             Available = "发现新版本"
@@ -92,6 +93,7 @@ Component = {
             MissingReleaseMetadata = "最新发布缺少版本元数据"
             NoCompatibleAsset = "最新发布中没有找到适合当前设备的 APK"
             DownloadAlreadyRunning = "更新包仍在下载中"
+            DownloadCancelled = "下载已取消"
             InstallPromptOpened = "下载完成，已打开安装器"
             InstallFailed = "打开安装器失败：%s"
         }

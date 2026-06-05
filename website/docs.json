@@ -25,7 +25,8 @@
             "icon": "book-open",
             "pages": [
               "/index",
-              "/update/history"
+              "/update/history",
+              "/update/release-flow"
             ]
           },
           {
