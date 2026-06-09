@@ -59,9 +59,9 @@ private data class ThemePalette(
     val dark: ThemeColors,
 )
 
-const val DEFAULT_THEME_SEED_ARGB: Long = 0xFF138A74L
-const val DEFAULT_ACG_WALLPAPER_THEME_SEED_ARGB: Long = 0xFFDA98ABL
-const val DEFAULT_CUSTOM_THEME_SEED_ARGB: Long = 0xFFDA98ABL
+const val DEFAULT_THEME_SEED_ARGB: Long = 0xFFB8B8B8L
+const val DEFAULT_ACG_WALLPAPER_THEME_SEED_ARGB: Long = 0xFFB8B8B8L
+const val DEFAULT_CUSTOM_THEME_SEED_ARGB: Long = 0xFFB8B8B8L
 
 data class TrafficColors(
     val download: Color = Color(0xFF5B8FF9),

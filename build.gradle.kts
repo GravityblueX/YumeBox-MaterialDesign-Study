@@ -73,7 +73,9 @@ subprojects {
     pluginManager.withPlugin("com.android.application") {
         extensions.configure<ApplicationExtension>("android") {
             compileSdk = androidCompileSdk
-            compileSdkMinor = androidCompileSdkMinor
+            if (androidCompileSdkMinor > 0) {
+                compileSdkMinor = androidCompileSdkMinor
+            }
 
             if (androidNdkVersion.isNotBlank()) {
                 ndkVersion = androidNdkVersion
@@ -106,7 +108,9 @@ subprojects {
     pluginManager.withPlugin("com.android.library") {
         extensions.configure<LibraryExtension>("android") {
             compileSdk = androidCompileSdk
-            compileSdkExtension = androidCompileSdkMinor
+            if (androidCompileSdkMinor > 0) {
+                compileSdkExtension = androidCompileSdkMinor
+            }
 
             if (androidNdkVersion.isNotBlank()) {
                 ndkVersion = androidNdkVersion
