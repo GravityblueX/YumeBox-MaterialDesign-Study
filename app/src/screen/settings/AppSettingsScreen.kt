@@ -462,6 +462,21 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
             summary = "查看 YumeBox Study 各版本的改动说明",
             onClick = { changelogDialogVisible = true },
         )
+        PreferenceValueItem(
+            title = "Infra Lab / 构建目标",
+            summary = "Debug · arm64-v8a · JDK 24 · Gradle strict build",
+            onClick = { },
+        )
+        PreferenceValueItem(
+            title = "本地构建脚本",
+            summary = "scripts/build-apk-strict.ps1 会使用 D:\\GradleCache-YumeBoxStudy 并限制 worker，适合低空间/低内存环境。",
+            onClick = { },
+        )
+        PreferenceValueItem(
+            title = "Release 操作提示",
+            summary = "更新版本号 → 写 release notes → tag v* → gh release create → 上传 APK。详见 RELEASE_STUDY.md。",
+            onClick = { },
+        )
     }
 
     AppTextFieldDialog(

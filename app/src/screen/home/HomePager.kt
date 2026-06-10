@@ -46,6 +46,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.github.yumelira.yumebox.common.AppConstants
 import com.github.yumelira.yumebox.common.util.toast
 import com.github.yumelira.yumebox.domain.model.TrafficData
+import com.github.yumelira.yumebox.core.util.trafficDownload
+import com.github.yumelira.yumebox.core.util.trafficUpload
 import com.github.yumelira.yumebox.presentation.component.LocalNavigator
 import com.github.yumelira.yumebox.presentation.component.ScreenLazyColumn
 import com.github.yumelira.yumebox.presentation.component.TopBar
@@ -172,6 +174,17 @@ fun HomePager(
                         tunnelMode = tunnelMode,
                     )
 
+                    InfraControlCenter(
+                        isRunning = isRunning,
+                        hasEnabledProfile = hasEnabledProfile,
+                        profileName = currentProfile?.name,
+                        serverName = selectedServerName,
+                        serverPing = selectedServerPing,
+                        tunnelMode = tunnelMode,
+                        uploadText = trafficNow.trafficUpload(),
+                        downloadText = trafficNow.trafficDownload(),
+                    )
+
                     StudyGuideCard(
                         isRunning = isRunning,
                         hasEnabledProfile = hasEnabledProfile,
@@ -240,6 +253,159 @@ fun HomePager(
 
             item { Spacer(modifier = Modifier.height(UiDp.dp32)) }
         }
+    }
+}
+
+@Composable
+private fun InfraControlCenter(
+    isRunning: Boolean,
+    hasEnabledProfile: Boolean,
+    profileName: String?,
+    serverName: String?,
+    serverPing: Int?,
+    tunnelMode: com.github.yumelira.yumebox.core.model.TunnelState.Mode?,
+    uploadText: String,
+    downloadText: String,
+    modifier: Modifier = Modifier,
+) {
+    val nodeReady = !serverName.isNullOrBlank()
+    val pingReady = serverPing != null && serverPing in 1..1000
+    val healthScore = listOf(isRunning, hasEnabledProfile, nodeReady, pingReady).count { it } * 25
+    val healthTone = when {
+        healthScore >= 75 -> MaterialTheme.colorScheme.primary
+        healthScore >= 50 -> MaterialTheme.colorScheme.onSurface
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.extraLarge,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.88f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.56f)),
+    ) {
+        Column(
+            modifier = Modifier.padding(UiDp.dp16),
+            verticalArrangement = Arrangement.spacedBy(UiDp.dp14),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp4)) {
+                    Text(
+                        text = "INFRA CONTROL CENTER",
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "runtime / profile / node / tunnel / traffic",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    color = healthTone.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, healthTone.copy(alpha = 0.32f)),
+                ) {
+                    Text(
+                        text = "HEALTH $healthScore%",
+                        modifier = Modifier.padding(horizontal = UiDp.dp10, vertical = UiDp.dp6),
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = healthTone,
+                    )
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp8)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(UiDp.dp8)) {
+                    InfraMetricTile("RUNTIME", if (isRunning) "ONLINE" else "IDLE", isRunning, Modifier.weight(1f))
+                    InfraMetricTile("PROFILE", if (hasEnabledProfile) "READY" else "MISSING", hasEnabledProfile, Modifier.weight(1f))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(UiDp.dp8)) {
+                    InfraMetricTile("NODE", serverName?.takeIf { it.isNotBlank() } ?: "--", nodeReady, Modifier.weight(1f))
+                    InfraMetricTile("TUNNEL", tunnelMode.studyDisplayName(), tunnelMode != null, Modifier.weight(1f))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(UiDp.dp8)) {
+                    InfraMetricTile("UPLOAD", uploadText, isRunning, Modifier.weight(1f))
+                    InfraMetricTile("DOWNLOAD", downloadText, isRunning, Modifier.weight(1f))
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp6)) {
+                InfraCheckRow("配置已启用", hasEnabledProfile)
+                InfraCheckRow("运行时在线", isRunning)
+                InfraCheckRow("节点已选择", nodeReady)
+                InfraCheckRow("延迟可读", pingReady)
+            }
+        }
+    }
+}
+
+@Composable
+private fun InfraMetricTile(
+    label: String,
+    value: String,
+    active: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val tone = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.44f)),
+    ) {
+        Column(
+            modifier = Modifier.padding(UiDp.dp10),
+            verticalArrangement = Arrangement.spacedBy(UiDp.dp4),
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                color = tone,
+                maxLines = 1,
+            )
+        }
+    }
+}
+
+@Composable
+private fun InfraCheckRow(
+    text: String,
+    passed: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val tone = if (passed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(UiDp.dp8),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            modifier = Modifier.size(8.dp),
+            shape = MaterialTheme.shapes.small,
+            color = tone,
+        ) {}
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = if (passed) "OK" else "WAIT",
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+            color = tone,
+        )
     }
 }
 
@@ -600,8 +766,6 @@ private fun StudyModuleOverview(modifier: Modifier = Modifier) {
             }
         }
     }
-}
-
 }
 
 @Composable
