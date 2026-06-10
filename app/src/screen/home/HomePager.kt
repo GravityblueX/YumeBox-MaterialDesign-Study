@@ -22,7 +22,9 @@
 package com.github.yumelira.yumebox.screen.home
 import com.github.yumelira.yumebox.presentation.theme.UiDp
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -175,6 +177,10 @@ fun HomePager(
                         hasEnabledProfile = hasEnabledProfile,
                         recommendedProfileName = recommendedProfile?.name,
                     )
+
+                    StudyDailyTip()
+
+                    StudyModuleOverview()
 
                     TrafficDisplay(
                         trafficNow = if (isRunning) {
@@ -466,6 +472,156 @@ private fun StudyStepRow(
         }
         Text(
             text = text,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+private val STUDY_TIPS = listOf(
+    "`TrafficDisplay` 的数据来自 `HomeViewModel.trafficNow`，类型是 `TrafficData`，去看看 data 层它是怎么封装的。",
+    "设置持久化用的是 `MMKV`，打开 `AppSettingsStore.kt` 可以看到 `boolFlow`、`strFlow`、`enumFlow` 等封装方式。",
+    "`HomeViewModel` 通过 `ProxyFacade` 与代理运行时通信，`ProxyFacade` 在 `runtime/client` 模块里。",
+    "主题系统在 `ui/src/presentation/theme/` 里，`YumeTheme` 是入口，修改 `Color.kt` 就能换一套配色。",
+    "四个主页分页在 `MainScreen.kt` 里用 `HorizontalPager` 承载，索引 0=首页 1=代理 2=配置 3=设置。",
+    "Koin 依赖注入在 `app/src/di/` 里配置，所有 ViewModel 通过 `koinViewModel()` 获取。",
+    "Geo 数据文件（geoip.metadb 等）由 `GeoXDataController.ensureGeoFiles()` 在启动时确保存在。",
+    "每个 feature 模块（proxy、override、editor...）都是独立的 Gradle 子模块，有自己的 build.gradle.kts。",
+)
+
+@Composable
+private fun StudyDailyTip(modifier: Modifier = Modifier) {
+    val dayIndex = remember {
+        java.time.LocalDate.now().dayOfYear % STUDY_TIPS.size
+    }
+    val tip = STUDY_TIPS[dayIndex]
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.48f)),
+    ) {
+        Column(
+            modifier = Modifier.padding(UiDp.dp14),
+            verticalArrangement = Arrangement.spacedBy(UiDp.dp8),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "💡 今日学习提示",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = "DAILY TIP",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Text(
+                text = tip,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun StudyModuleOverview(modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded },
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.48f)),
+    ) {
+        Column(modifier = Modifier.animateContentSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(UiDp.dp14),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "📦 模块结构速览",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(UiDp.dp6),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = if (expanded) "收起" else "展开",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = if (expanded) "▲" else "▼",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+
+            if (expanded) {
+                Column(
+                    modifier = Modifier.padding(
+                        start = UiDp.dp14,
+                        end = UiDp.dp14,
+                        bottom = UiDp.dp14,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(UiDp.dp6),
+                ) {
+                    ModuleRow("app/", "Compose UI 入口、导航、首页、Activity")
+                    ModuleRow("data/", "设置持久化、GeoX、流量统计、配置管理")
+                    ModuleRow("runtime/", "代理运行时 (api + client + service)")
+                    ModuleRow("core/", "核心模型、桥接、工具、基础 ViewModel")
+                    ModuleRow("ui/", "主题、图标、通用组件、视觉系统")
+                    ModuleRow("feature/*", "独立功能模块 (proxy, override, editor, meta, substore)")
+                    ModuleRow("platform/", "平台适配层")
+                    ModuleRow("locale/", "多语言资源")
+                    ModuleRow("extension/", "扩展模块")
+                }
+            }
+        }
+    }
+}
+
+}
+
+@Composable
+private fun ModuleRow(
+    name: String,
+    desc: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(UiDp.dp8),
+        verticalAlignment = Alignment.Top,
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Text(
+            text = desc,
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

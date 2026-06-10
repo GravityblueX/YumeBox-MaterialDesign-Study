@@ -20,6 +20,8 @@
 
 
 package com.github.yumelira.yumebox.screen.settings
+
+import androidx.compose.ui.text.AnnotatedString
 import com.github.yumelira.yumebox.presentation.theme.UiDp
 import android.content.Intent
 import android.net.Uri
@@ -28,11 +30,17 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,11 +48,15 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import com.github.yumelira.yumebox.BuildConfig
 import com.github.yumelira.yumebox.common.util.AppIconHelper
 import com.github.yumelira.yumebox.common.util.BiometricHelper
 import com.github.yumelira.yumebox.common.util.toast
@@ -107,6 +119,7 @@ fun AppSettingsScreen(
                     navigator = navigator,
                 )
             }
+            item { StudyBorrowSettingsSection(viewModel) }
         }
     }
 }
@@ -385,6 +398,190 @@ private fun AppExperimentalSettingsSection(
                 context.toast(MLang.AppSettings.Experimental.ResetWallpaperSuccess)
             },
         )
+    }
+}
+
+@Composable
+private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
+    val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
+    val isRefreshingDailyQuote by viewModel.isRefreshingDailyAcgQuote.collectAsState()
+    var importDialogVisible by remember { mutableStateOf(false) }
+    var importJson by remember { mutableStateOf("") }
+    var changelogDialogVisible by remember { mutableStateOf(false) }
+
+    Title("学习版借阅")
+    Card {
+        PreferenceValueItem(
+            title = "当前版本",
+            summary = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+            onClick = { },
+        )
+        PreferenceArrowItem(
+            title = "导出当前设置",
+            summary = "复制当前设置 JSON，方便借给别人继续学习",
+            onClick = {
+                viewModel.exportUserSettingsBackup()
+                    .onSuccess { json ->
+                        clipboardManager.setText(AnnotatedString(json))
+                        context.toast("设置 JSON 已复制到剪贴板")
+                    }
+                    .onFailure {
+                        context.toast(it.message ?: "导出设置失败")
+                    }
+            },
+        )
+        PreferenceArrowItem(
+            title = "导入借阅设置",
+            summary = "粘贴别人分享的设置 JSON，快速恢复学习环境",
+            onClick = {
+                importJson = ""
+                importDialogVisible = true
+            },
+        )
+        PreferenceArrowItem(
+            title = "强制刷新今日语录",
+            summary = if (isRefreshingDailyQuote) {
+                "正在刷新每日语录..."
+            } else {
+                "立即刷新 ACG 每日语录，更新首页学习氛围"
+            },
+            enabled = !isRefreshingDailyQuote,
+            onClick = {
+                viewModel.refreshDailyAcgQuoteIfNeeded(force = true)
+                context.toast("已请求刷新今日语录")
+            },
+        )
+        PreferenceValueItem(
+            title = "借阅说明",
+            summary = "这个学习版更适合演示、借阅和继续改 UI。建议只分享脱敏后的设置，不要包含私人订阅或敏感节点。",
+            onClick = { },
+        )
+        PreferenceArrowItem(
+            title = "学习版更新日志",
+            summary = "查看 YumeBox Study 各版本的改动说明",
+            onClick = { changelogDialogVisible = true },
+        )
+    }
+
+    AppTextFieldDialog(
+        show = importDialogVisible,
+        title = "导入借阅设置",
+        value = importJson,
+        onValueChange = { importJson = it },
+        onDismissRequest = { importDialogVisible = false },
+        onConfirm = {
+            val rawJson = importJson.trim()
+            if (rawJson.isBlank()) {
+                context.toast("请先粘贴设置 JSON")
+                return@AppTextFieldDialog
+            }
+            viewModel.importUserSettingsBackup(rawJson)
+                .onSuccess {
+                    importDialogVisible = false
+                    context.toast("学习版设置已导入")
+                }
+                .onFailure {
+                    context.toast(it.message ?: "导入设置失败")
+                }
+        },
+        summary = "粘贴通过“导出当前设置”得到的 JSON 文本。",
+        renderInRootScaffold = true,
+        singleLine = false,
+        maxLines = 12,
+    )
+
+    if (changelogDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { changelogDialogVisible = false },
+            title = {
+                Text(
+                    text = "学习版更新日志",
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp16)) {
+                    ChangelogItem(
+                        version = "v0.5.4-study.3",
+                        date = "2026-06",
+                        items = listOf(
+                            "新增学习版借阅区块（设置导出/导入、版本显示、强制刷新今日语录）",
+                            "修复严格构建脚本 Kotlin daemon JVM 参数传递错误",
+                        ),
+                    )
+                    ChangelogItem(
+                        version = "v0.5.4-study.2",
+                        date = "2026-06",
+                        items = listOf(
+                            "新增仓库内固定脚本 build-apk-strict.ps1 / upload-apk.bat",
+                            "新增 RELEASE_STUDY.md 固化发版流程",
+                            "首页暗色学习面板优化（StudyStatusCard / StudyGuideCard）",
+                        ),
+                    )
+                    ChangelogItem(
+                        version = "v0.5.4-study.1",
+                        date = "2026-06",
+                        items = listOf(
+                            "默认暗色主题 / 黑白灰 / Monochrome / 低饱和配色",
+                            "首页新增 StudyStatusCard 学习面板",
+                            "首页新增 StudyGuideCard 分步引导",
+                            "版本名改为 YumeBox Study",
+                        ),
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { changelogDialogVisible = false }) {
+                    Text("关闭")
+                }
+            },
+        )
+    }
+}
+
+@Composable
+private fun ChangelogItem(
+    version: String,
+    date: String,
+    items: List<String>,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp6)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = version,
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = date,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp4)) {
+            items.forEach { item ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(UiDp.dp8),
+                ) {
+                    Text(
+                        text = "•",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = item,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
     }
 }
 
