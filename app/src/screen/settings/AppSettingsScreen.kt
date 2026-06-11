@@ -477,6 +477,16 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
             summary = "更新版本号 → 写 release notes → tag v* → gh release create → 上传 APK。详见 RELEASE_STUDY.md。",
             onClick = { },
         )
+        PreferenceValueItem(
+            title = "构建失败排查",
+            summary = "优先看 build-apk-strict.log 尾部；Kotlin daemon、Gradle daemon、C 盘空间、JDK 版本是最常见卡点。",
+            onClick = { },
+        )
+        PreferenceValueItem(
+            title = "安全边界",
+            summary = "不要分享私人订阅/节点，不提交 local.properties，不改 release.keystore，不随意改 applicationId。",
+            onClick = { },
+        )
     }
 
     AppTextFieldDialog(

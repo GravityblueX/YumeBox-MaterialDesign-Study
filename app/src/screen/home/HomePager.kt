@@ -185,6 +185,15 @@ fun HomePager(
                         downloadText = trafficNow.trafficDownload(),
                     )
 
+                    ObservabilityPanel(
+                        isRunning = isRunning,
+                        hasEnabledProfile = hasEnabledProfile,
+                        hasNode = !selectedServerName.isNullOrBlank(),
+                        hasReadablePing = selectedServerPing != null && selectedServerPing in 1..1000,
+                        hasTrafficSignal = trafficNow != 0L,
+                        isIpObservable = isRunning,
+                    )
+
                     StudyGuideCard(
                         isRunning = isRunning,
                         hasEnabledProfile = hasEnabledProfile,
@@ -194,6 +203,8 @@ fun HomePager(
                     StudyDailyTip()
 
                     StudyModuleOverview()
+
+                    LearningRouteCard()
 
                     TrafficDisplay(
                         trafficNow = if (isRunning) {
@@ -642,6 +653,172 @@ private fun StudyStepRow(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun ObservabilityPanel(
+    isRunning: Boolean,
+    hasEnabledProfile: Boolean,
+    hasNode: Boolean,
+    hasReadablePing: Boolean,
+    hasTrafficSignal: Boolean,
+    isIpObservable: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val greenCount = listOf(isRunning, hasEnabledProfile, hasNode, hasReadablePing, hasTrafficSignal, isIpObservable).count { it }
+    val level = when {
+        greenCount >= 5 -> "GREEN"
+        greenCount >= 3 -> "WATCH"
+        else -> "IDLE"
+    }
+    val tone = when (level) {
+        "GREEN" -> MaterialTheme.colorScheme.primary
+        "WATCH" -> MaterialTheme.colorScheme.onSurface
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.extraLarge,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.78f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.52f)),
+    ) {
+        Column(
+            modifier = Modifier.padding(UiDp.dp16),
+            verticalArrangement = Arrangement.spacedBy(UiDp.dp12),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp4)) {
+                    Text(
+                        text = "OBSERVABILITY",
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "把首页当成运行时观测面板来看",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    color = tone.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, tone.copy(alpha = 0.32f)),
+                ) {
+                    Text(
+                        text = level,
+                        modifier = Modifier.padding(horizontal = UiDp.dp10, vertical = UiDp.dp6),
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = tone,
+                    )
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp8)) {
+                ObservabilityRow("Runtime", "HomeViewModel.controlState", isRunning)
+                ObservabilityRow("Profile", "currentProfile / recommendedProfile", hasEnabledProfile)
+                ObservabilityRow("Node", "selectedServerName", hasNode)
+                ObservabilityRow("Latency", "selectedServerPing", hasReadablePing)
+                ObservabilityRow("Traffic", "trafficNow → TrafficData", hasTrafficSignal)
+                ObservabilityRow("IP", "ipMonitoringState", isIpObservable)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ObservabilityRow(
+    label: String,
+    source: String,
+    active: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val tone = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(UiDp.dp8),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            modifier = Modifier.size(8.dp),
+            shape = MaterialTheme.shapes.small,
+            color = tone,
+        ) {}
+        Text(
+            text = label,
+            modifier = Modifier.weight(0.35f),
+            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Text(
+            text = source,
+            modifier = Modifier.weight(0.65f),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun LearningRouteCard(modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+    val route = listOf(
+        "App.kt：启动、Koin、MMKV、Geo 文件兜底",
+        "MainActivity.kt：主题、Onboarding、门禁、导航入口",
+        "MainScreen.kt：四个主分页和底部导航",
+        "HomeViewModel.kt：运行时状态聚合与代理控制",
+        "ProxyFacade.kt：App 侧代理 runtime client 门面",
+        "AppSettingsStore.kt：设置持久化与默认值",
+        "RELEASE_STUDY.md：本地构建与 GitHub Release 流程",
+    )
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded },
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.72f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.48f)),
+    ) {
+        Column(modifier = Modifier.animateContentSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(UiDp.dp14),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "🧭 学习路线",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = if (expanded) "收起 ▲" else "展开 ▼",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (expanded) {
+                Column(
+                    modifier = Modifier.padding(start = UiDp.dp14, end = UiDp.dp14, bottom = UiDp.dp14),
+                    verticalArrangement = Arrangement.spacedBy(UiDp.dp8),
+                ) {
+                    route.forEachIndexed { index, item ->
+                        StudyStepRow(index = index + 1, text = item)
+                    }
+                }
+            }
+        }
     }
 }
 
