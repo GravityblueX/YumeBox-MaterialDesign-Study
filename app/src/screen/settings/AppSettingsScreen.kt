@@ -463,6 +463,11 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
             onClick = { changelogDialogVisible = true },
         )
         PreferenceValueItem(
+            title = "Agent 发版流水线",
+            summary = "SSH push + gh release 已打通；改代码 → tag → build-apk-strict.ps1 → upload-apk.bat。",
+            onClick = { },
+        )
+        PreferenceValueItem(
             title = "Infra Lab / 构建目标",
             summary = "Debug · arm64-v8a · JDK 24 · Gradle strict build",
             onClick = { },
@@ -527,6 +532,41 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
             },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp16)) {
+                    ChangelogItem(
+                        version = "v0.5.4-study.7",
+                        date = "2026-06",
+                        items = listOf(
+                            "首页新增 Agent 发版流水线卡片（ReleasePipelineCard）",
+                            "可观测性面板增加 OBS 得分百分比",
+                            "学习路线补充 HomePager.kt，今日提示增加 gh/发版相关内容",
+                            "设置页 Infra Lab 增加 Agent 发版流水线说明",
+                        ),
+                    )
+                    ChangelogItem(
+                        version = "v0.5.4-study.6",
+                        date = "2026-06",
+                        items = listOf(
+                            "首页新增 OBSERVABILITY 可观测性面板",
+                            "首页新增学习路线卡片",
+                            "设置页 Infra Lab 增加故障排查和安全边界说明",
+                        ),
+                    )
+                    ChangelogItem(
+                        version = "v0.5.4-study.5",
+                        date = "2026-06",
+                        items = listOf(
+                            "首页新增 INFRA CONTROL CENTER 健康度面板",
+                            "设置页学习版借阅新增 Infra Lab 信息",
+                        ),
+                    )
+                    ChangelogItem(
+                        version = "v0.5.4-study.4",
+                        date = "2026-06",
+                        items = listOf(
+                            "首页新增模块结构速览与今日学习提示",
+                            "学习路线与每日提示按天轮换",
+                        ),
+                    )
                     ChangelogItem(
                         version = "v0.5.4-study.3",
                         date = "2026-06",

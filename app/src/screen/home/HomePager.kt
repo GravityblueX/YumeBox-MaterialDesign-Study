@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.github.yumelira.yumebox.BuildConfig
 import com.github.yumelira.yumebox.common.AppConstants
 import com.github.yumelira.yumebox.common.util.toast
 import com.github.yumelira.yumebox.domain.model.TrafficData
@@ -205,6 +206,8 @@ fun HomePager(
                     StudyModuleOverview()
 
                     LearningRouteCard()
+
+                    ReleasePipelineCard()
 
                     TrafficDisplay(
                         trafficNow = if (isRunning) {
@@ -467,7 +470,7 @@ private fun StudyStatusCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = "暗色学习面板",
+                        text = "v${BuildConfig.VERSION_NAME} · 暗色学习面板",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -667,6 +670,7 @@ private fun ObservabilityPanel(
     modifier: Modifier = Modifier,
 ) {
     val greenCount = listOf(isRunning, hasEnabledProfile, hasNode, hasReadablePing, hasTrafficSignal, isIpObservable).count { it }
+    val obsScore = (greenCount * 100) / 6
     val level = when {
         greenCount >= 5 -> "GREEN"
         greenCount >= 3 -> "WATCH"
@@ -707,17 +711,31 @@ private fun ObservabilityPanel(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    color = tone.copy(alpha = 0.12f),
-                    border = BorderStroke(1.dp, tone.copy(alpha = 0.32f)),
-                ) {
-                    Text(
-                        text = level,
-                        modifier = Modifier.padding(horizontal = UiDp.dp10, vertical = UiDp.dp6),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = tone,
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(UiDp.dp6)) {
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = tone.copy(alpha = 0.12f),
+                        border = BorderStroke(1.dp, tone.copy(alpha = 0.32f)),
+                    ) {
+                        Text(
+                            text = "$obsScore%",
+                            modifier = Modifier.padding(horizontal = UiDp.dp8, vertical = UiDp.dp6),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = tone,
+                        )
+                    }
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = tone.copy(alpha = 0.12f),
+                        border = BorderStroke(1.dp, tone.copy(alpha = 0.32f)),
+                    ) {
+                        Text(
+                            text = level,
+                            modifier = Modifier.padding(horizontal = UiDp.dp10, vertical = UiDp.dp6),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = tone,
+                        )
+                    }
                 }
             }
 
@@ -773,6 +791,7 @@ private fun LearningRouteCard(modifier: Modifier = Modifier) {
         "App.kt：启动、Koin、MMKV、Geo 文件兜底",
         "MainActivity.kt：主题、Onboarding、门禁、导航入口",
         "MainScreen.kt：四个主分页和底部导航",
+        "HomePager.kt：学习版首页卡片与可观测性面板",
         "HomeViewModel.kt：运行时状态聚合与代理控制",
         "ProxyFacade.kt：App 侧代理 runtime client 门面",
         "AppSettingsStore.kt：设置持久化与默认值",
@@ -822,6 +841,75 @@ private fun LearningRouteCard(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun ReleasePipelineCard(modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+    val versionName = BuildConfig.VERSION_NAME
+    val versionCode = BuildConfig.VERSION_CODE
+    val steps = listOf(
+        "改代码：首页卡片、设置页、学习提示等",
+        "更新 gradle.properties 版本号与 release notes",
+        "git commit + push 到 GravityblueX/YumeBox-MaterialDesign-Study",
+        "打 tag（如 v$versionName）并 gh release create",
+        "build-apk-strict.ps1 构建 arm64-v8a debug APK",
+        "upload-apk.bat 上传 APK 到对应 Release",
+    )
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded },
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.82f),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.56f)),
+    ) {
+        Column(modifier = Modifier.animateContentSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(UiDp.dp14),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp4)) {
+                    Text(
+                        text = "🚀 Agent 发版流水线",
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "v$versionName ($versionCode) · SSH + gh 已就绪",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Text(
+                    text = if (expanded) "收起 ▲" else "展开 ▼",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (expanded) {
+                Column(
+                    modifier = Modifier.padding(start = UiDp.dp14, end = UiDp.dp14, bottom = UiDp.dp14),
+                    verticalArrangement = Arrangement.spacedBy(UiDp.dp8),
+                ) {
+                    steps.forEachIndexed { index, step ->
+                        StudyStepRow(index = index + 1, text = step)
+                    }
+                    Text(
+                        text = "详见 RELEASE_STUDY.md · 仓库 GravityblueX/YumeBox-MaterialDesign-Study",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
+
 private val STUDY_TIPS = listOf(
     "`TrafficDisplay` 的数据来自 `HomeViewModel.trafficNow`，类型是 `TrafficData`，去看看 data 层它是怎么封装的。",
     "设置持久化用的是 `MMKV`，打开 `AppSettingsStore.kt` 可以看到 `boolFlow`、`strFlow`、`enumFlow` 等封装方式。",
@@ -831,6 +919,9 @@ private val STUDY_TIPS = listOf(
     "Koin 依赖注入在 `app/src/di/` 里配置，所有 ViewModel 通过 `koinViewModel()` 获取。",
     "Geo 数据文件（geoip.metadb 等）由 `GeoXDataController.ensureGeoFiles()` 在启动时确保存在。",
     "每个 feature 模块（proxy、override、editor...）都是独立的 Gradle 子模块，有自己的 build.gradle.kts。",
+    "学习版发版流程写在 `RELEASE_STUDY.md`：改版本号 → release notes → tag → `build-apk-strict.ps1` → `gh release create`。",
+    "`gh auth login` 用 SSH 协议登录后，Agent 就能自动 push 和创建 GitHub Release。",
+    "首页 `ReleasePipelineCard` 把发版步骤可视化，方便对照 `gradle.properties` 里的 `project.version.name`。",
 )
 
 @Composable
