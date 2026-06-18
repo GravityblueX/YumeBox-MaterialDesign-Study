@@ -32,6 +32,13 @@ android {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    if (name == "compileDebugUnitTestKotlin") {
+        source(layout.projectDirectory.dir("test"))
+    }
+}
+
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":platform"))
@@ -59,5 +66,7 @@ dependencies {
     implementation("top.yukonga.miuix.kmp:miuix-ui:${gropify.dep.version.miuix}")
     implementation("top.yukonga.miuix.kmp:miuix-preference:${gropify.dep.version.miuix}")
     implementation("top.yukonga.miuix.kmp:miuix-icons:${gropify.dep.version.miuix}")
-}
 
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${gropify.dep.version.coroutines}")
+}

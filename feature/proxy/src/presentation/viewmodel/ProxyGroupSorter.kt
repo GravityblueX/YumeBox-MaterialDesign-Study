@@ -200,12 +200,13 @@ internal class ProxyGroupSorter {
         if (latestNames.isEmpty()) return emptyList()
 
         val latestSet = latestNames.toHashSet()
+        val consumed = HashSet<String>(latestNames.size)
         val merged = ArrayList<String>(latestNames.size)
         previousOrder.forEach { name ->
-            if (name in latestSet) merged += name
+            if (name in latestSet && consumed.add(name)) merged += name
         }
         latestNames.forEach { name ->
-            if (name !in merged) merged += name
+            if (consumed.add(name)) merged += name
         }
         return merged
     }
