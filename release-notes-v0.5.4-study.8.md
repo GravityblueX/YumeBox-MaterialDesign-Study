@@ -11,6 +11,10 @@
   - 汇总当前 git 分支、提交和工作区状态。
   - 查询 GitHub Release 资产清单。
   - 生成 `release-health-v*.md` 报告。
+- 新增 `scripts/publish-apk-assets.ps1` APK 发布脚本。
+  - 复制 debug/release APK 为无空格标准资产名。
+  - 上传 APK 到 GitHub Release。
+  - 上传后刷新并发布体检报告。
 
 ## 改进
 
@@ -23,9 +27,11 @@
 ## 验证
 
 - `scripts/build-apk-strict.ps1`
+- `scripts/build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'`
 - `scripts/release-health.ps1 -Tag v0.5.4-study.8`
 
 ## 产物
 
-- Debug APK：`YumeBox Study-arm64-v8a-debug.apk`
+- Debug APK：`YumeBox-Study-v0.5.4-study.8-arm64-v8a-debug.apk`
+- Release APK：`YumeBox-Study-v0.5.4-study.8-arm64-v8a-release.apk`
 - 发版体检报告：`release-health-v0.5.4-study.8.md`

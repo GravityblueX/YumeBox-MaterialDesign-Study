@@ -24,6 +24,7 @@
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'
 ```
 
 6. 生成发版体检报告
@@ -32,7 +33,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.4-study.8
 ```
 
-它会检查 `gradle.properties`、APK 文件、SHA-256、git 状态和 GitHub Release 资产。
+它会检查 `gradle.properties`、debug/release APK 文件、SHA-256、git 状态和 GitHub Release 资产。
 
 7. 创建或更新 GitHub Release
 
@@ -46,9 +47,16 @@ gh release create v0.5.4-study.2 --repo GravityblueX/YumeBox-MaterialDesign-Stud
 scripts\upload-apk.bat v0.5.4-study.2
 ```
 
+推荐使用 PowerShell 发布脚本上传标准命名资产：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v0.5.4-study.8
+```
+
 ## 产物与日志
 
-- 默认 APK 路径：`app\build\outputs\apk\debug\YumeBox Study-arm64-v8a-debug.apk`
+- 默认 Debug APK 路径：`app\build\outputs\apk\debug\YumeBox Study-arm64-v8a-debug.apk`
+- 默认 Release APK 路径：`app\build\outputs\apk\release\YumeBox Study-arm64-v8a-release.apk`
 - 构建日志：`build-apk-strict.log`
 - 发版体检报告：`release-health-v*.md`
 

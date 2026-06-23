@@ -33,26 +33,24 @@ $versionCode = Read-GradleProperty 'project.version.code'
 if ([string]::IsNullOrWhiteSpace($Tag)) {
     $Tag = "v$versionName"
 }
-if ([string]::IsNullOrWhiteSpace($ApkPath)) {
-    $ApkPath = Join-Path $ProjectRoot 'app\build\outputs\apk\debug\YumeBox Study-arm64-v8a-debug.apk'
-}
 if ([string]::IsNullOrWhiteSpace($OutputName)) {
     $OutputName = "release-health-$Tag.md"
 }
 
-$apk = Get-Item -LiteralPath $ApkPath -ErrorAction SilentlyContinue
-$apkSha256 = ''
-$apkSize = ''
-$apkLastWrite = ''
-if ($apk) {
-    $apkSha256 = (Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    $apkSize = Format-Bytes -Bytes $apk.Length
-    $apkLastWrite = $apk.LastWriteTime.ToString('o')
+$apks = @()
+if (-not [string]::IsNullOrWhiteSpace($ApkPath)) {
+    $item = Get-Item -LiteralPath $ApkPath -ErrorAction SilentlyContinue
+    if ($item) {
+        $apks += $item
+    }
+} else {
+    $apkRoot = Join-Path $ProjectRoot 'app\build\outputs\apk'
+    $apks = @(Get-ChildItem -LiteralPath $apkRoot -Recurse -Filter '*.apk' -ErrorAction SilentlyContinue | Sort-Object FullName)
 }
 
 $gitBranch = (git rev-parse --abbrev-ref HEAD 2>$null)
 $gitHead = (git rev-parse HEAD 2>$null)
-$gitStatus = (git status --short 2>$null)
+$gitStatus = (git status --short --untracked-files=no 2>$null)
 $gitClean = [string]::IsNullOrWhiteSpace(($gitStatus -join "`n"))
 
 $release = $null
@@ -76,8 +74,8 @@ if ($release -and $release.assets) {
 $checks = @(
     @{ Name = 'gradle version name'; Ok = -not [string]::IsNullOrWhiteSpace($versionName); Detail = $versionName },
     @{ Name = 'gradle version code'; Ok = -not [string]::IsNullOrWhiteSpace($versionCode); Detail = $versionCode },
-    @{ Name = 'APK exists'; Ok = [bool]$apk; Detail = $(if ($apk) { $apk.FullName } else { $ApkPath }) },
-    @{ Name = 'git working tree clean'; Ok = $gitClean; Detail = $(if ($gitClean) { 'clean' } else { 'dirty before final commit is expected during development' }) },
+    @{ Name = 'APK exists'; Ok = $apks.Count -gt 0; Detail = "$($apks.Count) APK file(s)" },
+    @{ Name = 'tracked git files clean'; Ok = $gitClean; Detail = $(if ($gitClean) { 'clean' } else { 'tracked changes are present before final commit' }) },
     @{ Name = 'GitHub release visible'; Ok = [bool]$release; Detail = $(if ($release) { $release.url } else { $releaseError }) }
 )
 
@@ -110,8 +108,14 @@ $lines += @(
     '| File | Size | SHA-256 | Last Modified |',
     '|---|---:|---|---|'
 )
-if ($apk) {
-    $lines += "| $($apk.Name) | $apkSize | ``$apkSha256`` | $apkLastWrite |"
+if ($apks.Count -gt 0) {
+    foreach ($apk in $apks) {
+        $apkSha256 = (Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        $apkSize = Format-Bytes -Bytes $apk.Length
+        $apkLastWrite = $apk.LastWriteTime.ToString('o')
+        $relative = Resolve-Path -LiteralPath $apk.FullName -Relative
+        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkLastWrite |"
+    }
 } else {
     $lines += "| missing | - | - | - |"
 }
@@ -135,7 +139,8 @@ $lines += @(
     '',
     '```powershell',
     "powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1",
-    ".\scripts\upload-apk.bat $Tag",
+    "powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'",
+    "powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag $Tag",
     "powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag $Tag",
     '```',
     ''
