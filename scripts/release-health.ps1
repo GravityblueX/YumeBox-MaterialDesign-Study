@@ -67,6 +67,9 @@ try {
 $assetRows = @()
 if ($release -and $release.assets) {
     foreach ($asset in $release.assets) {
+        if ($asset.name -eq $OutputName) {
+            continue
+        }
         $assetRows += "| $($asset.name) | $(Format-Bytes -Bytes ([int64]$asset.size)) | $($asset.digest) |"
     }
 }
