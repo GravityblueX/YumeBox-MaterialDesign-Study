@@ -50,7 +50,20 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -F
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.8 -Install
 ```
 
-8. 创建或更新 GitHub Release
+8. 生成可归档的 APK 安装性报告
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.8
+```
+
+该脚本会从 GitHub Release 下载 APK，比较本地 SHA-256 与 GitHub Release asset digest，并输出 Markdown/JSON 双报告。默认报告路径：
+
+```text
+docs\apk-installability-report-v0.5.4-study.8.md
+docs\apk-installability-report-v0.5.4-study.8.json
+```
+
+9. 创建或更新 GitHub Release
 
 ```bash
 gh release create v0.5.4-study.2 --repo GravityblueX/YumeBox-MaterialDesign-Study --title "YumeBox Study v0.5.4-study.2" --notes-file release-notes-v0.5.4-study.2.md
@@ -75,8 +88,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v
 - 构建日志：`build-apk-strict.log`
 - 发版体检报告：`release-health-v*.md`
 - 安装就绪验证：`scripts\verify-installable-apk.ps1`
+- 可归档安装性报告：`docs\apk-installability-report-v*.md` 和 `docs\apk-installability-report-v*.json`
 
 ## 说明
 
 - `scripts/build-apk-strict.ps1` 会自动设置 `JAVA_HOME`、`GRADLE_USER_HOME` 和代理。
 - 当前固定上传学习版 `arm64-v8a` debug/release APK，适合自测和学习。
+- 更多细节见 `docs\apk-release-assurance.md`。
