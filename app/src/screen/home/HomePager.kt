@@ -853,6 +853,7 @@ private fun ReleasePipelineCard(modifier: Modifier = Modifier) {
         "打 tag（如 v$versionName）并 gh release create",
         "build-apk-strict.ps1 构建 arm64-v8a debug APK",
         "upload-apk.bat 上传 APK 到对应 Release",
+        "release-health.ps1 生成 SHA-256 与 Release 资产体检报告",
     )
 
     Surface(
@@ -900,7 +901,7 @@ private fun ReleasePipelineCard(modifier: Modifier = Modifier) {
                         StudyStepRow(index = index + 1, text = step)
                     }
                     Text(
-                        text = "详见 RELEASE_STUDY.md · 仓库 GravityblueX/YumeBox-MaterialDesign-Study",
+                        text = "详见 RELEASE_STUDY.md · release-health-v*.md 留档",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -919,9 +920,10 @@ private val STUDY_TIPS = listOf(
     "Koin 依赖注入在 `app/src/di/` 里配置，所有 ViewModel 通过 `koinViewModel()` 获取。",
     "Geo 数据文件（geoip.metadb 等）由 `GeoXDataController.ensureGeoFiles()` 在启动时确保存在。",
     "每个 feature 模块（proxy、override、editor...）都是独立的 Gradle 子模块，有自己的 build.gradle.kts。",
-    "学习版发版流程写在 `RELEASE_STUDY.md`：改版本号 → release notes → tag → `build-apk-strict.ps1` → `gh release create`。",
+    "学习版发版流程写在 `RELEASE_STUDY.md`：改版本号 → release notes → tag → 构建 APK → 上传 Release → `release-health.ps1`。",
     "`gh auth login` 用 SSH 协议登录后，Agent 就能自动 push 和创建 GitHub Release。",
     "首页 `ReleasePipelineCard` 把发版步骤可视化，方便对照 `gradle.properties` 里的 `project.version.name`。",
+    "`scripts/release-health.ps1` 会生成 APK SHA-256 和 Release 资产清单，适合发版后留档。",
 )
 
 @Composable

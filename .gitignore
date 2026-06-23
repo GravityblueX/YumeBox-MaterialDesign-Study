@@ -55,6 +55,7 @@ Thumbs.db
 *.log
 *.tmp
 *.hprof
+release-health-v*.md
 
 # Project specific
 /app/src/androidMain/assets/

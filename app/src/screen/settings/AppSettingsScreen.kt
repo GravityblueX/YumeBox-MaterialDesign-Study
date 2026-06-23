@@ -464,7 +464,7 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
         )
         PreferenceValueItem(
             title = "Agent 发版流水线",
-            summary = "SSH push + gh release 已打通；改代码 → tag → build-apk-strict.ps1 → upload-apk.bat。",
+            summary = "SSH push + gh release 已打通；构建、上传、release-health 体检都可留档。",
             onClick = { },
         )
         PreferenceValueItem(
@@ -479,7 +479,12 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
         )
         PreferenceValueItem(
             title = "Release 操作提示",
-            summary = "更新版本号 → 写 release notes → tag v* → gh release create → 上传 APK。详见 RELEASE_STUDY.md。",
+            summary = "更新版本号 → 写 notes → tag → 构建 APK → 上传 → release-health。详见 RELEASE_STUDY.md。",
+            onClick = { },
+        )
+        PreferenceValueItem(
+            title = "发版体检报告",
+            summary = "scripts/release-health.ps1 会输出版本、APK SHA-256、git 状态和 Release 资产清单。",
             onClick = { },
         )
         PreferenceValueItem(
@@ -532,6 +537,16 @@ private fun StudyBorrowSettingsSection(viewModel: AppSettingsViewModel) {
             },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(UiDp.dp16)) {
+                    ChangelogItem(
+                        version = "v0.5.4-study.8",
+                        date = "2026-06",
+                        items = listOf(
+                            "新增 scripts/release-health.ps1 发版体检脚本",
+                            "构建后可生成 APK SHA-256、git 状态和 Release 资产清单",
+                            "首页发版流水线和设置页 Infra Lab 补充体检步骤",
+                            "RELEASE_STUDY.md 增加构建后体检流程",
+                        ),
+                    )
                     ChangelogItem(
                         version = "v0.5.4-study.7",
                         date = "2026-06",
