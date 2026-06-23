@@ -18,6 +18,9 @@
 - `scripts/build-apk-strict.ps1` 增加 APK 安装就绪校验。
   - 构建后自动调用 Android SDK `zipalign -c`、`aapt dump badging` 和 `apksigner verify`。
   - 学习版 release APK 若未配置正式签名，会使用本机 Android debug keystore 兜底签名并二次验签。
+- 新增 `scripts/verify-installable-apk.ps1`。
+  - 可验证本地 APK，也可用 `-FromRelease` 直接下载 GitHub Release 资产后验证。
+  - 有真机或模拟器时可用 `-Install` 执行 `adb install` 真实安装验证。
 
 ## 改进
 
@@ -34,6 +37,7 @@
 - `scripts/build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'`
 - `scripts/release-health.ps1 -Tag v0.5.4-study.8`
 - Android SDK `apksigner verify` for debug/release APKs
+- `scripts/verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.8`
 
 ## 产物
 
