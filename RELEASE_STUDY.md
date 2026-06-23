@@ -27,7 +27,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'
 ```
 
-`build-apk-strict.ps1` 会在构建后调用 Android SDK `apksigner` 校验 APK 签名。若学习版 release APK 未配置正式 `signing.properties` 而导致未签名，脚本会使用本机 Android debug keystore 兜底签名，并再次验签；正式发布前请配置私有 release keystore。
+`build-apk-strict.ps1` 会在构建后调用 Android SDK 检查 APK 是否达到安装就绪状态：`zipalign -c`、`aapt dump badging` 和 `apksigner verify`。若学习版 release APK 未配置正式 `signing.properties` 而导致未签名，脚本会使用本机 Android debug keystore 兜底签名，并再次验签；正式发布前请配置私有 release keystore。
 
 6. 生成发版体检报告
 
@@ -35,7 +35,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleT
 powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.4-study.8
 ```
 
-它会检查 `gradle.properties`、debug/release APK 文件、APK 签名、SHA-256、git 状态和 GitHub Release 资产。
+它会检查 `gradle.properties`、debug/release APK 文件、APK zipalign、manifest/badging、APK 签名、SHA-256、git 状态和 GitHub Release 资产。
 
 7. 创建或更新 GitHub Release
 

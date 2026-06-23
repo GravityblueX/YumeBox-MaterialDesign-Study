@@ -15,8 +15,8 @@
   - 复制 debug/release APK 为无空格标准资产名。
   - 上传 APK 到 GitHub Release。
   - 上传后刷新并发布体检报告。
-- `scripts/build-apk-strict.ps1` 增加 APK 签名校验。
-  - 构建后自动调用 Android SDK `apksigner verify`。
+- `scripts/build-apk-strict.ps1` 增加 APK 安装就绪校验。
+  - 构建后自动调用 Android SDK `zipalign -c`、`aapt dump badging` 和 `apksigner verify`。
   - 学习版 release APK 若未配置正式签名，会使用本机 Android debug keystore 兜底签名并二次验签。
 
 ## 改进
@@ -24,7 +24,7 @@
 - 首页 `ReleasePipelineCard` 增加发版体检步骤。
 - 设置页 Infra Lab 增加发版体检说明。
 - `RELEASE_STUDY.md` 补充构建后签名校验和体检流程。
-- `scripts/release-health.ps1` 把 APK 签名状态纳入报告。
+- `scripts/release-health.ps1` 把 APK zipalign、badging 和签名状态纳入报告。
 - 学习版更新日志补充 v0.5.4-study.8 条目。
 - 版本升级到 `0.5.4-study.8` / `5408`。
 

@@ -69,13 +69,60 @@ function Resolve-BuildToolsDir {
     param([string]$SdkRoot)
     $buildToolsRoot = Join-Path $SdkRoot 'build-tools'
     $buildToolsDir = Get-ChildItem -LiteralPath $buildToolsRoot -Directory -ErrorAction SilentlyContinue |
-        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat') } |
+        Where-Object {
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat')) -and
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'zipalign.exe')) -and
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'aapt.exe'))
+        } |
         Sort-Object Name -Descending |
         Select-Object -First 1
     if (-not $buildToolsDir) {
         return ''
     }
     return $buildToolsDir.FullName
+}
+
+function Get-ApkZipalignStatus {
+    param(
+        [string]$ApkFile,
+        [string]$BuildToolsDir
+    )
+    if ([string]::IsNullOrWhiteSpace($BuildToolsDir)) {
+        return 'WARN: zipalign not found'
+    }
+
+    $command = '"{0}" -c -p 4 "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'zipalign.exe'), $ApkFile
+    cmd /c $command | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        return 'FAIL: zipalign check failed'
+    }
+    return 'OK'
+}
+
+function Get-ApkBadgingStatus {
+    param(
+        [string]$ApkFile,
+        [string]$BuildToolsDir
+    )
+    if ([string]::IsNullOrWhiteSpace($BuildToolsDir)) {
+        return 'WARN: aapt not found'
+    }
+
+    $command = '"{0}" dump badging "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'aapt.exe'), $ApkFile
+    $badgingOutput = cmd /c $command
+    if ($LASTEXITCODE -ne 0) {
+        return 'FAIL: aapt badging failed'
+    }
+
+    $packageLine = $badgingOutput | Where-Object { $_ -match '^package:' } | Select-Object -First 1
+    $nativeLine = $badgingOutput | Where-Object { $_ -match '^native-code:' } | Select-Object -First 1
+    if (-not $packageLine) {
+        return 'FAIL: package metadata missing'
+    }
+    if ($nativeLine) {
+        return "OK ($nativeLine)"
+    }
+    return 'OK'
 }
 
 function Get-ApkSignatureStatus {
@@ -131,10 +178,16 @@ $gitClean = [string]::IsNullOrWhiteSpace(($gitStatus -join "`n"))
 $resolvedSdkRoot = Resolve-AndroidSdkRoot
 $buildToolsDir = Resolve-BuildToolsDir -SdkRoot $resolvedSdkRoot
 $apkSignatureStatuses = @{}
+$apkZipalignStatuses = @{}
+$apkBadgingStatuses = @{}
 foreach ($apk in $apks) {
     $apkSignatureStatuses[$apk.FullName] = Get-ApkSignatureStatus -ApkFile $apk.FullName -BuildToolsDir $buildToolsDir
+    $apkZipalignStatuses[$apk.FullName] = Get-ApkZipalignStatus -ApkFile $apk.FullName -BuildToolsDir $buildToolsDir
+    $apkBadgingStatuses[$apk.FullName] = Get-ApkBadgingStatus -ApkFile $apk.FullName -BuildToolsDir $buildToolsDir
 }
 $apkSignaturesOk = $apks.Count -gt 0 -and @($apkSignatureStatuses.Values | Where-Object { $_ -notlike 'OK*' }).Count -eq 0
+$apkZipalignOk = $apks.Count -gt 0 -and @($apkZipalignStatuses.Values | Where-Object { $_ -ne 'OK' }).Count -eq 0
+$apkBadgingOk = $apks.Count -gt 0 -and @($apkBadgingStatuses.Values | Where-Object { $_ -notlike 'OK*' }).Count -eq 0
 
 $release = $null
 $releaseError = ''
@@ -162,6 +215,8 @@ $checks = @(
     @{ Name = 'gradle version code'; Ok = -not [string]::IsNullOrWhiteSpace($versionCode); Detail = $versionCode },
     @{ Name = 'APK exists'; Ok = $apks.Count -gt 0; Detail = "$($apks.Count) APK file(s)" },
     @{ Name = 'APK signatures'; Ok = $apkSignaturesOk; Detail = $(if ($apkSignaturesOk) { 'apksigner verify passed' } else { 'one or more APK signatures failed' }) },
+    @{ Name = 'APK zipalign'; Ok = $apkZipalignOk; Detail = $(if ($apkZipalignOk) { 'zipalign check passed' } else { 'one or more APK zipalign checks failed' }) },
+    @{ Name = 'APK badging'; Ok = $apkBadgingOk; Detail = $(if ($apkBadgingOk) { 'aapt badging passed' } else { 'one or more APK badging checks failed' }) },
     @{ Name = 'tracked git files clean'; Ok = $gitClean; Detail = $(if ($gitClean) { 'clean' } else { 'tracked changes are present before final commit' }) },
     @{ Name = 'GitHub release visible'; Ok = [bool]$release; Detail = $(if ($release) { $release.url } else { $releaseError }) }
 )
@@ -192,8 +247,8 @@ $lines += @(
     '',
     '## APK',
     '',
-    '| File | Size | SHA-256 | Signature | Last Modified |',
-    '|---|---:|---|---|---|'
+    '| File | Size | SHA-256 | Signature | Zipalign | Badging | Last Modified |',
+    '|---|---:|---|---|---|---|---|'
 )
 if ($apks.Count -gt 0) {
     foreach ($apk in $apks) {
@@ -202,10 +257,12 @@ if ($apks.Count -gt 0) {
         $apkLastWrite = $apk.LastWriteTime.ToString('o')
         $relative = Resolve-Path -LiteralPath $apk.FullName -Relative
         $apkSignatureStatus = $apkSignatureStatuses[$apk.FullName]
-        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkSignatureStatus | $apkLastWrite |"
+        $apkZipalignStatus = $apkZipalignStatuses[$apk.FullName]
+        $apkBadgingStatus = $apkBadgingStatuses[$apk.FullName]
+        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkSignatureStatus | $apkZipalignStatus | $apkBadgingStatus | $apkLastWrite |"
     }
 } else {
-    $lines += "| missing | - | - | - | - |"
+    $lines += "| missing | - | - | - | - | - | - |"
 }
 
 $lines += @(

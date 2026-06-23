@@ -109,13 +109,48 @@ function Resolve-BuildToolsDir {
     param([string]$SdkRoot)
     $buildToolsRoot = Join-Path $SdkRoot 'build-tools'
     $buildToolsDir = Get-ChildItem -LiteralPath $buildToolsRoot -Directory -ErrorAction SilentlyContinue |
-        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat') } |
+        Where-Object {
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat')) -and
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'zipalign.exe')) -and
+            (Test-Path -LiteralPath (Join-Path $_.FullName 'aapt.exe'))
+        } |
         Sort-Object Name -Descending |
         Select-Object -First 1
     if (-not $buildToolsDir) {
-        throw "Cannot find apksigner.bat under $buildToolsRoot"
+        throw "Cannot find apksigner.bat, zipalign.exe, and aapt.exe under $buildToolsRoot"
     }
     return $buildToolsDir.FullName
+}
+
+function Test-ApkZipalign {
+    param(
+        [string]$ApkPath,
+        [string]$BuildToolsDir
+    )
+    Write-LogLine ("=== Verify APK zipalign: {0} ===" -f $ApkPath) | Out-Null
+    $command = '"{0}" -c -p 4 "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'zipalign.exe'), $ApkPath
+    $zipalignOutput = cmd /c $command
+    $zipalignExitCode = $LASTEXITCODE
+    $zipalignOutput | Tee-Object -FilePath $logPath -Append | Out-Null
+    if ($zipalignExitCode -eq 0) {
+        Write-LogLine 'zipalign=OK' | Out-Null
+    }
+    return [bool]($zipalignExitCode -eq 0)
+}
+
+function Test-ApkBadging {
+    param(
+        [string]$ApkPath,
+        [string]$BuildToolsDir
+    )
+    Write-LogLine ("=== Verify APK badging: {0} ===" -f $ApkPath) | Out-Null
+    $command = '"{0}" dump badging "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'aapt.exe'), $ApkPath
+    $badgingOutput = cmd /c $command
+    $badgingExitCode = $LASTEXITCODE
+    $badgingOutput |
+        Where-Object { $_ -match '^(package:|sdkVersion|targetSdkVersion|application-label:|launchable-activity|native-code)' } |
+        ForEach-Object { Write-LogLine $_ | Out-Null }
+    return [bool]($badgingExitCode -eq 0)
 }
 
 function Test-ApkSignature {
@@ -230,6 +265,18 @@ if (-not $SkipApkVerify) {
     Write-LogLine ("BuildToolsDir={0}" -f $buildToolsDir)
 
     foreach ($apk in $builtApks) {
+        $zipAligned = Test-ApkZipalign -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
+        if (-not $zipAligned) {
+            Write-LogLine ("ERROR: APK zipalign verification failed: {0}" -f $apk.FullName)
+            exit 1
+        }
+
+        $badgingOk = Test-ApkBadging -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
+        if (-not $badgingOk) {
+            Write-LogLine ("ERROR: APK manifest/badging verification failed: {0}" -f $apk.FullName)
+            exit 1
+        }
+
         $verified = Test-ApkSignature -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
         $isReleaseApk = $apk.Name -like '*-release.apk'
         if (-not $verified -and $isReleaseApk -and -not $DisableDebugSigningFallback) {
