@@ -7,7 +7,10 @@ param(
     [string]$LogName = 'build-apk-strict.log',
     [string]$GradleJvmArgs = '-Xmx2g -XX:MaxMetaspaceSize=768m -XX:+UseG1GC -Dfile.encoding=UTF-8',
     [string]$KotlinDaemonJvmArgs = '-Xmx1024m -XX:+UseG1GC',
-    [int]$MinProjectDriveFreeGb = 8
+    [int]$MinProjectDriveFreeGb = 8,
+    [string]$AndroidSdkRoot = '',
+    [switch]$SkipApkVerify,
+    [switch]$DisableDebugSigningFallback
 )
 
 $ErrorActionPreference = 'Stop'
@@ -66,6 +69,116 @@ function Format-BytesToGb {
     return ('{0:N2} GB' -f ($Bytes / 1GB))
 }
 
+function Read-LocalProperty {
+    param([string]$Name)
+    $localProperties = Join-Path $ProjectRoot 'local.properties'
+    if (-not (Test-Path -LiteralPath $localProperties)) {
+        return ''
+    }
+
+    $line = Get-Content -LiteralPath $localProperties |
+        Where-Object { $_ -match ('^{0}=' -f [regex]::Escape($Name)) } |
+        Select-Object -First 1
+    if (-not $line) {
+        return ''
+    }
+
+    return (($line -split '=', 2)[1].Trim() -replace '\\\\', '\')
+}
+
+function Resolve-AndroidSdkRoot {
+    if (-not [string]::IsNullOrWhiteSpace($AndroidSdkRoot)) {
+        return $AndroidSdkRoot
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ANDROID_HOME)) {
+        return $env:ANDROID_HOME
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ANDROID_SDK_ROOT)) {
+        return $env:ANDROID_SDK_ROOT
+    }
+
+    $localSdk = Read-LocalProperty 'sdk.dir'
+    if (-not [string]::IsNullOrWhiteSpace($localSdk)) {
+        return $localSdk
+    }
+
+    return (Join-Path $env:LOCALAPPDATA 'Android\Sdk')
+}
+
+function Resolve-BuildToolsDir {
+    param([string]$SdkRoot)
+    $buildToolsRoot = Join-Path $SdkRoot 'build-tools'
+    $buildToolsDir = Get-ChildItem -LiteralPath $buildToolsRoot -Directory -ErrorAction SilentlyContinue |
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat') } |
+        Sort-Object Name -Descending |
+        Select-Object -First 1
+    if (-not $buildToolsDir) {
+        throw "Cannot find apksigner.bat under $buildToolsRoot"
+    }
+    return $buildToolsDir.FullName
+}
+
+function Test-ApkSignature {
+    param(
+        [string]$ApkPath,
+        [string]$BuildToolsDir
+    )
+    Write-LogLine ("=== Verify APK signature: {0} ===" -f $ApkPath) | Out-Null
+    $command = '"{0}" verify --verbose --print-certs "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'apksigner.bat'), $ApkPath
+    $verifyOutput = cmd /c $command
+    $verifyExitCode = $LASTEXITCODE
+    $verifyOutput | Tee-Object -FilePath $logPath -Append | Out-Null
+    return [bool]($verifyExitCode -eq 0)
+}
+
+function Ensure-DebugKeystore {
+    $debugKeystore = Join-Path $env:USERPROFILE '.android\debug.keystore'
+    if (Test-Path -LiteralPath $debugKeystore) {
+        return $debugKeystore
+    }
+
+    $debugKeystoreDir = Split-Path -Parent $debugKeystore
+    New-Item -ItemType Directory -Force -Path $debugKeystoreDir | Out-Null
+    $keytool = Join-Path $env:JAVA_HOME 'bin\keytool.exe'
+    if (-not (Test-Path -LiteralPath $keytool)) {
+        throw "Cannot find keytool.exe under JAVA_HOME=$env:JAVA_HOME"
+    }
+
+    Write-LogLine ("=== Create Android debug keystore: {0} ===" -f $debugKeystore) | Out-Null
+    & $keytool -genkeypair `
+        -alias androiddebugkey `
+        -keypass android `
+        -keystore $debugKeystore `
+        -storepass android `
+        -dname 'CN=Android Debug,O=Android,C=US' `
+        -keyalg RSA `
+        -keysize 2048 `
+        -validity 10000 2>&1 |
+        Tee-Object -FilePath $logPath -Append | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to create Android debug keystore.'
+    }
+
+    return $debugKeystore
+}
+
+function Sign-ApkWithDebugKeystore {
+    param(
+        [string]$ApkPath,
+        [string]$BuildToolsDir
+    )
+    $debugKeystore = Ensure-DebugKeystore
+    Write-LogLine ("=== Sign release APK with Android debug keystore fallback: {0} ===" -f $ApkPath) | Out-Null
+    $command = '"{0}" sign --ks "{1}" --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey "{2}" 2>&1' -f `
+        (Join-Path $BuildToolsDir 'apksigner.bat'), $debugKeystore, $ApkPath
+    $signOutput = cmd /c $command
+    $signExitCode = $LASTEXITCODE
+    $signOutput | Tee-Object -FilePath $logPath -Append | Out-Null
+    if ($signExitCode -ne 0) {
+        throw "Failed to sign $ApkPath with Android debug keystore fallback."
+    }
+}
+
 Write-LogLine ('=== YumeBox Study strict APK build ===')
 Write-LogLine ("Time: {0}" -f (Get-Date -Format o))
 Write-LogLine ("ProjectRoot={0}" -f $ProjectRoot)
@@ -99,10 +212,36 @@ $code = $LASTEXITCODE
 Write-LogLine ("=== Gradle exit code: {0} ===" -f $code)
 
 Write-LogLine '=== APK search ==='
-Get-ChildItem (Join-Path $ProjectRoot 'app\build\outputs') -Recurse -Filter *.apk -ErrorAction SilentlyContinue |
-    Select-Object FullName, Length, LastWriteTime |
-    Format-Table -AutoSize |
-    Out-String |
-    Tee-Object -FilePath $logPath -Append
+$builtApks = @(Get-ChildItem (Join-Path $ProjectRoot 'app\build\outputs') -Recurse -Filter *.apk -ErrorAction SilentlyContinue | Sort-Object FullName)
+foreach ($apk in $builtApks) {
+    Write-LogLine ("APK={0}" -f $apk.FullName)
+    Write-LogLine ("Length={0}" -f $apk.Length)
+    Write-LogLine ("LastWriteTime={0}" -f $apk.LastWriteTime.ToString('o'))
+}
+
+if ($code -ne 0) {
+    exit $code
+}
+
+if (-not $SkipApkVerify) {
+    $resolvedSdkRoot = Resolve-AndroidSdkRoot
+    $buildToolsDir = Resolve-BuildToolsDir -SdkRoot $resolvedSdkRoot
+    Write-LogLine ("AndroidSdkRoot={0}" -f $resolvedSdkRoot)
+    Write-LogLine ("BuildToolsDir={0}" -f $buildToolsDir)
+
+    foreach ($apk in $builtApks) {
+        $verified = Test-ApkSignature -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
+        $isReleaseApk = $apk.Name -like '*-release.apk'
+        if (-not $verified -and $isReleaseApk -and -not $DisableDebugSigningFallback) {
+            Sign-ApkWithDebugKeystore -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
+            $verified = Test-ApkSignature -ApkPath $apk.FullName -BuildToolsDir $buildToolsDir
+        }
+
+        if (-not $verified) {
+            Write-LogLine ("ERROR: APK signature verification failed: {0}" -f $apk.FullName)
+            exit 1
+        }
+    }
+}
 
 exit $code

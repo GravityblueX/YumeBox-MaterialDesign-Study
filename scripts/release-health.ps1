@@ -3,7 +3,8 @@ param(
     [string]$Repo = 'GravityblueX/YumeBox-MaterialDesign-Study',
     [string]$Tag = '',
     [string]$ApkPath = '',
-    [string]$OutputName = ''
+    [string]$OutputName = '',
+    [string]$AndroidSdkRoot = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -26,6 +27,81 @@ function Format-Bytes {
         return ('{0:N2} MB' -f ($Bytes / 1MB))
     }
     return ('{0:N0} bytes' -f $Bytes)
+}
+
+function Read-LocalProperty {
+    param([string]$Name)
+    $localProperties = Join-Path $ProjectRoot 'local.properties'
+    if (-not (Test-Path -LiteralPath $localProperties)) {
+        return ''
+    }
+
+    $line = Get-Content -LiteralPath $localProperties |
+        Where-Object { $_ -match ('^{0}=' -f [regex]::Escape($Name)) } |
+        Select-Object -First 1
+    if (-not $line) {
+        return ''
+    }
+
+    return (($line -split '=', 2)[1].Trim() -replace '\\\\', '\')
+}
+
+function Resolve-AndroidSdkRoot {
+    if (-not [string]::IsNullOrWhiteSpace($AndroidSdkRoot)) {
+        return $AndroidSdkRoot
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ANDROID_HOME)) {
+        return $env:ANDROID_HOME
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ANDROID_SDK_ROOT)) {
+        return $env:ANDROID_SDK_ROOT
+    }
+
+    $localSdk = Read-LocalProperty 'sdk.dir'
+    if (-not [string]::IsNullOrWhiteSpace($localSdk)) {
+        return $localSdk
+    }
+
+    return (Join-Path $env:LOCALAPPDATA 'Android\Sdk')
+}
+
+function Resolve-BuildToolsDir {
+    param([string]$SdkRoot)
+    $buildToolsRoot = Join-Path $SdkRoot 'build-tools'
+    $buildToolsDir = Get-ChildItem -LiteralPath $buildToolsRoot -Directory -ErrorAction SilentlyContinue |
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'apksigner.bat') } |
+        Sort-Object Name -Descending |
+        Select-Object -First 1
+    if (-not $buildToolsDir) {
+        return ''
+    }
+    return $buildToolsDir.FullName
+}
+
+function Get-ApkSignatureStatus {
+    param(
+        [string]$ApkFile,
+        [string]$BuildToolsDir
+    )
+    if ([string]::IsNullOrWhiteSpace($BuildToolsDir)) {
+        return 'WARN: apksigner not found'
+    }
+
+    $command = '"{0}" verify --verbose --print-certs "{1}" 2>&1' -f (Join-Path $BuildToolsDir 'apksigner.bat'), $ApkFile
+    $verifyOutput = cmd /c $command
+    if ($LASTEXITCODE -ne 0) {
+        $errorLine = $verifyOutput | Where-Object { $_ -match '^(ERROR|DOES NOT VERIFY)' } | Select-Object -First 1
+        if ([string]::IsNullOrWhiteSpace($errorLine)) {
+            $errorLine = 'apksigner verify failed'
+        }
+        return "FAIL: $errorLine"
+    }
+
+    $signerLine = $verifyOutput | Where-Object { $_ -match '^Signer #1 certificate DN:' } | Select-Object -First 1
+    if ($signerLine) {
+        return ('OK ({0})' -f (($signerLine -split ': ', 2)[1]))
+    }
+    return 'OK'
 }
 
 $versionName = Read-GradleProperty 'project.version.name'
@@ -52,6 +128,13 @@ $gitBranch = (git rev-parse --abbrev-ref HEAD 2>$null)
 $gitHead = (git rev-parse HEAD 2>$null)
 $gitStatus = (git status --short --untracked-files=no 2>$null)
 $gitClean = [string]::IsNullOrWhiteSpace(($gitStatus -join "`n"))
+$resolvedSdkRoot = Resolve-AndroidSdkRoot
+$buildToolsDir = Resolve-BuildToolsDir -SdkRoot $resolvedSdkRoot
+$apkSignatureStatuses = @{}
+foreach ($apk in $apks) {
+    $apkSignatureStatuses[$apk.FullName] = Get-ApkSignatureStatus -ApkFile $apk.FullName -BuildToolsDir $buildToolsDir
+}
+$apkSignaturesOk = $apks.Count -gt 0 -and @($apkSignatureStatuses.Values | Where-Object { $_ -notlike 'OK*' }).Count -eq 0
 
 $release = $null
 $releaseError = ''
@@ -78,6 +161,7 @@ $checks = @(
     @{ Name = 'gradle version name'; Ok = -not [string]::IsNullOrWhiteSpace($versionName); Detail = $versionName },
     @{ Name = 'gradle version code'; Ok = -not [string]::IsNullOrWhiteSpace($versionCode); Detail = $versionCode },
     @{ Name = 'APK exists'; Ok = $apks.Count -gt 0; Detail = "$($apks.Count) APK file(s)" },
+    @{ Name = 'APK signatures'; Ok = $apkSignaturesOk; Detail = $(if ($apkSignaturesOk) { 'apksigner verify passed' } else { 'one or more APK signatures failed' }) },
     @{ Name = 'tracked git files clean'; Ok = $gitClean; Detail = $(if ($gitClean) { 'clean' } else { 'tracked changes are present before final commit' }) },
     @{ Name = 'GitHub release visible'; Ok = [bool]$release; Detail = $(if ($release) { $release.url } else { $releaseError }) }
 )
@@ -108,8 +192,8 @@ $lines += @(
     '',
     '## APK',
     '',
-    '| File | Size | SHA-256 | Last Modified |',
-    '|---|---:|---|---|'
+    '| File | Size | SHA-256 | Signature | Last Modified |',
+    '|---|---:|---|---|---|'
 )
 if ($apks.Count -gt 0) {
     foreach ($apk in $apks) {
@@ -117,10 +201,11 @@ if ($apks.Count -gt 0) {
         $apkSize = Format-Bytes -Bytes $apk.Length
         $apkLastWrite = $apk.LastWriteTime.ToString('o')
         $relative = Resolve-Path -LiteralPath $apk.FullName -Relative
-        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkLastWrite |"
+        $apkSignatureStatus = $apkSignatureStatuses[$apk.FullName]
+        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkSignatureStatus | $apkLastWrite |"
     }
 } else {
-    $lines += "| missing | - | - | - |"
+    $lines += "| missing | - | - | - | - |"
 }
 
 $lines += @(
