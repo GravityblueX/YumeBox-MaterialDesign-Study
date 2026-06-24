@@ -1,7 +1,7 @@
 ﻿{
     "reportType":  "yumebox_release_provenance",
     "predicateType":  "https://slsa.dev/provenance/v1",
-    "generatedAt":  "2026-06-24T11:23:19.5735184+08:00",
+    "generatedAt":  "2026-06-24T11:59:38.4769026+08:00",
     "repo":  "GravityblueX/YumeBox-MaterialDesign-Study",
     "tag":  "v0.5.4-study.9",
     "ok":  true,
@@ -49,7 +49,7 @@
                                                                      },
                                               "internalParameters":  {
                                                                          "sourceBranch":  "Yume",
-                                                                         "sourceCommit":  "39744e2167cf10d0b04d4601a867ce6d526ae0d7",
+                                                                         "sourceCommit":  "33843ba31bc3e39ec7d69568ea0835de6822df79",
                                                                          "sourceRemote":  "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git"
                                                                      }
                                           },
@@ -60,20 +60,32 @@
                                          "metadata":  {
                                                           "invocationId":  "manual-local-v0.5.4-study.9",
                                                           "startedOn":  "2026-06-24T11:22:24.5336925+08:00",
-                                                          "finishedOn":  "2026-06-24T11:23:19.5799197+08:00"
+                                                          "finishedOn":  "2026-06-24T11:59:38.4825977+08:00"
                                                       }
                                      },
                       "materials":  [
                                         {
                                             "uri":  "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git",
                                             "digest":  {
-                                                           "gitCommit":  "39744e2167cf10d0b04d4601a867ce6d526ae0d7"
+                                                           "gitCommit":  "33843ba31bc3e39ec7d69568ea0835de6822df79"
                                                        }
                                         },
                                         {
                                             "uri":  "file://docs/release-asset-manifest-v0.5.4-study.9.json",
                                             "digest":  {
                                                            "sha256":  "a4053b88a628ed9481b677f4a925d1c8be8f7f422c25cd52a113126b9ad8fdf8"
+                                                       }
+                                        },
+                                        {
+                                            "uri":  "file://docs/build-environment-v0.5.4-study.9.json",
+                                            "digest":  {
+                                                           "sha256":  "0a2af50b899bb2779cc8e5b9b042118ae84e6c4642e0826b5a49dabc45826fbd"
+                                                       }
+                                        },
+                                        {
+                                            "uri":  "file://docs/apk-permission-justification-v0.5.4-study.9.json",
+                                            "digest":  {
+                                                           "sha256":  "133096e3401ff1c2bab1873cafbbf28a692e56d623d6f7070e5acb807856d3db"
                                                        }
                                         }
                                     ]
@@ -83,6 +95,16 @@
                       "name":  "asset manifest exists",
                       "ok":  true,
                       "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\release-asset-manifest-v0.5.4-study.9.json"
+                  },
+                  {
+                      "name":  "build environment exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\build-environment-v0.5.4-study.9.json"
+                  },
+                  {
+                      "name":  "permission justification exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-justification-v0.5.4-study.9.json"
                   },
                   {
                       "name":  "asset manifest ok",
@@ -107,7 +129,7 @@
                   {
                       "name":  "git commit available",
                       "ok":  true,
-                      "detail":  "39744e2167cf10d0b04d4601a867ce6d526ae0d7"
+                      "detail":  "33843ba31bc3e39ec7d69568ea0835de6822df79"
                   },
                   {
                       "name":  "release is not draft",
@@ -128,10 +150,11 @@
     "failures":  [
 
                  ],
-    "dirtyCountWhenGenerated":  8,
+    "dirtyCountWhenGenerated":  5,
     "referenceBasis":  [
                            "SLSA provenance style subject and material digest mapping",
                            "GitHub Release assets remain the downloadable APK source of truth",
+                           "Build environment and permission justification evidence are linked as release materials",
                            "Installability and permission evidence remain separate linked reports"
                        ]
 }

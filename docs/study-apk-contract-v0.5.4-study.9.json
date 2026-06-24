@@ -1,6 +1,6 @@
 ﻿{
     "reportType":  "study_apk_contract",
-    "generatedAt":  "2026-06-24T11:38:22.3297359+08:00",
+    "generatedAt":  "2026-06-24T11:59:52.4708718+08:00",
     "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
     "tag":  "v0.5.4-study.9",
     "ok":  true,
@@ -66,6 +66,16 @@
                        "detail":  "docs\\apk-permission-review-v0.5.4-study.9.json"
                    },
                    {
+                       "name":  "required file docs\\apk-permission-justification-v0.5.4-study.9.md",
+                       "ok":  true,
+                       "detail":  "docs\\apk-permission-justification-v0.5.4-study.9.md"
+                   },
+                   {
+                       "name":  "required file docs\\apk-permission-justification-v0.5.4-study.9.json",
+                       "ok":  true,
+                       "detail":  "docs\\apk-permission-justification-v0.5.4-study.9.json"
+                   },
+                   {
                        "name":  "required file docs\\release-asset-manifest-v0.5.4-study.9.md",
                        "ok":  true,
                        "detail":  "docs\\release-asset-manifest-v0.5.4-study.9.md"
@@ -114,6 +124,11 @@
                        "name":  "required file scripts\\apk-permission-review.ps1",
                        "ok":  true,
                        "detail":  "scripts\\apk-permission-review.ps1"
+                   },
+                   {
+                       "name":  "required file scripts\\apk-permission-justification.ps1",
+                       "ok":  true,
+                       "detail":  "scripts\\apk-permission-justification.ps1"
                    },
                    {
                        "name":  "required file scripts\\release-asset-manifest.ps1",
@@ -266,6 +281,26 @@
                        "detail":  "2 APKs"
                    },
                    {
+                       "name":  "permission justification ok flag",
+                       "ok":  true,
+                       "detail":  "ok=True"
+                   },
+                   {
+                       "name":  "permission justification tag matches",
+                       "ok":  true,
+                       "detail":  "tag=v0.5.4-study.9"
+                   },
+                   {
+                       "name":  "permission justification covers permissions",
+                       "ok":  true,
+                       "detail":  "20 permission(s)"
+                   },
+                   {
+                       "name":  "permission justification has gates",
+                       "ok":  true,
+                       "detail":  "6 gates"
+                   },
+                   {
                        "name":  "release asset manifest ok flag",
                        "ok":  true,
                        "detail":  "ok=True"
@@ -304,6 +339,16 @@
                        "name":  "release provenance APK subjects",
                        "ok":  true,
                        "detail":  "2 subject(s)"
+                   },
+                   {
+                       "name":  "release provenance links build environment",
+                       "ok":  true,
+                       "detail":  "build-environment-v0.5.4-study.9.json"
+                   },
+                   {
+                       "name":  "release provenance links permission justification",
+                       "ok":  true,
+                       "detail":  "apk-permission-justification-v0.5.4-study.9.json"
                    },
                    {
                        "name":  "build environment ok flag",

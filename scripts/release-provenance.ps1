@@ -2,6 +2,8 @@ param(
     [string]$Tag = "",
     [string]$Repo = "GravityblueX/YumeBox-MaterialDesign-Study",
     [string]$AssetManifestJson = "",
+    [string]$BuildEnvironmentJson = "",
+    [string]$PermissionJustificationJson = "",
     [string]$JsonOut = "",
     [string]$MarkdownOut = ""
 )
@@ -57,6 +59,12 @@ if ([string]::IsNullOrWhiteSpace($Tag)) { $Tag = "v$versionName" }
 if ([string]::IsNullOrWhiteSpace($AssetManifestJson)) {
     $AssetManifestJson = Join-Path $ProjectRoot "docs\release-asset-manifest-$Tag.json"
 }
+if ([string]::IsNullOrWhiteSpace($BuildEnvironmentJson)) {
+    $BuildEnvironmentJson = Join-Path $ProjectRoot "docs\build-environment-$Tag.json"
+}
+if ([string]::IsNullOrWhiteSpace($PermissionJustificationJson)) {
+    $PermissionJustificationJson = Join-Path $ProjectRoot "docs\apk-permission-justification-$Tag.json"
+}
 if ([string]::IsNullOrWhiteSpace($JsonOut)) {
     $JsonOut = Join-Path $ProjectRoot "docs\release-provenance-$Tag.json"
 }
@@ -68,6 +76,14 @@ $gates = New-Object System.Collections.Generic.List[object]
 Add-Gate $gates "asset manifest exists" (Test-Path -LiteralPath $AssetManifestJson) $AssetManifestJson
 if (-not (Test-Path -LiteralPath $AssetManifestJson)) {
     throw "asset manifest not found: $AssetManifestJson"
+}
+Add-Gate $gates "build environment exists" (Test-Path -LiteralPath $BuildEnvironmentJson) $BuildEnvironmentJson
+if (-not (Test-Path -LiteralPath $BuildEnvironmentJson)) {
+    throw "build environment report not found: $BuildEnvironmentJson"
+}
+Add-Gate $gates "permission justification exists" (Test-Path -LiteralPath $PermissionJustificationJson) $PermissionJustificationJson
+if (-not (Test-Path -LiteralPath $PermissionJustificationJson)) {
+    throw "permission justification report not found: $PermissionJustificationJson"
 }
 
 $manifest = Get-Content -LiteralPath $AssetManifestJson -Raw | ConvertFrom-Json
@@ -149,6 +165,14 @@ $payload = [pscustomobject]@{
             [pscustomobject]@{
                 uri = "file://docs/release-asset-manifest-$Tag.json"
                 digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $AssetManifestJson -Algorithm SHA256).Hash.ToLowerInvariant() }
+            },
+            [pscustomobject]@{
+                uri = "file://docs/build-environment-$Tag.json"
+                digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $BuildEnvironmentJson -Algorithm SHA256).Hash.ToLowerInvariant() }
+            },
+            [pscustomobject]@{
+                uri = "file://docs/apk-permission-justification-$Tag.json"
+                digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $PermissionJustificationJson -Algorithm SHA256).Hash.ToLowerInvariant() }
             }
         )
     }
@@ -158,6 +182,7 @@ $payload = [pscustomobject]@{
     referenceBasis = @(
         "SLSA provenance style subject and material digest mapping",
         "GitHub Release assets remain the downloadable APK source of truth",
+        "Build environment and permission justification evidence are linked as release materials",
         "Installability and permission evidence remain separate linked reports"
     )
 }

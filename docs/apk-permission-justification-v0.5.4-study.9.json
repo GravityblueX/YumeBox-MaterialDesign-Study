@@ -1,0 +1,316 @@
+﻿{
+    "reportType":  "yumebox_apk_permission_justification",
+    "generatedAt":  "2026-06-24T11:58:59.7864366+08:00",
+    "tag":  "v0.5.4-study.9",
+    "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
+    "permissionReview":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json",
+    "ok":  true,
+    "status":  "review_required",
+    "summary":  {
+                    "permissionCount":  20,
+                    "attentionPermissionCount":  7,
+                    "apkCount":  2
+                },
+    "gates":  [
+                  {
+                      "name":  "permission review exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json"
+                  },
+                  {
+                      "name":  "permission review ok",
+                      "ok":  true,
+                      "detail":  "ok=True"
+                  },
+                  {
+                      "name":  "permissions discovered",
+                      "ok":  true,
+                      "detail":  "20 permission(s)"
+                  },
+                  {
+                      "name":  "all permissions have justification",
+                      "ok":  true,
+                      "detail":  "0 missing"
+                  },
+                  {
+                      "name":  "attention permissions have production actions",
+                      "ok":  true,
+                      "detail":  "0 missing"
+                  },
+                  {
+                      "name":  "APK permission sets consistent",
+                      "ok":  true,
+                      "detail":  "2 APK(s)"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "permissions":  [
+                        {
+                            "permission":  "android.permission.ACCESS_NETWORK_STATE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "network-state",
+                            "userBenefit":  "Detects network availability before starting proxy, profile refresh, or diagnostics work.",
+                            "productionAction":  "Keep; mention network-status use in privacy documentation.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.ACCESS_WIFI_STATE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "network-state",
+                            "userBenefit":  "Reads Wi-Fi state for connection display and network-aware routing behavior.",
+                            "productionAction":  "Keep only if UI or routing features still consume Wi-Fi state.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.CAMERA",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "dangerous",
+                            "category":  "runtime-sensitive",
+                            "userBenefit":  "Supports QR/profile scanning from the onboarding and profile import flows.",
+                            "productionAction":  "Gate behind an explicit user action and request at runtime with scanner copy.",
+                            "attentionReason":  "runtime sensitive permission; confirm scanner/onboarding flow",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.FOREGROUND_SERVICE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "foreground-service",
+                            "userBenefit":  "Keeps the proxy/VPN runtime visible and controllable while traffic handling is active.",
+                            "productionAction":  "Keep notification text accurate and user dismiss/stop controls obvious.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "foreground-service",
+                            "userBenefit":  "Covers foreground profile/data synchronization while the service is active.",
+                            "productionAction":  "Keep scoped to active user-visible sync work.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "special",
+                            "category":  "special-foreground-service",
+                            "userBenefit":  "Documents the special foreground service class needed by the proxy runtime mode.",
+                            "productionAction":  "Review Play/store-facing declaration before production release.",
+                            "attentionReason":  "special foreground service declaration; confirm store-facing explanation",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.INTERNET",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "network",
+                            "userBenefit":  "Allows profile fetch, proxy control, diagnostics, and web-based feature surfaces.",
+                            "productionAction":  "Keep; disclose network use and avoid sending private profile data unexpectedly.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.MANAGE_EXTERNAL_STORAGE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "special",
+                            "category":  "broad-storage",
+                            "userBenefit":  "Supports importing, exporting, and managing local configuration assets during study builds.",
+                            "productionAction":  "Reduce scope before store release or provide a specific user-facing all-files rationale.",
+                            "attentionReason":  "broad file access; production release needs explicit user-facing justification",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.POST_NOTIFICATIONS",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "dangerous",
+                            "category":  "runtime-sensitive",
+                            "userBenefit":  "Shows service status, traffic state, and important runtime notifications on modern Android.",
+                            "productionAction":  "Request at runtime and keep notification categories user-controllable.",
+                            "attentionReason":  "runtime notification permission on modern Android",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.PROCESS_OUTGOING_CALLS",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "restricted",
+                            "category":  "legacy-telephony",
+                            "userBenefit":  "Legacy compatibility surface inherited by the fork; no core study APK flow should depend on it.",
+                            "productionAction":  "Remove unless a tested, documented feature still requires it.",
+                            "attentionReason":  "legacy sensitive telephony permission; confirm compatibility need",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.QUERY_ALL_PACKAGES",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "special",
+                            "category":  "package-visibility",
+                            "userBenefit":  "Supports app selection, access control, and package-aware proxy routing views.",
+                            "productionAction":  "Minimize with package visibility queries when possible and document the user feature.",
+                            "attentionReason":  "broad package visibility; keep scoped and documented",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.READ_EXTERNAL_STORAGE",
+                            "maxSdkVersion":  "32",
+                            "sensitivity":  "dangerous",
+                            "category":  "legacy-storage",
+                            "userBenefit":  "Reads imported profile files on older Android versions.",
+                            "productionAction":  "Keep maxSdk scoped; prefer system picker on newer Android versions.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.RECEIVE_BOOT_COMPLETED",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "startup",
+                            "userBenefit":  "Allows user-enabled service restoration after reboot.",
+                            "productionAction":  "Keep behind explicit auto-start setting and respect disabled state.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.REQUEST_INSTALL_PACKAGES",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "special",
+                            "category":  "package-install",
+                            "userBenefit":  "Supports user-initiated local package/update flows in study builds.",
+                            "productionAction":  "Require user confirmation and remove if release distribution does not install packages.",
+                            "attentionReason":  "package install request permission; verify user-initiated flow",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.USE_BIOMETRIC",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "runtime-protected",
+                            "category":  "authentication",
+                            "userBenefit":  "Supports biometric lock or sensitive action confirmation.",
+                            "productionAction":  "Keep optional and provide fallback authentication.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.USE_FINGERPRINT",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "runtime-protected",
+                            "category":  "legacy-authentication",
+                            "userBenefit":  "Supports older devices that expose fingerprint APIs.",
+                            "productionAction":  "Keep only for compatibility; prefer USE_BIOMETRIC where available.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.VIBRATE",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "normal",
+                            "category":  "haptics",
+                            "userBenefit":  "Provides tactile feedback for switches, dialogs, and runtime controls.",
+                            "productionAction":  "Keep lightweight and respect system haptic settings.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "android.permission.WRITE_EXTERNAL_STORAGE",
+                            "maxSdkVersion":  "32",
+                            "sensitivity":  "dangerous",
+                            "category":  "legacy-storage",
+                            "userBenefit":  "Writes exported profile or diagnostic files on older Android versions.",
+                            "productionAction":  "Keep maxSdk scoped; prefer app-scoped storage or system picker.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "com.android.permission.GET_INSTALLED_APPS",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "vendor-special",
+                            "category":  "package-visibility",
+                            "userBenefit":  "Supports package-aware routing on Android distributions that expose this vendor permission.",
+                            "productionAction":  "Confirm device/vendor need and remove if redundant with Android package visibility APIs.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        },
+                        {
+                            "permission":  "com.github.yizuka17.yumebox.md3.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                            "maxSdkVersion":  "",
+                            "sensitivity":  "signature",
+                            "category":  "app-private",
+                            "userBenefit":  "Protects app-internal dynamic receiver traffic from other apps.",
+                            "productionAction":  "Keep as app-private protection for internal broadcast surfaces.",
+                            "attentionReason":  "",
+                            "presentInApks":  [
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                                                  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk"
+                                              ]
+                        }
+                    ],
+    "referenceBasis":  [
+                           "Android permission review should connect package metadata to user-facing reasons",
+                           "OWASP MASVS style mobile review separates installability from privacy and permission justification",
+                           "Special and dangerous permissions need release-time rationale before production distribution"
+                       ]
+}

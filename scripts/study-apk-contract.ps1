@@ -105,6 +105,8 @@ $requiredFiles = @(
     "docs\apk-installability-report-$Tag.json",
     "docs\apk-permission-review-$Tag.md",
     "docs\apk-permission-review-$Tag.json",
+    "docs\apk-permission-justification-$Tag.md",
+    "docs\apk-permission-justification-$Tag.json",
     "docs\release-asset-manifest-$Tag.md",
     "docs\release-asset-manifest-$Tag.json",
     "docs\release-provenance-$Tag.md",
@@ -115,6 +117,7 @@ $requiredFiles = @(
     "scripts\verify-installable-apk.ps1",
     "scripts\apk-installability-report.ps1",
     "scripts\apk-permission-review.ps1",
+    "scripts\apk-permission-justification.ps1",
     "scripts\release-asset-manifest.ps1",
     "scripts\release-provenance.ps1",
     "scripts\build-environment-report.ps1",
@@ -165,6 +168,15 @@ if (Test-Path -LiteralPath $permissionReviewPath) {
     Add-Check "permission review covers APKs" (@($permissionReview.apks).Count -ge 1) "$(@($permissionReview.apks).Count) APKs"
 }
 
+$permissionJustificationPath = Join-Path $ProjectRoot "docs\apk-permission-justification-$Tag.json"
+if (Test-Path -LiteralPath $permissionJustificationPath) {
+    $permissionJustification = Get-Content -LiteralPath $permissionJustificationPath -Raw | ConvertFrom-Json
+    Add-Check "permission justification ok flag" ([bool]$permissionJustification.ok) "ok=$($permissionJustification.ok)"
+    Add-Check "permission justification tag matches" ([string]$permissionJustification.tag -eq $Tag) "tag=$($permissionJustification.tag)"
+    Add-Check "permission justification covers permissions" ([int]$permissionJustification.summary.permissionCount -ge 10) "$($permissionJustification.summary.permissionCount) permission(s)"
+    Add-Check "permission justification has gates" (@($permissionJustification.gates).Count -ge 5) "$(@($permissionJustification.gates).Count) gates"
+}
+
 $assetManifestPath = Join-Path $ProjectRoot "docs\release-asset-manifest-$Tag.json"
 if (Test-Path -LiteralPath $assetManifestPath) {
     $assetManifest = Get-Content -LiteralPath $assetManifestPath -Raw | ConvertFrom-Json
@@ -181,6 +193,9 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
     Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
     Add-Check "release provenance APK subjects" (@($provenance.subject).Count -ge 2) "$(@($provenance.subject).Count) subject(s)"
+    $materialUris = @($provenance.predicate.materials | ForEach-Object { [string]$_.uri })
+    Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
+    Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
 }
 
 $buildEnvironmentPath = Join-Path $ProjectRoot "docs\build-environment-$Tag.json"
