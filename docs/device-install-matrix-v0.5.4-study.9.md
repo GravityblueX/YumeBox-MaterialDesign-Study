@@ -1,6 +1,6 @@
 ﻿# Device Install Matrix - v0.5.4-study.9
 
-Generated: 2026-06-24T10:16:13.6170423+08:00
+Generated: 2026-06-24T10:32:49.9601239+08:00
 Status: `no_devices`
 APK: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\app\build\outputs\apk\release\YumeBox Study-arm64-v8a-release.apk`
 ApplicationId: `com.github.yizuka17.yumebox.md3`

@@ -1,0 +1,271 @@
+﻿{
+    "reportType":  "yumebox_apk_permission_review",
+    "generatedAt":  "2026-06-24T10:32:47.9965115+08:00",
+    "tag":  "v0.5.4-study.9",
+    "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
+    "installabilityReport":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-installability-report-v0.5.4-study.9.json",
+    "installabilityOk":  true,
+    "ok":  true,
+    "status":  "review_required",
+    "referenceBasis":  [
+                           "Android app signing and package metadata checks prove installability, not production security",
+                           "OWASP MASVS style review separates permissions and privacy review from APK signature checks",
+                           "Runtime and special Android permissions require a user-facing justification before production release"
+                       ],
+    "apks":  [
+                 {
+                     "name":  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                     "packageName":  "com.github.yizuka17.yumebox.md3",
+                     "versionName":  "0.5.4-study.9",
+                     "versionCode":  "5409",
+                     "permissionCount":  20,
+                     "attentionCount":  7,
+                     "permissions":  [
+                                         {
+                                             "name":  "android.permission.ACCESS_NETWORK_STATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.ACCESS_WIFI_STATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.CAMERA",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.INTERNET",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.MANAGE_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.POST_NOTIFICATIONS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.PROCESS_OUTGOING_CALLS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.QUERY_ALL_PACKAGES",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.READ_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  "32"
+                                         },
+                                         {
+                                             "name":  "android.permission.RECEIVE_BOOT_COMPLETED",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.REQUEST_INSTALL_PACKAGES",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.USE_BIOMETRIC",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.USE_FINGERPRINT",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.VIBRATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.WRITE_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  "32"
+                                         },
+                                         {
+                                             "name":  "com.android.permission.GET_INSTALLED_APPS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "com.github.yizuka17.yumebox.md3.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                                             "maxSdkVersion":  ""
+                                         }
+                                     ],
+                     "attention":  [
+                                       {
+                                           "permission":  "android.permission.CAMERA",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "runtime sensitive permission; confirm scanner/onboarding flow"
+                                       },
+                                       {
+                                           "permission":  "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "special foreground service declaration; confirm store-facing explanation"
+                                       },
+                                       {
+                                           "permission":  "android.permission.MANAGE_EXTERNAL_STORAGE",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "broad file access; production release needs explicit user-facing justification"
+                                       },
+                                       {
+                                           "permission":  "android.permission.POST_NOTIFICATIONS",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "runtime notification permission on modern Android"
+                                       },
+                                       {
+                                           "permission":  "android.permission.PROCESS_OUTGOING_CALLS",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "legacy sensitive telephony permission; confirm compatibility need"
+                                       },
+                                       {
+                                           "permission":  "android.permission.QUERY_ALL_PACKAGES",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "broad package visibility; keep scoped and documented"
+                                       },
+                                       {
+                                           "permission":  "android.permission.REQUEST_INSTALL_PACKAGES",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "package install request permission; verify user-initiated flow"
+                                       }
+                                   ]
+                 },
+                 {
+                     "name":  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
+                     "packageName":  "com.github.yizuka17.yumebox.md3",
+                     "versionName":  "0.5.4-study.9",
+                     "versionCode":  "5409",
+                     "permissionCount":  20,
+                     "attentionCount":  7,
+                     "permissions":  [
+                                         {
+                                             "name":  "android.permission.ACCESS_NETWORK_STATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.ACCESS_WIFI_STATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.CAMERA",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.INTERNET",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.MANAGE_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.POST_NOTIFICATIONS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.PROCESS_OUTGOING_CALLS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.QUERY_ALL_PACKAGES",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.READ_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  "32"
+                                         },
+                                         {
+                                             "name":  "android.permission.RECEIVE_BOOT_COMPLETED",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.REQUEST_INSTALL_PACKAGES",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.USE_BIOMETRIC",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.USE_FINGERPRINT",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.VIBRATE",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "android.permission.WRITE_EXTERNAL_STORAGE",
+                                             "maxSdkVersion":  "32"
+                                         },
+                                         {
+                                             "name":  "com.android.permission.GET_INSTALLED_APPS",
+                                             "maxSdkVersion":  ""
+                                         },
+                                         {
+                                             "name":  "com.github.yizuka17.yumebox.md3.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                                             "maxSdkVersion":  ""
+                                         }
+                                     ],
+                     "attention":  [
+                                       {
+                                           "permission":  "android.permission.CAMERA",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "runtime sensitive permission; confirm scanner/onboarding flow"
+                                       },
+                                       {
+                                           "permission":  "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "special foreground service declaration; confirm store-facing explanation"
+                                       },
+                                       {
+                                           "permission":  "android.permission.MANAGE_EXTERNAL_STORAGE",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "broad file access; production release needs explicit user-facing justification"
+                                       },
+                                       {
+                                           "permission":  "android.permission.POST_NOTIFICATIONS",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "runtime notification permission on modern Android"
+                                       },
+                                       {
+                                           "permission":  "android.permission.PROCESS_OUTGOING_CALLS",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "legacy sensitive telephony permission; confirm compatibility need"
+                                       },
+                                       {
+                                           "permission":  "android.permission.QUERY_ALL_PACKAGES",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "broad package visibility; keep scoped and documented"
+                                       },
+                                       {
+                                           "permission":  "android.permission.REQUEST_INSTALL_PACKAGES",
+                                           "maxSdkVersion":  "",
+                                           "reason":  "package install request permission; verify user-initiated flow"
+                                       }
+                                   ]
+                 }
+             ]
+}

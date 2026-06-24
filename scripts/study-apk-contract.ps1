@@ -103,9 +103,12 @@ $requiredFiles = @(
     "docs\apk-release-assurance.md",
     "docs\apk-installability-report-$Tag.md",
     "docs\apk-installability-report-$Tag.json",
+    "docs\apk-permission-review-$Tag.md",
+    "docs\apk-permission-review-$Tag.json",
     "scripts\build-apk-strict.ps1",
     "scripts\verify-installable-apk.ps1",
     "scripts\apk-installability-report.ps1",
+    "scripts\apk-permission-review.ps1",
     "scripts\publish-apk-assets.ps1"
 )
 
@@ -142,6 +145,15 @@ if (Test-Path -LiteralPath $reportPath) {
         Add-Check "$prefix version metadata" ([string]$apk.badging.metadata.versionName -eq $versionName -and [string]$apk.badging.metadata.versionCode -eq $versionCode) "$($apk.badging.metadata.versionName)/$($apk.badging.metadata.versionCode)"
         Add-Check "$prefix ABI metadata" (@($apk.badging.metadata.nativeAbis) -contains "arm64-v8a") "$(@($apk.badging.metadata.nativeAbis) -join ',')"
     }
+}
+
+$permissionReviewPath = Join-Path $ProjectRoot "docs\apk-permission-review-$Tag.json"
+if (Test-Path -LiteralPath $permissionReviewPath) {
+    $permissionReview = Get-Content -LiteralPath $permissionReviewPath -Raw | ConvertFrom-Json
+    Add-Check "permission review ok flag" ([bool]$permissionReview.ok) "ok=$($permissionReview.ok)"
+    Add-Check "permission review tag matches" ([string]$permissionReview.tag -eq $Tag) "tag=$($permissionReview.tag)"
+    Add-Check "permission review status recorded" (-not [string]::IsNullOrWhiteSpace([string]$permissionReview.status)) "status=$($permissionReview.status)"
+    Add-Check "permission review covers APKs" (@($permissionReview.apks).Count -ge 1) "$(@($permissionReview.apks).Count) APKs"
 }
 
 $checkArray = @()

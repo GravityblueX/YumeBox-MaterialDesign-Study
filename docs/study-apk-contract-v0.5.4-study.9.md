@@ -1,6 +1,6 @@
 ﻿# Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-06-24T10:15:54.7899941+08:00
+Generated: 2026-06-24T10:32:48.9856223+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -18,9 +18,12 @@ Status: `OK`
 | required file docs\apk-release-assurance.md | OK | docs\apk-release-assurance.md |
 | required file docs\apk-installability-report-v0.5.4-study.9.md | OK | docs\apk-installability-report-v0.5.4-study.9.md |
 | required file docs\apk-installability-report-v0.5.4-study.9.json | OK | docs\apk-installability-report-v0.5.4-study.9.json |
+| required file docs\apk-permission-review-v0.5.4-study.9.md | OK | docs\apk-permission-review-v0.5.4-study.9.md |
+| required file docs\apk-permission-review-v0.5.4-study.9.json | OK | docs\apk-permission-review-v0.5.4-study.9.json |
 | required file scripts\build-apk-strict.ps1 | OK | scripts\build-apk-strict.ps1 |
 | required file scripts\verify-installable-apk.ps1 | OK | scripts\verify-installable-apk.ps1 |
 | required file scripts\apk-installability-report.ps1 | OK | scripts\apk-installability-report.ps1 |
+| required file scripts\apk-permission-review.ps1 | OK | scripts\apk-permission-review.ps1 |
 | required file scripts\publish-apk-assets.ps1 | OK | scripts\publish-apk-assets.ps1 |
 | README mentions tag | OK | v0.5.4-study.9 |
 | release flow mentions installability | OK | verify-installable-apk.ps1 |
@@ -44,4 +47,8 @@ Status: `OK`
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk package metadata | OK | com.github.yizuka17.yumebox.md3 |
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk version metadata | OK | 0.5.4-study.9/5409 |
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk ABI metadata | OK | arm64-v8a |
+| permission review ok flag | OK | ok=True |
+| permission review tag matches | OK | tag=v0.5.4-study.9 |
+| permission review status recorded | OK | status=review_required |
+| permission review covers APKs | OK | 2 APKs |
 

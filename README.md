@@ -22,6 +22,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'
 powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\device-install-matrix.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\apk-permission-review.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9
 powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.9
 ```
@@ -30,6 +31,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1
 By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `docs/study-apk-contract-<tag>.json`.
 
 `device-install-matrix.ps1` records the real-device layer above APK tooling checks. With connected owned or authorized Android devices it runs `adb install -r -t`; without devices it archives an explicit `no_devices` report instead of pretending a device install happened.
+
+`apk-permission-review.ps1` reads the archived installability report and creates `docs/apk-permission-review-<tag>.md/json`, separating installability from the Android permission and privacy review layer.
 
 `build-apk-strict.ps1` runs `zipalign`, `aapt dump badging`, and `apksigner verify` after the Gradle build. If the local study release build does not have a private release signing config, the script signs the APK with the local Android debug keystore and verifies it again so the resulting file is still installable for study/testing devices.
 
