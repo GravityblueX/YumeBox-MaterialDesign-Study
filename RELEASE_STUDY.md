@@ -15,11 +15,11 @@
 1. 更新 `gradle.properties`
    - `project.version.name`
    - `project.version.code`
-2. 准备 release notes，例如 `release-notes-v0.5.4-study.2.md`
+2. 准备 release notes，例如 `release-notes-v0.5.4-study.9.md`
 3. 提交代码并推送分支
 4. 创建并推送 tag
-   - `git tag v0.5.4-study.2`
-   - `git push origin v0.5.4-study.2`
+   - `git tag v0.5.4-study.9`
+   - `git push origin v0.5.4-study.9`
 5. 本地构建 APK
 
 ```powershell
@@ -32,7 +32,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleT
 6. 生成发版体检报告
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.4-study.8
+powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.4-study.9
 ```
 
 它会检查 `gradle.properties`、debug/release APK 文件、APK zipalign、manifest/badging、APK 签名、SHA-256、git 状态和 GitHub Release 资产。
@@ -40,11 +40,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.
 7. 验证 APK 下载后可被 Android 安装器识别
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\device-install-matrix.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.9
 powershell -ExecutionPolicy Bypass -File .\scripts\apk-permission-review.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\release-asset-manifest.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.8
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9
 ```
 
 `study-apk-contract.ps1` 是快速合同检查：读取 `gradle.properties` 和已归档的安装性 JSON 报告，确认版本、包名、ABI、GitHub digest、zipalign、badging 和签名证据一致。默认会归档 `docs\study-apk-contract-<tag>.md` 和 `docs\study-apk-contract-<tag>.json`。
@@ -53,41 +55,43 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -F
 
 `apk-permission-review.ps1` 是权限复核层：读取安装性报告里的 `aapt badging` 权限清单，列出需要人工说明的敏感或特殊权限，避免把“能安装”误写成“已完成生产安全审计”。
 
+`release-asset-manifest.ps1` 是发布资产账本层：读取 GitHub Release 资产、安装性报告和权限复核报告，确认 debug/release APK 的大小、SHA-256、GitHub digest、安装性证据和权限复核记录一致。
+
 有真机或模拟器连接时，可以追加 `-Install` 做真实安装验证：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.8 -Install
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9 -Install
 ```
 
 8. 生成可归档的 APK 安装性报告
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.8
+powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.9
 ```
 
 该脚本会从 GitHub Release 下载 APK，比较本地 SHA-256 与 GitHub Release asset digest，并输出 Markdown/JSON 双报告。默认报告路径：
 
 ```text
-docs\apk-installability-report-v0.5.4-study.8.md
-docs\apk-installability-report-v0.5.4-study.8.json
+docs\apk-installability-report-v0.5.4-study.9.md
+docs\apk-installability-report-v0.5.4-study.9.json
 ```
 
 9. 创建或更新 GitHub Release
 
 ```bash
-gh release create v0.5.4-study.2 --repo GravityblueX/YumeBox-MaterialDesign-Study --title "YumeBox Study v0.5.4-study.2" --notes-file release-notes-v0.5.4-study.2.md
+gh release create v0.5.4-study.9 --repo GravityblueX/YumeBox-MaterialDesign-Study --title "YumeBox Study v0.5.4-study.9" --notes-file release-notes-v0.5.4-study.9.md
 ```
 
 如果 Release 已存在，只上传 APK：
 
 ```bat
-scripts\upload-apk.bat v0.5.4-study.2
+scripts\upload-apk.bat v0.5.4-study.9
 ```
 
 推荐使用 PowerShell 发布脚本上传标准命名资产：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v0.5.4-study.8
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v0.5.4-study.9
 ```
 
 ## 产物与日志
@@ -98,6 +102,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v
 - 发版体检报告：`release-health-v*.md`
 - 安装就绪验证：`scripts\verify-installable-apk.ps1`
 - 可归档安装性报告：`docs\apk-installability-report-v*.md` 和 `docs\apk-installability-report-v*.json`
+- 发布资产账本：`docs\release-asset-manifest-v*.md` 和 `docs\release-asset-manifest-v*.json`
 
 ## 说明
 

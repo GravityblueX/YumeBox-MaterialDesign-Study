@@ -1,0 +1,236 @@
+﻿{
+    "reportType":  "yumebox_release_asset_manifest",
+    "generatedAt":  "2026-06-24T11:02:02.0837350+08:00",
+    "repo":  "GravityblueX/YumeBox-MaterialDesign-Study",
+    "tag":  "v0.5.4-study.9",
+    "release":  {
+                    "name":  "YumeBox Study v0.5.4-study.9",
+                    "tagName":  "v0.5.4-study.9",
+                    "isDraft":  false,
+                    "isPrerelease":  false,
+                    "publishedAt":  "2026-06-23T23:55:21Z"
+                },
+    "installabilityReport":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-installability-report-v0.5.4-study.9.json",
+    "permissionReview":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json",
+    "ok":  true,
+    "summary":  {
+                    "assetCount":  5,
+                    "apkAssetCount":  2,
+                    "debugApkCount":  1,
+                    "releaseApkCount":  1,
+                    "reportAssetCount":  3
+                },
+    "gates":  [
+                  {
+                      "name":  "installability report exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-installability-report-v0.5.4-study.9.json"
+                  },
+                  {
+                      "name":  "permission review exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json"
+                  },
+                  {
+                      "name":  "installability report ok",
+                      "ok":  true,
+                      "detail":  "ok=True"
+                  },
+                  {
+                      "name":  "installability tag matches",
+                      "ok":  true,
+                      "detail":  "tag=v0.5.4-study.9"
+                  },
+                  {
+                      "name":  "permission review ok",
+                      "ok":  true,
+                      "detail":  "ok=True"
+                  },
+                  {
+                      "name":  "permission review tag matches",
+                      "ok":  true,
+                      "detail":  "tag=v0.5.4-study.9"
+                  },
+                  {
+                      "name":  "release tag matches",
+                      "ok":  true,
+                      "detail":  "tag=v0.5.4-study.9"
+                  },
+                  {
+                      "name":  "release is not draft",
+                      "ok":  true,
+                      "detail":  "isDraft=False"
+                  },
+                  {
+                      "name":  "debug APK asset present",
+                      "ok":  true,
+                      "detail":  "1 debug APK asset(s)"
+                  },
+                  {
+                      "name":  "release APK asset present",
+                      "ok":  true,
+                      "detail":  "1 release APK asset(s)"
+                  },
+                  {
+                      "name":  "support reports uploaded",
+                      "ok":  true,
+                      "detail":  "3 report asset(s)"
+                  },
+                  {
+                      "name":  "release APK assets uploaded",
+                      "ok":  true,
+                      "detail":  "apkAssets=2"
+                  },
+                  {
+                      "name":  "all release APKs in installability report",
+                      "ok":  true,
+                      "detail":  "apkAssets=2"
+                  },
+                  {
+                      "name":  "all installability APKs in release",
+                      "ok":  true,
+                      "detail":  "reportApks=2"
+                  },
+                  {
+                      "name":  "APK asset digests match report",
+                      "ok":  true,
+                      "detail":  "apkAssets=2"
+                  },
+                  {
+                      "name":  "APK asset sizes match report",
+                      "ok":  true,
+                      "detail":  "apkAssets=2"
+                  },
+                  {
+                      "name":  "APK tooling checks passed",
+                      "ok":  true,
+                      "detail":  "zipalign/badging/signature/digest"
+                  },
+                  {
+                      "name":  "permission review covers APKs",
+                      "ok":  true,
+                      "detail":  "apkAssets=2"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "assets":  [
+                   {
+                       "name":  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                       "kind":  "debug-apk",
+                       "size":  60307760,
+                       "digest":  "sha256:9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80",
+                       "state":  "uploaded",
+                       "contentType":  "application/vnd.android.package-archive",
+                       "downloadCount":  11,
+                       "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+                       "installability":  {
+                                              "present":  true,
+                                              "sizeMatches":  true,
+                                              "digestMatches":  true,
+                                              "githubDigestMatches":  true,
+                                              "zipalignOk":  true,
+                                              "badgingOk":  true,
+                                              "signatureOk":  true,
+                                              "packageName":  "com.github.yizuka17.yumebox.md3",
+                                              "versionName":  "0.5.4-study.9",
+                                              "versionCode":  "5409",
+                                              "nativeAbis":  [
+                                                                 "arm64-v8a"
+                                                             ],
+                                              "signer":  "C=US, O=Android, CN=Android Debug"
+                                          },
+                       "permissionReview":  {
+                                                "present":  true,
+                                                "permissionCount":  20,
+                                                "attentionCount":  7
+                                            }
+                   },
+                   {
+                       "name":  "apk-installability-report-v0.5.4-study.9.json",
+                       "kind":  "installability-json",
+                       "size":  41956,
+                       "digest":  "sha256:826313061bbe42ac85cb073fa752814a612ffbe3c069222b93883700fd9e3b30",
+                       "state":  "uploaded",
+                       "contentType":  "application/json",
+                       "downloadCount":  0,
+                       "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/apk-installability-report-v0.5.4-study.9.json",
+                       "installability":  {
+                                              "present":  false
+                                          },
+                       "permissionReview":  {
+                                                "present":  false
+                                            }
+                   },
+                   {
+                       "name":  "apk-installability-report-v0.5.4-study.9.md",
+                       "kind":  "installability-md",
+                       "size":  1918,
+                       "digest":  "sha256:7e55e00320bbab608ca071a7451e5efc8bcebf01bd9386444d3d38800dbab14a",
+                       "state":  "uploaded",
+                       "contentType":  "application/octet-stream",
+                       "downloadCount":  0,
+                       "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/apk-installability-report-v0.5.4-study.9.md",
+                       "installability":  {
+                                              "present":  false
+                                          },
+                       "permissionReview":  {
+                                                "present":  false
+                                            }
+                   },
+                   {
+                       "name":  "YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
+                       "kind":  "release-apk",
+                       "size":  28193436,
+                       "digest":  "sha256:7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc",
+                       "state":  "uploaded",
+                       "contentType":  "application/vnd.android.package-archive",
+                       "downloadCount":  11,
+                       "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
+                       "installability":  {
+                                              "present":  true,
+                                              "sizeMatches":  true,
+                                              "digestMatches":  true,
+                                              "githubDigestMatches":  true,
+                                              "zipalignOk":  true,
+                                              "badgingOk":  true,
+                                              "signatureOk":  true,
+                                              "packageName":  "com.github.yizuka17.yumebox.md3",
+                                              "versionName":  "0.5.4-study.9",
+                                              "versionCode":  "5409",
+                                              "nativeAbis":  [
+                                                                 "arm64-v8a"
+                                                             ],
+                                              "signer":  "C=US, O=Android, CN=Android Debug"
+                                          },
+                       "permissionReview":  {
+                                                "present":  true,
+                                                "permissionCount":  20,
+                                                "attentionCount":  7
+                                            }
+                   },
+                   {
+                       "name":  "release-health-v0.5.4-study.9.md",
+                       "kind":  "release-health",
+                       "size":  2156,
+                       "digest":  "sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630",
+                       "state":  "uploaded",
+                       "contentType":  "application/octet-stream",
+                       "downloadCount":  0,
+                       "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md",
+                       "installability":  {
+                                              "present":  false
+                                          },
+                       "permissionReview":  {
+                                                "present":  false
+                                            }
+                   }
+               ],
+    "referenceBasis":  [
+                           "GitHub Release asset manifest",
+                           "APK supply-chain digest and size reconciliation",
+                           "Installability report remains the source of zipalign, badging, signature, and package metadata truth",
+                           "Permission review remains separate from installability and release asset presence"
+                       ]
+}

@@ -105,10 +105,13 @@ $requiredFiles = @(
     "docs\apk-installability-report-$Tag.json",
     "docs\apk-permission-review-$Tag.md",
     "docs\apk-permission-review-$Tag.json",
+    "docs\release-asset-manifest-$Tag.md",
+    "docs\release-asset-manifest-$Tag.json",
     "scripts\build-apk-strict.ps1",
     "scripts\verify-installable-apk.ps1",
     "scripts\apk-installability-report.ps1",
     "scripts\apk-permission-review.ps1",
+    "scripts\release-asset-manifest.ps1",
     "scripts\publish-apk-assets.ps1"
 )
 
@@ -154,6 +157,15 @@ if (Test-Path -LiteralPath $permissionReviewPath) {
     Add-Check "permission review tag matches" ([string]$permissionReview.tag -eq $Tag) "tag=$($permissionReview.tag)"
     Add-Check "permission review status recorded" (-not [string]::IsNullOrWhiteSpace([string]$permissionReview.status)) "status=$($permissionReview.status)"
     Add-Check "permission review covers APKs" (@($permissionReview.apks).Count -ge 1) "$(@($permissionReview.apks).Count) APKs"
+}
+
+$assetManifestPath = Join-Path $ProjectRoot "docs\release-asset-manifest-$Tag.json"
+if (Test-Path -LiteralPath $assetManifestPath) {
+    $assetManifest = Get-Content -LiteralPath $assetManifestPath -Raw | ConvertFrom-Json
+    Add-Check "release asset manifest ok flag" ([bool]$assetManifest.ok) "ok=$($assetManifest.ok)"
+    Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
+    Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
+    Add-Check "release asset manifest gates recorded" (@($assetManifest.gates).Count -ge 10) "$(@($assetManifest.gates).Count) gates"
 }
 
 $checkArray = @()

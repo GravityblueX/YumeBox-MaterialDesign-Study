@@ -1,6 +1,6 @@
 ﻿# APK Permission Review - v0.5.4-study.9
 
-Generated: 2026-06-24T10:32:47.9965115+08:00
+Generated: 2026-06-24T11:02:00.1720842+08:00
 Status: `review_required`
 Installability report: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\apk-installability-report-v0.5.4-study.9.json`
 
