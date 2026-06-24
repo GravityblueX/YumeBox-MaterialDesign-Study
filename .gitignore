@@ -21,6 +21,7 @@
 .idea/*
 !.idea/codeStyles/
 !.idea/copyright/
+.vscode/
 *.iml
 .navigation/
 captures/
