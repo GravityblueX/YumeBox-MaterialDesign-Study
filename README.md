@@ -26,6 +26,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\device-install-matrix.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\apk-permission-review.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\release-asset-manifest.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\release-provenance.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\build-environment-report.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 ```
 
@@ -39,6 +40,8 @@ By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `d
 `release-asset-manifest.ps1` reads GitHub Release assets plus the archived installability and permission reports, then creates `docs/release-asset-manifest-<tag>.md/json` with APK digest, size, debug/release channel, and tooling consistency checks.
 
 `release-provenance.ps1` creates `docs/release-provenance-<tag>.md/json`, linking downloadable APK subjects to SHA-256 digests, git source commit, release asset manifest, and study build metadata.
+
+`build-environment-report.ps1` creates `docs/build-environment-<tag>.md/json`, recording Java, Gradle wrapper, Android SDK, build-tools, app id, version, and ABI evidence for the study build.
 
 `build-apk-strict.ps1` runs `zipalign`, `aapt dump badging`, and `apksigner verify` after the Gradle build. If the local study release build does not have a private release signing config, the script signs the APK with the local Android debug keystore and verifies it again so the resulting file is still installable for study/testing devices.
 

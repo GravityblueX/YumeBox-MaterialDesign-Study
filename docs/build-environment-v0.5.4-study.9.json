@@ -1,0 +1,109 @@
+﻿{
+    "reportType":  "yumebox_build_environment",
+    "generatedAt":  "2026-06-24T11:38:21.4124893+08:00",
+    "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
+    "tag":  "v0.5.4-study.9",
+    "ok":  true,
+    "android":  {
+                    "sdkRoot":  "C:\\Users\\123\\AppData\\Local\\Android\\Sdk",
+                    "buildTools":  [
+                                       "34.0.0",
+                                       "35.0.0",
+                                       "36.0.0"
+                                   ],
+                    "selectedBuildTools":  "36.0.0"
+                },
+    "java":  {
+                 "exitCode":  1,
+                 "output":  [
+                                "openjdk version \"24.0.2\" 2025-07-15"
+                            ]
+             },
+    "gradle":  {
+                   "wrapper":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\gradlew.bat",
+                   "exitCode":  0,
+                   "output":  [
+                                  "",
+                                  "------------------------------------------------------------",
+                                  "Gradle 9.5.0-milestone-7",
+                                  "------------------------------------------------------------",
+                                  "",
+                                  "Build time:    2026-03-15 08:40:51 UTC",
+                                  "Revision:      812c56a2fbbd51caf1865e37dbfb8e169137ab13",
+                                  "",
+                                  "Kotlin:        2.3.10",
+                                  "Groovy:        4.0.29",
+                                  "Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024",
+                                  "Launcher JVM:  24.0.2 (Eclipse Adoptium 24.0.2+12)",
+                                  "Daemon JVM:    C:\\Program Files\\Eclipse Adoptium\\jdk-24.0.2.12-hotspot (no Daemon JVM specified, using current Java home)",
+                                  "OS:            Windows 11 10.0 amd64",
+                                  ""
+                              ]
+               },
+    "project":  {
+                    "applicationId":  "com.github.yizuka17.yumebox.md3",
+                    "versionName":  "0.5.4-study.9",
+                    "versionCode":  "5409",
+                    "abiList":  "arm64-v8a"
+                },
+    "gates":  [
+                  {
+                      "name":  "gradle.properties exists",
+                      "ok":  true,
+                      "detail":  "gradle.properties"
+                  },
+                  {
+                      "name":  "local.properties exists",
+                      "ok":  true,
+                      "detail":  "local.properties"
+                  },
+                  {
+                      "name":  "version name present",
+                      "ok":  true,
+                      "detail":  "0.5.4-study.9"
+                  },
+                  {
+                      "name":  "version code present",
+                      "ok":  true,
+                      "detail":  "5409"
+                  },
+                  {
+                      "name":  "application id present",
+                      "ok":  true,
+                      "detail":  "com.github.yizuka17.yumebox.md3"
+                  },
+                  {
+                      "name":  "Android SDK root exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\AppData\\Local\\Android\\Sdk"
+                  },
+                  {
+                      "name":  "Android build tools available",
+                      "ok":  true,
+                      "detail":  "36.0.0"
+                  },
+                  {
+                      "name":  "Gradle wrapper exists",
+                      "ok":  true,
+                      "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\gradlew.bat"
+                  },
+                  {
+                      "name":  "Gradle wrapper version readable",
+                      "ok":  true,
+                      "detail":  "exit=0"
+                  },
+                  {
+                      "name":  "Java version readable",
+                      "ok":  true,
+                      "detail":  "exit=1"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "referenceBasis":  [
+                           "Android app signing and package tooling require traceable SDK build tools",
+                           "Gradle wrapper version is part of reproducible local build evidence",
+                           "Build environment report complements APK digest and provenance reports"
+                       ]
+}

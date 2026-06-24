@@ -1,6 +1,6 @@
 ﻿# Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-06-24T11:23:20.5217107+08:00
+Generated: 2026-06-24T11:38:22.3297359+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -24,12 +24,15 @@ Status: `OK`
 | required file docs\release-asset-manifest-v0.5.4-study.9.json | OK | docs\release-asset-manifest-v0.5.4-study.9.json |
 | required file docs\release-provenance-v0.5.4-study.9.md | OK | docs\release-provenance-v0.5.4-study.9.md |
 | required file docs\release-provenance-v0.5.4-study.9.json | OK | docs\release-provenance-v0.5.4-study.9.json |
+| required file docs\build-environment-v0.5.4-study.9.md | OK | docs\build-environment-v0.5.4-study.9.md |
+| required file docs\build-environment-v0.5.4-study.9.json | OK | docs\build-environment-v0.5.4-study.9.json |
 | required file scripts\build-apk-strict.ps1 | OK | scripts\build-apk-strict.ps1 |
 | required file scripts\verify-installable-apk.ps1 | OK | scripts\verify-installable-apk.ps1 |
 | required file scripts\apk-installability-report.ps1 | OK | scripts\apk-installability-report.ps1 |
 | required file scripts\apk-permission-review.ps1 | OK | scripts\apk-permission-review.ps1 |
 | required file scripts\release-asset-manifest.ps1 | OK | scripts\release-asset-manifest.ps1 |
 | required file scripts\release-provenance.ps1 | OK | scripts\release-provenance.ps1 |
+| required file scripts\build-environment-report.ps1 | OK | scripts\build-environment-report.ps1 |
 | required file scripts\publish-apk-assets.ps1 | OK | scripts\publish-apk-assets.ps1 |
 | README mentions tag | OK | v0.5.4-study.9 |
 | release flow mentions installability | OK | verify-installable-apk.ps1 |
@@ -65,4 +68,8 @@ Status: `OK`
 | release provenance tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |
 | release provenance APK subjects | OK | 2 subject(s) |
+| build environment ok flag | OK | ok=True |
+| build environment tag matches | OK | tag=v0.5.4-study.9 |
+| build environment version matches gradle | OK | 0.5.4-study.9/5409 |
+| build environment build-tools recorded | OK | 36.0.0 |
 

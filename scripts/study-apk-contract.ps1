@@ -109,12 +109,15 @@ $requiredFiles = @(
     "docs\release-asset-manifest-$Tag.json",
     "docs\release-provenance-$Tag.md",
     "docs\release-provenance-$Tag.json",
+    "docs\build-environment-$Tag.md",
+    "docs\build-environment-$Tag.json",
     "scripts\build-apk-strict.ps1",
     "scripts\verify-installable-apk.ps1",
     "scripts\apk-installability-report.ps1",
     "scripts\apk-permission-review.ps1",
     "scripts\release-asset-manifest.ps1",
     "scripts\release-provenance.ps1",
+    "scripts\build-environment-report.ps1",
     "scripts\publish-apk-assets.ps1"
 )
 
@@ -178,6 +181,15 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
     Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
     Add-Check "release provenance APK subjects" (@($provenance.subject).Count -ge 2) "$(@($provenance.subject).Count) subject(s)"
+}
+
+$buildEnvironmentPath = Join-Path $ProjectRoot "docs\build-environment-$Tag.json"
+if (Test-Path -LiteralPath $buildEnvironmentPath) {
+    $buildEnvironment = Get-Content -LiteralPath $buildEnvironmentPath -Raw | ConvertFrom-Json
+    Add-Check "build environment ok flag" ([bool]$buildEnvironment.ok) "ok=$($buildEnvironment.ok)"
+    Add-Check "build environment tag matches" ([string]$buildEnvironment.tag -eq $Tag) "tag=$($buildEnvironment.tag)"
+    Add-Check "build environment version matches gradle" ([string]$buildEnvironment.project.versionName -eq $versionName -and [string]$buildEnvironment.project.versionCode -eq $versionCode) "$($buildEnvironment.project.versionName)/$($buildEnvironment.project.versionCode)"
+    Add-Check "build environment build-tools recorded" (-not [string]::IsNullOrWhiteSpace([string]$buildEnvironment.android.selectedBuildTools)) "$($buildEnvironment.android.selectedBuildTools)"
 }
 
 $checkArray = @()

@@ -45,6 +45,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\apk-permission-review.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\release-asset-manifest.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\release-provenance.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\build-environment-report.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9
@@ -59,6 +60,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -F
 `release-asset-manifest.ps1` 是发布资产账本层：读取 GitHub Release 资产、安装性报告和权限复核报告，确认 debug/release APK 的大小、SHA-256、GitHub digest、安装性证据和权限复核记录一致。
 
 `release-provenance.ps1` 是发布来源声明层：记录可下载 APK subject、SHA-256、git 源提交、发布资产账本和学习版构建元数据，方便以后追溯“这个 APK 从哪里来”。
+
+`build-environment-report.ps1` 是构建环境账本层：记录 Java、Gradle wrapper、Android SDK、build-tools、app id、版本和 ABI，让 APK 证据不只停留在产物层。
 
 有真机或模拟器连接时，可以追加 `-Install` 做真实安装验证：
 
@@ -107,6 +110,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v
 - 可归档安装性报告：`docs\apk-installability-report-v*.md` 和 `docs\apk-installability-report-v*.json`
 - 发布资产账本：`docs\release-asset-manifest-v*.md` 和 `docs\release-asset-manifest-v*.json`
 - 发布来源声明：`docs\release-provenance-v*.md` 和 `docs\release-provenance-v*.json`
+- 构建环境账本：`docs\build-environment-v*.md` 和 `docs\build-environment-v*.json`
 
 ## 说明
 
