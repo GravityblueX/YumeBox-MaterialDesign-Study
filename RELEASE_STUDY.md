@@ -40,9 +40,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.
 7. 验证 APK 下载后可被 Android 安装器识别
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.8
 ```
+
+`study-apk-contract.ps1` 是快速合同检查：读取 `gradle.properties` 和已归档的安装性 JSON 报告，确认版本、包名、ABI、GitHub digest、zipalign、badging 和签名证据一致。
 
 有真机或模拟器连接时，可以追加 `-Install` 做真实安装验证：
 

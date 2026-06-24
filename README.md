@@ -20,9 +20,12 @@ The release flow verifies that the APK can be recognized by the standard Android
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleTask ':app:assembleRelease' -LogName 'build-apk-release-strict.log'
+powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9
 powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1 -Tag v0.5.4-study.9
 ```
+
+`study-apk-contract.ps1` is the fast local contract check for an already archived study release. It compares `gradle.properties` with the installability JSON report and verifies the recorded APK digest, `zipalign`, `aapt badging`, signing, package id, version, and ABI evidence.
 
 `build-apk-strict.ps1` runs `zipalign`, `aapt dump badging`, and `apksigner verify` after the Gradle build. If the local study release build does not have a private release signing config, the script signs the APK with the local Android debug keystore and verifies it again so the resulting file is still installable for study/testing devices.
 
