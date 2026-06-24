@@ -26,6 +26,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apk-installability-report.ps1
 ```
 
 `study-apk-contract.ps1` is the fast local contract check for an already archived study release. It compares `gradle.properties` with the installability JSON report and verifies the recorded APK digest, `zipalign`, `aapt badging`, signing, package id, version, and ABI evidence.
+By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `docs/study-apk-contract-<tag>.json`.
 
 `build-apk-strict.ps1` runs `zipalign`, `aapt dump badging`, and `apksigner verify` after the Gradle build. If the local study release build does not have a private release signing config, the script signs the APK with the local Android debug keystore and verifies it again so the resulting file is still installable for study/testing devices.
 

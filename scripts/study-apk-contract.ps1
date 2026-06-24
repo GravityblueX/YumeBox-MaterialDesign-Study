@@ -1,6 +1,8 @@
 param(
     [string]$Tag = "",
-    [switch]$Json
+    [switch]$Json,
+    [string]$JsonOut = "",
+    [string]$MarkdownOut = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -47,6 +49,30 @@ function Test-FileContains {
     }
     $content = Get-Content -LiteralPath $Path -Raw
     return $content.Contains($Needle)
+}
+
+function Convert-ToMarkdown {
+    param($Payload)
+    $status = if ($Payload.ok) { "OK" } else { "FAIL" }
+    $lines = New-Object System.Collections.Generic.List[string]
+    $lines.Add("# Study APK Contract - $($Payload.tag)")
+    $lines.Add("")
+    $lines.Add("Generated: $($Payload.generatedAt)")
+    $lines.Add("ProjectRoot: ``$($Payload.projectRoot)``")
+    $lines.Add("Status: ``$status``")
+    $lines.Add("")
+    $lines.Add("## Checks")
+    $lines.Add("")
+    $lines.Add("| Check | Result | Detail |")
+    $lines.Add("|---|---|---|")
+    foreach ($check in $Payload.checks) {
+        $result = if ($check.ok) { "OK" } else { "FAIL" }
+        $detail = [string]$check.detail
+        $detail = $detail.Replace("|", "\|")
+        $lines.Add("| $($check.name) | $result | $detail |")
+    }
+    $lines.Add("")
+    return ($lines -join "`n")
 }
 
 $gradlePath = Join-Path $ProjectRoot "gradle.properties"
@@ -133,6 +159,24 @@ $payload = New-Object psobject -Property ([ordered]@{
     failures = @($failed)
 })
 
+if ([string]::IsNullOrWhiteSpace($JsonOut)) {
+    $JsonOut = Join-Path $ProjectRoot "docs\study-apk-contract-$Tag.json"
+}
+if ([string]::IsNullOrWhiteSpace($MarkdownOut)) {
+    $MarkdownOut = Join-Path $ProjectRoot "docs\study-apk-contract-$Tag.md"
+}
+
+if ($JsonOut) {
+    $jsonParent = Split-Path -Parent $JsonOut
+    if ($jsonParent) { New-Item -ItemType Directory -Force -Path $jsonParent | Out-Null }
+    $payload | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
+}
+if ($MarkdownOut) {
+    $markdownParent = Split-Path -Parent $MarkdownOut
+    if ($markdownParent) { New-Item -ItemType Directory -Force -Path $markdownParent | Out-Null }
+    Convert-ToMarkdown -Payload $payload | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
+}
+
 if ($Json) {
     $payload | ConvertTo-Json -Depth 8
 } else {
@@ -143,6 +187,8 @@ if ($Json) {
         $status = if ($check.ok) { "OK" } else { "FAIL" }
         Write-Host ("{0} {1} - {2}" -f $status, $check.name, $check.detail)
     }
+    Write-Host "JsonOut=$JsonOut"
+    Write-Host "MarkdownOut=$MarkdownOut"
 }
 
 if ($failed.Count -gt 0) {
