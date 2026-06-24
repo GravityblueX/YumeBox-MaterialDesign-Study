@@ -107,11 +107,14 @@ $requiredFiles = @(
     "docs\apk-permission-review-$Tag.json",
     "docs\release-asset-manifest-$Tag.md",
     "docs\release-asset-manifest-$Tag.json",
+    "docs\release-provenance-$Tag.md",
+    "docs\release-provenance-$Tag.json",
     "scripts\build-apk-strict.ps1",
     "scripts\verify-installable-apk.ps1",
     "scripts\apk-installability-report.ps1",
     "scripts\apk-permission-review.ps1",
     "scripts\release-asset-manifest.ps1",
+    "scripts\release-provenance.ps1",
     "scripts\publish-apk-assets.ps1"
 )
 
@@ -166,6 +169,15 @@ if (Test-Path -LiteralPath $assetManifestPath) {
     Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
     Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
     Add-Check "release asset manifest gates recorded" (@($assetManifest.gates).Count -ge 10) "$(@($assetManifest.gates).Count) gates"
+}
+
+$provenancePath = Join-Path $ProjectRoot "docs\release-provenance-$Tag.json"
+if (Test-Path -LiteralPath $provenancePath) {
+    $provenance = Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
+    Add-Check "release provenance ok flag" ([bool]$provenance.ok) "ok=$($provenance.ok)"
+    Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
+    Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
+    Add-Check "release provenance APK subjects" (@($provenance.subject).Count -ge 2) "$(@($provenance.subject).Count) subject(s)"
 }
 
 $checkArray = @()

@@ -1,6 +1,6 @@
 ﻿# Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-06-24T11:02:03.0412081+08:00
+Generated: 2026-06-24T11:23:20.5217107+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -22,11 +22,14 @@ Status: `OK`
 | required file docs\apk-permission-review-v0.5.4-study.9.json | OK | docs\apk-permission-review-v0.5.4-study.9.json |
 | required file docs\release-asset-manifest-v0.5.4-study.9.md | OK | docs\release-asset-manifest-v0.5.4-study.9.md |
 | required file docs\release-asset-manifest-v0.5.4-study.9.json | OK | docs\release-asset-manifest-v0.5.4-study.9.json |
+| required file docs\release-provenance-v0.5.4-study.9.md | OK | docs\release-provenance-v0.5.4-study.9.md |
+| required file docs\release-provenance-v0.5.4-study.9.json | OK | docs\release-provenance-v0.5.4-study.9.json |
 | required file scripts\build-apk-strict.ps1 | OK | scripts\build-apk-strict.ps1 |
 | required file scripts\verify-installable-apk.ps1 | OK | scripts\verify-installable-apk.ps1 |
 | required file scripts\apk-installability-report.ps1 | OK | scripts\apk-installability-report.ps1 |
 | required file scripts\apk-permission-review.ps1 | OK | scripts\apk-permission-review.ps1 |
 | required file scripts\release-asset-manifest.ps1 | OK | scripts\release-asset-manifest.ps1 |
+| required file scripts\release-provenance.ps1 | OK | scripts\release-provenance.ps1 |
 | required file scripts\publish-apk-assets.ps1 | OK | scripts\publish-apk-assets.ps1 |
 | README mentions tag | OK | v0.5.4-study.9 |
 | release flow mentions installability | OK | verify-installable-apk.ps1 |
@@ -58,4 +61,8 @@ Status: `OK`
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
 | release asset manifest gates recorded | OK | 18 gates |
+| release provenance ok flag | OK | ok=True |
+| release provenance tag matches | OK | tag=v0.5.4-study.9 |
+| release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |
+| release provenance APK subjects | OK | 2 subject(s) |
 

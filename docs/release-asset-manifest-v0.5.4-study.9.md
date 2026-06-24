@@ -1,6 +1,6 @@
 ﻿# Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-06-24T11:02:02.0837350+08:00
+Generated: 2026-06-24T11:22:24.5336925+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
 Published: 2026-06-23T23:55:21Z

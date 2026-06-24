@@ -1,6 +1,6 @@
 ﻿{
     "reportType":  "study_apk_contract",
-    "generatedAt":  "2026-06-24T11:02:03.0412081+08:00",
+    "generatedAt":  "2026-06-24T11:23:20.5217107+08:00",
     "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
     "tag":  "v0.5.4-study.9",
     "ok":  true,
@@ -76,6 +76,16 @@
                        "detail":  "docs\\release-asset-manifest-v0.5.4-study.9.json"
                    },
                    {
+                       "name":  "required file docs\\release-provenance-v0.5.4-study.9.md",
+                       "ok":  true,
+                       "detail":  "docs\\release-provenance-v0.5.4-study.9.md"
+                   },
+                   {
+                       "name":  "required file docs\\release-provenance-v0.5.4-study.9.json",
+                       "ok":  true,
+                       "detail":  "docs\\release-provenance-v0.5.4-study.9.json"
+                   },
+                   {
                        "name":  "required file scripts\\build-apk-strict.ps1",
                        "ok":  true,
                        "detail":  "scripts\\build-apk-strict.ps1"
@@ -99,6 +109,11 @@
                        "name":  "required file scripts\\release-asset-manifest.ps1",
                        "ok":  true,
                        "detail":  "scripts\\release-asset-manifest.ps1"
+                   },
+                   {
+                       "name":  "required file scripts\\release-provenance.ps1",
+                       "ok":  true,
+                       "detail":  "scripts\\release-provenance.ps1"
                    },
                    {
                        "name":  "required file scripts\\publish-apk-assets.ps1",
@@ -254,6 +269,26 @@
                        "name":  "release asset manifest gates recorded",
                        "ok":  true,
                        "detail":  "18 gates"
+                   },
+                   {
+                       "name":  "release provenance ok flag",
+                       "ok":  true,
+                       "detail":  "ok=True"
+                   },
+                   {
+                       "name":  "release provenance tag matches",
+                       "ok":  true,
+                       "detail":  "tag=v0.5.4-study.9"
+                   },
+                   {
+                       "name":  "release provenance predicate recorded",
+                       "ok":  true,
+                       "detail":  "https://slsa.dev/provenance/v1"
+                   },
+                   {
+                       "name":  "release provenance APK subjects",
+                       "ok":  true,
+                       "detail":  "2 subject(s)"
                    }
                ],
     "failures":  [
