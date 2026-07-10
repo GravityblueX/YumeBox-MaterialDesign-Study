@@ -58,9 +58,25 @@ function Get-AssetKind {
 }
 
 function Escape-Md {
-    param([string]$Value)
+    param([object]$Value)
     if ($null -eq $Value) { return "" }
-    return $Value.Replace("|", "\|")
+    return ([string]$Value).
+        Replace("`r`n", "<br>").
+        Replace("`n", "<br>").Replace("`r", "<br>").
+        Replace("|", "\|")
+}
+
+function Format-MdCodeSpan {
+    param([object]$Value)
+    $text = Escape-Md -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
 }
 
 $props = Read-PropertiesFile -Path (Join-Path $ProjectRoot "gradle.properties")
@@ -222,14 +238,17 @@ New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Ou
 $payload | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
 
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
+$repoCode = Format-MdCodeSpan -Value $Repo
+$releaseNameCode = Format-MdCodeSpan -Value $payload.release.name
+$statusCode = Format-MdCodeSpan -Value $status
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add("# Release Asset Manifest - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Repo: ``$Repo``")
-$lines.Add("Release: ``$($payload.release.name)``")
+$lines.Add("Repo: $repoCode")
+$lines.Add("Release: $releaseNameCode")
 $lines.Add("Published: $($payload.release.publishedAt)")
-$lines.Add("Status: ``$status``")
+$lines.Add("Status: $statusCode")
 $lines.Add("")
 $lines.Add("## Summary")
 $lines.Add("")
@@ -265,7 +284,12 @@ foreach ($asset in @($payload.assets | Where-Object { $_.kind -in @("debug-apk",
     } else {
         "missing review"
     }
-    $lines.Add("| ``$(Escape-Md $asset.name)`` | $($asset.kind) | $($asset.size) | ``$(Normalize-Digest $asset.digest)`` | $(Escape-Md $tooling) | $(Escape-Md $permissions) |")
+    $assetName = Format-MdCodeSpan -Value $asset.name
+    $assetKind = Escape-Md -Value $asset.kind
+    $assetDigest = Format-MdCodeSpan -Value (Normalize-Digest $asset.digest)
+    $toolingCell = Escape-Md -Value $tooling
+    $permissionsCell = Escape-Md -Value $permissions
+    $lines.Add("| $assetName | $assetKind | $($asset.size) | $assetDigest | $toolingCell | $permissionsCell |")
 }
 $lines.Add("")
 $lines.Add("## Supporting Assets")
@@ -273,7 +297,10 @@ $lines.Add("")
 $lines.Add("| Asset | Kind | Size | Digest |")
 $lines.Add("|---|---|---:|---|")
 foreach ($asset in @($payload.assets | Where-Object { $_.kind -notin @("debug-apk", "release-apk", "apk") })) {
-    $lines.Add("| ``$(Escape-Md $asset.name)`` | $($asset.kind) | $($asset.size) | ``$($asset.digest)`` |")
+    $assetName = Format-MdCodeSpan -Value $asset.name
+    $assetKind = Escape-Md -Value $asset.kind
+    $assetDigest = Format-MdCodeSpan -Value $asset.digest
+    $lines.Add("| $assetName | $assetKind | $($asset.size) | $assetDigest |")
 }
 $lines.Add("")
 $lines.Add("## Boundary")

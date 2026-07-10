@@ -118,6 +118,29 @@ function Ensure-ParentDirectory {
     }
 }
 
+function Escape-MarkdownTableCell {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ''
+    }
+    return ([string]$Value).
+        Replace("`r`n", '<br>').Replace("`n", '<br>').Replace("`r", '<br>').
+        Replace('|', '\|')
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownTableCell -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return '' }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
 function Parse-Badging {
     param([string[]]$Output)
     $packageLine = $Output | Where-Object { $_ -match '^package:' } | Select-Object -First 1
@@ -165,14 +188,17 @@ function Parse-Signature {
 
 function New-MarkdownReport {
     param([hashtable]$Report)
+    $repoCode = Format-MarkdownCodeSpan -Value $Report.repo
+    $androidSdkRootCode = Format-MarkdownCodeSpan -Value $Report.androidSdkRoot
+    $buildToolsDirCode = Format-MarkdownCodeSpan -Value $Report.buildToolsDir
     $lines = @(
         "# APK Installability Report - $($Report.tag)",
         '',
         "Generated: $($Report.generatedAt)",
-        "Repository: ``$($Report.repo)``",
+        "Repository: $repoCode",
         "Release: $($Report.releaseUrl)",
-        "Android SDK: ``$($Report.androidSdkRoot)``",
-        "Build tools: ``$($Report.buildToolsDir)``",
+        "Android SDK: $androidSdkRootCode",
+        "Build tools: $buildToolsDirCode",
         '',
         '## Result',
         '',
@@ -187,7 +213,13 @@ function New-MarkdownReport {
     foreach ($apk in $Report.apks) {
         $digestMatch = if ($null -eq $apk.githubDigestMatches) { 'n/a' } elseif ($apk.githubDigestMatches) { 'OK' } else { 'FAIL' }
         $signature = if ($apk.signature.ok) { "OK (v2=$($apk.signature.v2), v3=$($apk.signature.v3))" } else { 'FAIL' }
-        $lines += "| ``$($apk.name)`` | $(Format-Bytes -Bytes ([int64]$apk.size)) | ``$($apk.sha256)`` | ``$($apk.githubDigest)`` | $digestMatch | $($apk.zipalign.status) | $($apk.badging.status) | $signature |"
+        $apkName = Format-MarkdownCodeSpan -Value $apk.name
+        $sha256 = Format-MarkdownCodeSpan -Value $apk.sha256
+        $githubDigest = Format-MarkdownCodeSpan -Value $apk.githubDigest
+        $zipalignStatus = Escape-MarkdownTableCell -Value $apk.zipalign.status
+        $badgingStatus = Escape-MarkdownTableCell -Value $apk.badging.status
+        $signatureStatus = Escape-MarkdownTableCell -Value $signature
+        $lines += "| $apkName | $(Format-Bytes -Bytes ([int64]$apk.size)) | $sha256 | $githubDigest | $digestMatch | $zipalignStatus | $badgingStatus | $signatureStatus |"
     }
 
     $lines += @(
@@ -203,7 +235,13 @@ function New-MarkdownReport {
         $version = "$($metadata.versionName) / $($metadata.versionCode)"
         $sdk = "min $($metadata.minSdkVersion), target $($metadata.targetSdkVersion), compile $($metadata.compileSdkVersion)"
         $abis = ($metadata.nativeAbis -join ', ')
-        $lines += "| ``$($apk.name)`` | ``$($metadata.packageName)`` | ``$version`` | $sdk | $($metadata.applicationLabel) | ``$abis`` |"
+        $apkName = Format-MarkdownCodeSpan -Value $apk.name
+        $packageName = Format-MarkdownCodeSpan -Value $metadata.packageName
+        $versionCell = Format-MarkdownCodeSpan -Value $version
+        $sdkCell = Escape-MarkdownTableCell -Value $sdk
+        $label = Escape-MarkdownTableCell -Value $metadata.applicationLabel
+        $abiCell = Format-MarkdownCodeSpan -Value $abis
+        $lines += "| $apkName | $packageName | $versionCell | $sdkCell | $label | $abiCell |"
     }
 
     $lines += @(

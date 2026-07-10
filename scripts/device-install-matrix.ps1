@@ -21,6 +21,51 @@ function Read-PropertiesFile {
     return $props
 }
 
+function Escape-MarkdownInline {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", " ").Replace("`n", " ").Replace("`r", " ")
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownInline -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
+function Invoke-NativeText {
+    param(
+        [string]$Command,
+        [string[]]$CommandArgs = @()
+    )
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $script:ErrorActionPreference = "Continue"
+        $output = & $Command @CommandArgs 2>&1
+        return [pscustomobject]@{
+            exitCode = $LASTEXITCODE
+            output = @($output | ForEach-Object { [string]$_ })
+        }
+    } catch {
+        return [pscustomobject]@{
+            exitCode = 1
+            output = @([string]$_.Exception.Message)
+        }
+    } finally {
+        $script:ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
 function Find-Adb {
     $candidates = @()
     if ($env:ANDROID_HOME) { $candidates += (Join-Path $env:ANDROID_HOME "platform-tools\adb.exe") }
@@ -64,11 +109,15 @@ $results = @()
 $failures = @()
 
 if (-not [string]::IsNullOrWhiteSpace($adb)) {
-    $rawDevices = & $adb devices 2>&1
-    foreach ($line in $rawDevices) {
-        if ($line -match "^([^\s]+)\s+device$") {
-            $devices += $matches[1]
+    $adbDevices = Invoke-NativeText -Command $adb -CommandArgs @("devices")
+    if ($adbDevices.exitCode -eq 0) {
+        foreach ($line in @($adbDevices.output)) {
+            if ($line -match "^([^\s]+)\s+device$") {
+                $devices += $matches[1]
+            }
         }
+    } else {
+        $failures += "adb devices failed: $(@($adbDevices.output) -join '; ')"
     }
 }
 
@@ -84,14 +133,14 @@ if ($RequireDevice -and $devices.Count -eq 0) {
 
 if ($apkExists -and -not [string]::IsNullOrWhiteSpace($adb)) {
     foreach ($device in $devices) {
-        $installOutput = & $adb -s $device install -r -t $ApkPath 2>&1
-        $ok = ($LASTEXITCODE -eq 0) -and (($installOutput -join "`n") -match "Success")
+        $install = Invoke-NativeText -Command $adb -CommandArgs @("-s", $device, "install", "-r", "-t", $ApkPath)
+        $ok = ($install.exitCode -eq 0) -and ((@($install.output) -join "`n") -match "Success")
         if (-not $ok) { $failures += "install failed on $device" }
         $results += [pscustomobject]@{
             serial = $device
             ok = $ok
             command = "adb -s $device install -r -t <apk>"
-            output = ($installOutput -join "`n")
+            output = (@($install.output) -join "`n")
         }
     }
 }
@@ -121,13 +170,21 @@ New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Ou
 $payload | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
 
 $lines = New-Object System.Collections.Generic.List[string]
+$safeStatus = Escape-MarkdownInline -Value $payload.status
+$safeApkPath = Escape-MarkdownInline -Value $ApkPath
+$safeApplicationId = Escape-MarkdownInline -Value $applicationId
+$safeVersion = Escape-MarkdownInline -Value "$versionName / $versionCode"
+$statusCode = Format-MarkdownCodeSpan -Value $safeStatus
+$apkPathCode = Format-MarkdownCodeSpan -Value $safeApkPath
+$applicationIdCode = Format-MarkdownCodeSpan -Value $safeApplicationId
+$versionCodeSpan = Format-MarkdownCodeSpan -Value $safeVersion
 $lines.Add("# Device Install Matrix - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Status: ``$($payload.status)``")
-$lines.Add("APK: ``$ApkPath``")
-$lines.Add("ApplicationId: ``$applicationId``")
-$lines.Add("Version: ``$versionName / $versionCode``")
+$lines.Add("Status: $statusCode")
+$lines.Add("APK: $apkPathCode")
+$lines.Add("ApplicationId: $applicationIdCode")
+$lines.Add("Version: $versionCodeSpan")
 $lines.Add("")
 $lines.Add("## Devices")
 $lines.Add("")
@@ -136,14 +193,16 @@ if ($devices.Count -eq 0) {
 } else {
     foreach ($result in $results) {
         $resultStatus = if ($result.ok) { "OK" } else { "FAIL" }
-        $lines.Add("- ``$($result.serial)``: $resultStatus")
+        $safeSerial = Escape-MarkdownInline -Value $result.serial
+        $serialCode = Format-MarkdownCodeSpan -Value $safeSerial
+        $lines.Add("- $($serialCode): $resultStatus")
     }
 }
 $lines.Add("")
 $lines.Add("## Notes")
 $lines.Add("")
 $lines.Add("- This report is the real-device layer above zipalign, badging, signature, and digest checks.")
-$lines.Add("- Use `-RequireDevice` in a release gate when a connected owned or authorized device is expected.")
+$lines.Add('- Use `-RequireDevice` in a release gate when a connected owned or authorized device is expected.')
 $lines.Add("- No APK file is committed by this report.")
 ($lines -join "`n") | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
 

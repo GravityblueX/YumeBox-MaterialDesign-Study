@@ -45,6 +45,8 @@ By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `d
 
 `build-apk-strict.ps1` runs `zipalign`, `aapt dump badging`, and `apksigner verify` after the Gradle build. If the local study release build does not have a private release signing config, the script signs the APK with the local Android debug keystore and verifies it again so the resulting file is still installable for study/testing devices.
 
+`build-apk-strict.ps1` also checks both the project drive and Gradle cache drive before building. Use `-GradleUserHome <path>` to move the cache and `-MinGradleDriveFreeGb <n>` when a local study machine needs a different free-space threshold.
+
 With a connected Android device or emulator, run the same installability check with `-Install` to perform a real package-manager install:
 
 ```powershell

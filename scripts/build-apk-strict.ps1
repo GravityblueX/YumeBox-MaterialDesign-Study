@@ -8,6 +8,7 @@ param(
     [string]$GradleJvmArgs = '-Xmx2g -XX:MaxMetaspaceSize=768m -XX:+UseG1GC -Dfile.encoding=UTF-8',
     [string]$KotlinDaemonJvmArgs = '-Xmx1024m -XX:+UseG1GC',
     [int]$MinProjectDriveFreeGb = 8,
+    [int]$MinGradleDriveFreeGb = 8,
     [string]$AndroidSdkRoot = '',
     [switch]$SkipApkVerify,
     [switch]$DisableDebugSigningFallback
@@ -19,6 +20,14 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
 }
 Set-Location $ProjectRoot
 
+$ambientJavaHome = $env:JAVA_HOME
+if (-not $PSBoundParameters.ContainsKey('JavaHome') -and
+    -not (Test-Path -LiteralPath (Join-Path $JavaHome 'bin\java.exe')) -and
+    -not [string]::IsNullOrWhiteSpace($ambientJavaHome) -and
+    (Test-Path -LiteralPath (Join-Path $ambientJavaHome 'bin\java.exe'))) {
+    $JavaHome = $ambientJavaHome
+}
+
 $logPath = Join-Path $ProjectRoot $LogName
 if (Test-Path $logPath) {
     Remove-Item $logPath -Force
@@ -26,6 +35,10 @@ if (Test-Path $logPath) {
 
 $env:JAVA_HOME = $JavaHome
 $env:Path = "$JavaHome\bin;$env:Path"
+if (-not (Test-Path -LiteralPath (Join-Path $env:JAVA_HOME 'bin\java.exe'))) {
+    throw "Cannot find java.exe under JAVA_HOME=$env:JAVA_HOME. Pass -JavaHome or set JAVA_HOME to a JDK installation."
+}
+
 $env:GRADLE_USER_HOME = $GradleUserHome
 $env:HTTP_PROXY = $ProxyUrl
 $env:HTTPS_PROXY = $ProxyUrl
@@ -33,6 +46,7 @@ $env:ALL_PROXY = $ProxyUrl
 $env:NO_PROXY = 'localhost,127.0.0.1'
 $env:GRADLE_OPTS = '-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dfile.encoding=UTF-8'
 $env:JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+New-Item -ItemType Directory -Force -Path $env:GRADLE_USER_HOME | Out-Null
 $gradlePropertyArgs = @(
     ('-Dorg.gradle.jvmargs={0}' -f $GradleJvmArgs),
     '-Dorg.gradle.daemon=false',
@@ -214,6 +228,18 @@ function Sign-ApkWithDebugKeystore {
     }
 }
 
+function Get-ApkNamePatternForGradleTask {
+    param([string]$Task)
+    $normalized = $Task.ToLowerInvariant()
+    if ($normalized.Contains('release')) {
+        return '*-release.apk'
+    }
+    if ($normalized.Contains('debug')) {
+        return '*-debug.apk'
+    }
+    return '*.apk'
+}
+
 Write-LogLine ('=== YumeBox Study strict APK build ===')
 Write-LogLine ("Time: {0}" -f (Get-Date -Format o))
 Write-LogLine ("ProjectRoot={0}" -f $ProjectRoot)
@@ -232,6 +258,11 @@ if ($projectDriveFreeBytes -lt ($MinProjectDriveFreeGb * 1GB)) {
     Write-LogLine ("ERROR: {0}" -f $message)
     throw $message
 }
+if ($gradleDriveFreeBytes -lt ($MinGradleDriveFreeGb * 1GB)) {
+    $message = "Gradle cache drive is too full for Android packaging. Free at least $MinGradleDriveFreeGb GB on the Gradle cache drive or pass -GradleUserHome on a drive with more space."
+    Write-LogLine ("ERROR: {0}" -f $message)
+    throw $message
+}
 
 cmd /c "java -version 2>&1" | Tee-Object -FilePath $logPath -Append
 cmd /c "javac -version 2>&1" | Tee-Object -FilePath $logPath -Append
@@ -247,7 +278,11 @@ $code = $LASTEXITCODE
 Write-LogLine ("=== Gradle exit code: {0} ===" -f $code)
 
 Write-LogLine '=== APK search ==='
-$builtApks = @(Get-ChildItem (Join-Path $ProjectRoot 'app\build\outputs') -Recurse -Filter *.apk -ErrorAction SilentlyContinue | Sort-Object FullName)
+$apkNamePattern = Get-ApkNamePatternForGradleTask -Task $GradleTask
+Write-LogLine ("ApkNamePattern={0}" -f $apkNamePattern)
+$builtApks = @(Get-ChildItem (Join-Path $ProjectRoot 'app\build\outputs') -Recurse -Filter *.apk -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -like $apkNamePattern } |
+        Sort-Object FullName)
 foreach ($apk in $builtApks) {
     Write-LogLine ("APK={0}" -f $apk.FullName)
     Write-LogLine ("Length={0}" -f $apk.Length)
@@ -256,6 +291,10 @@ foreach ($apk in $builtApks) {
 
 if ($code -ne 0) {
     exit $code
+}
+if ($builtApks.Count -eq 0) {
+    Write-LogLine ("ERROR: No APK matched pattern {0} under app\build\outputs after {1}." -f $apkNamePattern, $GradleTask)
+    exit 1
 }
 
 if (-not $SkipApkVerify) {

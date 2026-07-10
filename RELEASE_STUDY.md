@@ -29,6 +29,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-apk-strict.ps1 -GradleT
 
 `build-apk-strict.ps1` 会在构建后调用 Android SDK 检查 APK 是否达到安装就绪状态：`zipalign -c`、`aapt dump badging` 和 `apksigner verify`。若学习版 release APK 未配置正式 `signing.properties` 而导致未签名，脚本会使用本机 Android debug keystore 兜底签名，并再次验签；正式发布前请配置私有 release keystore。
 
+`build-apk-strict.ps1` 会在构建前检查项目盘和 Gradle 缓存盘空间。空间不足时可用 `-GradleUserHome <路径>` 移动缓存，或用 `-MinGradleDriveFreeGb <GB>` 调整本机学习构建的缓存盘阈值。
+
 6. 生成发版体检报告
 
 ```powershell
@@ -36,6 +38,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\release-health.ps1 -Tag v0.5.
 ```
 
 它会检查 `gradle.properties`、debug/release APK 文件、APK zipalign、manifest/badging、APK 签名、SHA-256、git 状态和 GitHub Release 资产。
+
+任一体检项失败时，脚本会在终端错误流输出失败检查名，并以非零退出码停止，报告中对应行标记为 `FAIL`。
 
 7. 验证 APK 下载后可被 Android 安装器识别
 
@@ -115,5 +119,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v
 ## 说明
 
 - `scripts/build-apk-strict.ps1` 会自动设置 `JAVA_HOME`、`GRADLE_USER_HOME` 和代理。
+- 构建前空间检查同时覆盖项目盘和 Gradle 缓存盘；必要时使用 `-GradleUserHome` 和 `-MinGradleDriveFreeGb` 调整。
 - 当前固定上传学习版 `arm64-v8a` debug/release APK，适合自测和学习。
 - 更多细节见 `docs\apk-release-assurance.md`。

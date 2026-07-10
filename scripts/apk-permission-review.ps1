@@ -20,6 +20,40 @@ function Read-PropertiesFile {
     return $props
 }
 
+function Escape-MarkdownTableCell {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", "<br>").Replace("`n", "<br>").Replace("`r", "<br>").
+        Replace("|", "\|")
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    if ($null -eq $Value) { return "" }
+    $text = ([string]$Value).Replace("`r`n", " ").Replace("`n", " ").Replace("`r", " ").Replace("|", "\|")
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
+function Escape-MarkdownText {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", " ").Replace("`n", " ").Replace("`r", " ").
+        Replace("|", "\|").Replace("``", "'")
+}
+
 function Get-PermissionRows {
     param($Apk)
     $rows = @()
@@ -110,18 +144,21 @@ New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Ou
 $payload | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
 
 $lines = New-Object System.Collections.Generic.List[string]
+$statusCode = Format-MarkdownCodeSpan -Value $payload.status
+$installabilityJsonCode = Format-MarkdownCodeSpan -Value $InstallabilityJson
 $lines.Add("# APK Permission Review - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Status: ``$($payload.status)``")
-$lines.Add("Installability report: ``$InstallabilityJson``")
+$lines.Add("Status: $statusCode")
+$lines.Add("Installability report: $installabilityJsonCode")
 $lines.Add("")
 $lines.Add("## APK Summary")
 $lines.Add("")
 $lines.Add("| APK | Permissions | Attention Items |")
 $lines.Add("|---|---:|---:|")
 foreach ($review in $apkReviews) {
-    $lines.Add("| ``$($review.name)`` | $($review.permissionCount) | $($review.attentionCount) |")
+    $reviewName = Format-MarkdownCodeSpan -Value $review.name
+    $lines.Add("| $reviewName | $($review.permissionCount) | $($review.attentionCount) |")
 }
 $lines.Add("")
 $lines.Add("## Attention Items")
@@ -131,7 +168,10 @@ if (@($allAttention).Count -eq 0) {
 } else {
     foreach ($review in $apkReviews) {
         foreach ($item in @($review.attention)) {
-            $lines.Add("- ``$($review.name)``: ``$($item.permission)`` - $($item.reason)")
+            $reviewName = Format-MarkdownCodeSpan -Value $review.name
+            $permissionName = Format-MarkdownCodeSpan -Value $item.permission
+            $reason = Escape-MarkdownText -Value $item.reason
+            $lines.Add("- ${reviewName}: $permissionName - $reason")
         }
     }
 }

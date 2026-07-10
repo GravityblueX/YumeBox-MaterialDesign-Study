@@ -44,6 +44,29 @@ function Normalize-Digest {
     return ($Digest -replace "^sha256:", "").ToLowerInvariant()
 }
 
+function Escape-MarkdownTableCell {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", "<br>").Replace("`n", "<br>").Replace("`r", "<br>").
+        Replace("|", "\|")
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownTableCell -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
 function Git-Text {
     param([string[]]$GitArgs)
     $output = & git -C $ProjectRoot @GitArgs 2>$null
@@ -192,21 +215,30 @@ New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Ou
 $payload | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
 
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
+$predicateCode = Format-MarkdownCodeSpan -Value $payload.predicateType
+$repoCode = Format-MarkdownCodeSpan -Value $Repo
+$statusCode = Format-MarkdownCodeSpan -Value $status
+$headCode = Format-MarkdownCodeSpan -Value $head
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add("# Release Provenance - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Predicate: ``$($payload.predicateType)``")
-$lines.Add("Repo: ``$Repo``")
-$lines.Add("Status: ``$status``")
-$lines.Add("Source commit: ``$head``")
+$lines.Add("Predicate: $predicateCode")
+$lines.Add("Repo: $repoCode")
+$lines.Add("Status: $statusCode")
+$lines.Add("Source commit: $headCode")
 $lines.Add("")
 $lines.Add("## Subjects")
 $lines.Add("")
 $lines.Add("| APK | Kind | Size | SHA-256 | Package | Version |")
 $lines.Add("|---|---|---:|---|---|---|")
 foreach ($subject in $payload.subject) {
-    $lines.Add("| ``$($subject.name)`` | $($subject.annotations.kind) | $($subject.size) | ``$($subject.digest.sha256)`` | ``$($subject.annotations.packageName)`` | $($subject.annotations.versionName)/$($subject.annotations.versionCode) |")
+    $subjectName = Format-MarkdownCodeSpan -Value $subject.name
+    $subjectKind = Escape-MarkdownTableCell -Value $subject.annotations.kind
+    $subjectDigest = Format-MarkdownCodeSpan -Value $subject.digest.sha256
+    $subjectPackage = Format-MarkdownCodeSpan -Value $subject.annotations.packageName
+    $subjectVersion = Escape-MarkdownTableCell -Value "$($subject.annotations.versionName)/$($subject.annotations.versionCode)"
+    $lines.Add("| $subjectName | $subjectKind | $($subject.size) | $subjectDigest | $subjectPackage | $subjectVersion |")
 }
 $lines.Add("")
 $lines.Add("## Gates")
@@ -215,7 +247,9 @@ $lines.Add("| Gate | Result | Detail |")
 $lines.Add("|---|---|---|")
 foreach ($gate in $payload.gates) {
     $gateStatus = if ($gate.ok) { "OK" } else { "FAIL" }
-    $lines.Add("| $($gate.name) | $gateStatus | $($gate.detail) |")
+    $gateName = Escape-MarkdownTableCell -Value $gate.name
+    $gateDetail = Escape-MarkdownTableCell -Value $gate.detail
+    $lines.Add("| $gateName | $gateStatus | $gateDetail |")
 }
 $lines.Add("")
 $lines.Add("## Boundary")

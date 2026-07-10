@@ -35,9 +35,24 @@ function Add-Gate {
 }
 
 function Escape-MarkdownCell {
-    param([string]$Value)
-    if ([string]::IsNullOrWhiteSpace($Value)) { return "" }
-    return $Value.Replace("|", "\|").Replace("`r", " ").Replace("`n", " ")
+    param([object]$Value)
+    if ($null -eq $Value) { return "" }
+    $text = [string]$Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    return $text.Replace("`r`n", " ").Replace("`n", " ").Replace("`r", " ").Replace("|", "\|")
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownCell -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
 }
 
 $props = Read-PropertiesFile (Join-Path $ProjectRoot "gradle.properties")
@@ -263,12 +278,15 @@ $payload | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $JsonOut -Encodin
 
 $lines = New-Object System.Collections.Generic.List[string]
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
+$statusCode = Format-MarkdownCodeSpan -Value $status
+$reviewStatusCode = Format-MarkdownCodeSpan -Value $payload.status
+$permissionReviewJsonCode = Format-MarkdownCodeSpan -Value $PermissionReviewJson
 $lines.Add("# APK Permission Justification - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Status: ``$status``")
-$lines.Add("Review status: ``$($payload.status)``")
-$lines.Add("Permission review: ``$PermissionReviewJson``")
+$lines.Add("Status: $statusCode")
+$lines.Add("Review status: $reviewStatusCode")
+$lines.Add("Permission review: $permissionReviewJsonCode")
 $lines.Add("")
 $lines.Add("## Gates")
 $lines.Add("")
@@ -276,7 +294,7 @@ $lines.Add("| Gate | Result | Detail |")
 $lines.Add("|---|---|---|")
 foreach ($gate in $payload.gates) {
     $gateStatus = if ($gate.ok) { "OK" } else { "FAIL" }
-    $lines.Add("| $($gate.name) | $gateStatus | $($gate.detail) |")
+    $lines.Add("| $(Escape-MarkdownCell -Value $gate.name) | $gateStatus | $(Escape-MarkdownCell -Value $gate.detail) |")
 }
 $lines.Add("")
 $lines.Add("## Permission Reasons")
@@ -284,7 +302,7 @@ $lines.Add("")
 $lines.Add("| Permission | Sensitivity | Category | User Benefit | Production Action |")
 $lines.Add("|---|---|---|---|---|")
 foreach ($row in $rows) {
-    $lines.Add("| ``$($row.permission)`` | $(Escape-MarkdownCell $row.sensitivity) | $(Escape-MarkdownCell $row.category) | $(Escape-MarkdownCell $row.userBenefit) | $(Escape-MarkdownCell $row.productionAction) |")
+    $lines.Add("| $(Escape-MarkdownCell -Value $row.permission) | $(Escape-MarkdownCell -Value $row.sensitivity) | $(Escape-MarkdownCell -Value $row.category) | $(Escape-MarkdownCell -Value $row.userBenefit) | $(Escape-MarkdownCell -Value $row.productionAction) |")
 }
 $lines.Add("")
 $lines.Add("## Boundary")

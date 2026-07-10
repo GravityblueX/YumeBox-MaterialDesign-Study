@@ -30,6 +30,38 @@ function Add-Gate {
     $Gates.Add([pscustomobject]@{ name = $Name; ok = $Ok; detail = $Detail })
 }
 
+function Escape-MarkdownTableCell {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", "<br>").Replace("`n", "<br>").Replace("`r", "<br>").
+        Replace("|", "\|")
+}
+
+function Escape-MarkdownInline {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ""
+    }
+    return ([string]$Value).
+        Replace("`r`n", " ").Replace("`n", " ").Replace("`r", " ")
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownInline -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
 function Invoke-Text {
     param([string]$Command, [string[]]$CommandArgs = @())
     try {
@@ -138,15 +170,20 @@ New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Ou
 $payload | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
 
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
+$statusCode = Format-MarkdownCodeSpan -Value $status
+$sdkRootCode = Format-MarkdownCodeSpan -Value $sdkRoot
+$selectedBuildToolsCode = Format-MarkdownCodeSpan -Value $selectedBuildTools
+$applicationIdCode = Format-MarkdownCodeSpan -Value $payload.project.applicationId
+$versionLabelCode = Format-MarkdownCodeSpan -Value "$($payload.project.versionName)/$($payload.project.versionCode)"
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add("# Build Environment - $Tag")
 $lines.Add("")
 $lines.Add("Generated: $($payload.generatedAt)")
-$lines.Add("Status: ``$status``")
-$lines.Add("Android SDK: ``$sdkRoot``")
-$lines.Add("Selected build-tools: ``$selectedBuildTools``")
-$lines.Add("Application: ``$($payload.project.applicationId)``")
-$lines.Add("Version: ``$($payload.project.versionName)/$($payload.project.versionCode)``")
+$lines.Add("Status: $statusCode")
+$lines.Add("Android SDK: $sdkRootCode")
+$lines.Add("Selected build-tools: $selectedBuildToolsCode")
+$lines.Add("Application: $applicationIdCode")
+$lines.Add("Version: $versionLabelCode")
 $lines.Add("")
 $lines.Add("## Gates")
 $lines.Add("")
@@ -154,16 +191,24 @@ $lines.Add("| Gate | Result | Detail |")
 $lines.Add("|---|---|---|")
 foreach ($gate in $payload.gates) {
     $gateStatus = if ($gate.ok) { "OK" } else { "FAIL" }
-    $lines.Add("| $($gate.name) | $gateStatus | $($gate.detail) |")
+    $gateName = Escape-MarkdownTableCell -Value $gate.name
+    $gateDetail = Escape-MarkdownTableCell -Value $gate.detail
+    $lines.Add("| $gateName | $gateStatus | $gateDetail |")
 }
 $lines.Add("")
 $lines.Add("## Java")
 $lines.Add("")
-foreach ($line in @($java.output | Select-Object -First 6)) { $lines.Add("- ``$line``") }
+foreach ($line in @($java.output | Select-Object -First 6)) {
+    $lineCode = Format-MarkdownCodeSpan -Value $line
+    $lines.Add("- $lineCode")
+}
 $lines.Add("")
 $lines.Add("## Gradle")
 $lines.Add("")
-foreach ($line in @($gradleVersion.output | Select-Object -First 10)) { $lines.Add("- ``$line``") }
+foreach ($line in @($gradleVersion.output | Select-Object -First 10)) {
+    $lineCode = Format-MarkdownCodeSpan -Value $line
+    $lines.Add("- $lineCode")
+}
 $lines.Add("")
 ($lines -join "`n") | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
 

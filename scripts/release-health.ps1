@@ -29,6 +29,29 @@ function Format-Bytes {
     return ('{0:N0} bytes' -f $Bytes)
 }
 
+function Escape-MarkdownTableCell {
+    param([object]$Value)
+    if ($null -eq $Value) {
+        return ''
+    }
+    return ([string]$Value).
+        Replace("`r`n", '<br>').Replace("`n", '<br>').Replace("`r", '<br>').
+        Replace('|', '\|')
+}
+
+function Format-MarkdownCodeSpan {
+    param([object]$Value)
+    $text = Escape-MarkdownTableCell -Value $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return '' }
+    $maxTicks = 0
+    foreach ($match in [regex]::Matches($text, '`+')) {
+        if ($match.Value.Length -gt $maxTicks) { $maxTicks = $match.Value.Length }
+    }
+    $fence = '`' * ($maxTicks + 1)
+    $padded = if ($text.StartsWith('`') -or $text.EndsWith('`')) { " $text " } else { $text }
+    return "$fence$padded$fence"
+}
+
 function Read-LocalProperty {
     param([string]$Name)
     $localProperties = Join-Path $ProjectRoot 'local.properties'
@@ -192,12 +215,17 @@ $apkBadgingOk = $apks.Count -gt 0 -and @($apkBadgingStatuses.Values | Where-Obje
 $release = $null
 $releaseError = ''
 try {
-    $releaseJson = gh release view $Tag --repo $Repo --json tagName,name,url,assets 2>$null
-    if ($LASTEXITCODE -eq 0 -and $releaseJson) {
-        $release = $releaseJson | ConvertFrom-Json
+    $releaseOutput = @(gh release view $Tag --repo $Repo --json tagName,name,url,assets 2>&1)
+    if ($LASTEXITCODE -eq 0 -and $releaseOutput.Count -gt 0) {
+        $release = ($releaseOutput -join "`n") | ConvertFrom-Json
+    } elseif ($releaseOutput.Count -gt 0) {
+        $releaseError = (($releaseOutput | ForEach-Object { [string]$_ }) -join "`n").Trim()
     }
 } catch {
     $releaseError = $_.Exception.Message
+}
+if (-not $release -and [string]::IsNullOrWhiteSpace($releaseError)) {
+    $releaseError = 'gh release view failed or returned no output'
 }
 
 $assetRows = @()
@@ -206,7 +234,10 @@ if ($release -and $release.assets) {
         if ($asset.name -eq $OutputName) {
             continue
         }
-        $assetRows += "| $($asset.name) | $(Format-Bytes -Bytes ([int64]$asset.size)) | $($asset.digest) |"
+        $assetName = Escape-MarkdownTableCell -Value $asset.name
+        $assetSize = Format-Bytes -Bytes ([int64]$asset.size)
+        $assetDigest = Escape-MarkdownTableCell -Value $asset.digest
+        $assetRows += "| $assetName | $assetSize | $assetDigest |"
     }
 }
 
@@ -221,15 +252,22 @@ $checks = @(
     @{ Name = 'GitHub release visible'; Ok = [bool]$release; Detail = $(if ($release) { $release.url } else { $releaseError }) }
 )
 
+$repoCode = Format-MarkdownCodeSpan -Value $Repo
+$branchCode = Format-MarkdownCodeSpan -Value (@($gitBranch) -join "`n")
+$commitCode = Format-MarkdownCodeSpan -Value (@($gitHead) -join "`n")
+$versionNameCode = Format-MarkdownCodeSpan -Value $versionName
+$versionCodeSpan = Format-MarkdownCodeSpan -Value $versionCode
+$tagCode = Format-MarkdownCodeSpan -Value $Tag
+
 $lines = @(
     "# YumeBox Study Release Health",
     '',
     "Generated: $(Get-Date -Format o)",
-    "Repository: ``$Repo``",
-    "Branch: ``$gitBranch``",
-    "Commit: ``$gitHead``",
-    "Version: ``$versionName`` / ``$versionCode``",
-    "Tag: ``$Tag``",
+    "Repository: $repoCode",
+    "Branch: $branchCode",
+    "Commit: $commitCode",
+    "Version: $versionNameCode / $versionCodeSpan",
+    "Tag: $tagCode",
     '',
     '## Checks',
     '',
@@ -238,9 +276,10 @@ $lines = @(
 )
 
 foreach ($check in $checks) {
-    $status = if ($check.Ok) { 'OK' } else { 'WARN' }
-    $detail = [string]$check.Detail
-    $lines += "| $($check.Name) | $status | $detail |"
+    $status = if ($check.Ok) { 'OK' } else { 'FAIL' }
+    $checkName = Escape-MarkdownTableCell -Value $check.Name
+    $detail = Escape-MarkdownTableCell -Value $check.Detail
+    $lines += "| $checkName | $status | $detail |"
 }
 
 $lines += @(
@@ -252,14 +291,14 @@ $lines += @(
 )
 if ($apks.Count -gt 0) {
     foreach ($apk in $apks) {
-        $apkSha256 = (Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        $apkSha256 = Format-MarkdownCodeSpan -Value (Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         $apkSize = Format-Bytes -Bytes $apk.Length
         $apkLastWrite = $apk.LastWriteTime.ToString('o')
-        $relative = Resolve-Path -LiteralPath $apk.FullName -Relative
-        $apkSignatureStatus = $apkSignatureStatuses[$apk.FullName]
-        $apkZipalignStatus = $apkZipalignStatuses[$apk.FullName]
-        $apkBadgingStatus = $apkBadgingStatuses[$apk.FullName]
-        $lines += "| $relative | $apkSize | ``$apkSha256`` | $apkSignatureStatus | $apkZipalignStatus | $apkBadgingStatus | $apkLastWrite |"
+        $relative = Escape-MarkdownTableCell -Value (Resolve-Path -LiteralPath $apk.FullName -Relative)
+        $apkSignatureStatus = Escape-MarkdownTableCell -Value $apkSignatureStatuses[$apk.FullName]
+        $apkZipalignStatus = Escape-MarkdownTableCell -Value $apkZipalignStatuses[$apk.FullName]
+        $apkBadgingStatus = Escape-MarkdownTableCell -Value $apkBadgingStatuses[$apk.FullName]
+        $lines += "| $relative | $apkSize | $apkSha256 | $apkSignatureStatus | $apkZipalignStatus | $apkBadgingStatus | $apkLastWrite |"
     }
 } else {
     $lines += "| missing | - | - | - | - | - | - |"
@@ -294,3 +333,10 @@ $lines += @(
 $outputPath = Join-Path $ProjectRoot $OutputName
 $lines -join "`n" | Set-Content -LiteralPath $outputPath -Encoding UTF8
 Write-Host "Wrote $outputPath"
+
+$failedChecks = @($checks | Where-Object { -not [bool]$_.Ok })
+if ($failedChecks.Count -gt 0) {
+    $failedCheckNames = (($failedChecks | ForEach-Object { [string]$_.Name }) -join ', ')
+    [Console]::Error.WriteLine("Release health failed checks: $failedCheckNames")
+    exit 1
+}
