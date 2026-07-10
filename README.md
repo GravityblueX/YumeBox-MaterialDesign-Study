@@ -11,7 +11,7 @@ This repository is a personal study fork for building and verifying a standard A
   - `RELEASE_STUDY.md`
   - `docs/apk-release-assurance.md`
   - `docs/apk-installability-report-v0.5.4-study.9.md`
-  - `release-health-v0.5.4-study.9.md`
+  - `docs/release-asset-manifest-v0.5.4-study.9.md`
 
 ## APK Verification
 
@@ -37,7 +37,7 @@ By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `d
 
 `apk-permission-review.ps1` reads the archived installability report and creates `docs/apk-permission-review-<tag>.md/json`, separating installability from the Android permission and privacy review layer.
 
-`release-asset-manifest.ps1` reads GitHub Release assets plus the archived installability and permission reports, then creates `docs/release-asset-manifest-<tag>.md/json` with APK digest, size, debug/release channel, and tooling consistency checks.
+`release-asset-manifest.ps1` reads GitHub Release assets plus the archived installability and permission reports, then creates `docs/release-asset-manifest-<tag>.md/json` with APK digest, size, debug/release channel, release-health asset evidence, and tooling consistency checks.
 
 `release-provenance.ps1` creates `docs/release-provenance-<tag>.md/json`, linking downloadable APK subjects to SHA-256 digests, git source commit, release asset manifest, and study build metadata.
 

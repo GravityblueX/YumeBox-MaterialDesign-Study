@@ -61,7 +61,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -F
 
 `apk-permission-review.ps1` 是权限复核层：读取安装性报告里的 `aapt badging` 权限清单，列出需要人工说明的敏感或特殊权限，避免把“能安装”误写成“已完成生产安全审计”。
 
-`release-asset-manifest.ps1` 是发布资产账本层：读取 GitHub Release 资产、安装性报告和权限复核报告，确认 debug/release APK 的大小、SHA-256、GitHub digest、安装性证据和权限复核记录一致。
+`release-asset-manifest.ps1` 是发布资产账本层：读取 GitHub Release 资产、安装性报告和权限复核报告，确认 debug/release APK 的大小、SHA-256、GitHub digest、安装性证据、权限复核记录和 release-health 资产一致。
 
 `release-provenance.ps1` 是发布来源声明层：记录可下载 APK subject、SHA-256、git 源提交、发布资产账本和学习版构建元数据，方便以后追溯“这个 APK 从哪里来”。
 
@@ -109,7 +109,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publish-apk-assets.ps1 -Tag v
 - 默认 Debug APK 路径：`app\build\outputs\apk\debug\YumeBox Study-arm64-v8a-debug.apk`
 - 默认 Release APK 路径：`app\build\outputs\apk\release\YumeBox Study-arm64-v8a-release.apk`
 - 构建日志：`build-apk-strict.log`
-- 发版体检报告：`release-health-v*.md`
+- 发版体检报告：`release-health-v*.md`，作为 GitHub Release asset 发布，并由 `docs\release-asset-manifest-v*.json` 追踪。
 - 安装就绪验证：`scripts\verify-installable-apk.ps1`
 - 可归档安装性报告：`docs\apk-installability-report-v*.md` 和 `docs\apk-installability-report-v*.json`
 - 发布资产账本：`docs\release-asset-manifest-v*.md` 和 `docs\release-asset-manifest-v*.json`

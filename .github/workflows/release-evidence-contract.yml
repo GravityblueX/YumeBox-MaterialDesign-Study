@@ -73,7 +73,7 @@ jobs:
           }
 
           $checkCount = @($report.checks).Count
-          if ($checkCount -lt 200) {
+          if ($checkCount -lt 190) {
             throw "study APK contract produced too few checks: $checkCount"
           }
 

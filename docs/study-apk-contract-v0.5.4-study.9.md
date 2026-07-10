@@ -1,6 +1,6 @@
-﻿# Study APK Contract - v0.5.4-study.9
+# Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-11T04:18:26.7115893+08:00
+Generated: 2026-07-11T05:22:03.1254000+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -16,7 +16,6 @@ Status: `OK`
 | required file README.md | OK | README.md |
 | required file RELEASE_STUDY.md | OK | RELEASE_STUDY.md |
 | required file docs\apk-release-assurance.md | OK | docs\apk-release-assurance.md |
-| required file release-health-v0.5.4-study.9.md | OK | release-health-v0.5.4-study.9.md |
 | required file docs\apk-installability-report-v0.5.4-study.9.md | OK | docs\apk-installability-report-v0.5.4-study.9.md |
 | required file docs\apk-installability-report-v0.5.4-study.9.json | OK | docs\apk-installability-report-v0.5.4-study.9.json |
 | required file docs\device-install-matrix-v0.5.4-study.9.md | OK | docs\device-install-matrix-v0.5.4-study.9.md |
@@ -173,20 +172,6 @@ Status: `OK`
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk package metadata | OK | com.github.yizuka17.yumebox.md3 |
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk version metadata | OK | 0.5.4-study.9/5409 |
 | APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk ABI metadata | OK | arm64-v8a |
-| release health tag matches | OK | v0.5.4-study.9 |
-| release health version matches gradle | OK | Version: `0.5.4-study.9` / `5409` |
-| release health APK count matches report | OK | 2 APK file(s) |
-| release health records APK signatures OK | OK | APK signatures |
-| release health records APK zipalign OK | OK | APK zipalign |
-| release health records APK badging OK | OK | APK badging |
-| release health records GitHub release visible | OK | GitHub release visible |
-| release health release URL matches report | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/tag/v0.5.4-study.9 |
-| release health lists YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk | OK | YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk |
-| release health records YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk SHA-256 | OK | 9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80 |
-| release health records YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk asset digest | OK | sha256:9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80 |
-| release health lists YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk | OK | YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk |
-| release health records YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk SHA-256 | OK | 7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc |
-| release health records YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk asset digest | OK | sha256:7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc |
 | device install matrix ok flag | OK | ok=True |
 | device install matrix tag matches | OK | tag=v0.5.4-study.9 |
 | device install matrix package matches gradle | OK | com.github.yizuka17.yumebox.md3 |
@@ -205,6 +190,10 @@ Status: `OK`
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
 | release asset manifest gates recorded | OK | 18 gates |
+| release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |
+| release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
+| release health asset URL matches tag | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md |
+| release health asset has stable size | OK | 2156 bytes |
 | release provenance ok flag | OK | ok=True |
 | release provenance tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |

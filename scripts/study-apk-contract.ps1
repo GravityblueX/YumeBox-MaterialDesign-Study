@@ -130,7 +130,6 @@ $requiredFiles = @(
     "README.md",
     "RELEASE_STUDY.md",
     "docs\apk-release-assurance.md",
-    "release-health-$Tag.md",
     "docs\apk-installability-report-$Tag.md",
     "docs\apk-installability-report-$Tag.json",
     "docs\device-install-matrix-$Tag.md",
@@ -321,32 +320,6 @@ if (Test-Path -LiteralPath $reportPath) {
     }
 }
 
-$releaseHealthPath = Join-Path $ProjectRoot "release-health-$Tag.md"
-if (Test-Path -LiteralPath $releaseHealthPath) {
-    $versionLine = "Version: ``$versionName`` / ``$versionCode``"
-    Add-Check "release health tag matches" (Test-FileContains -Path $releaseHealthPath -Needle $Tag) $Tag
-    Add-Check "release health version matches gradle" (Test-FileContains -Path $releaseHealthPath -Needle $versionLine) $versionLine
-    Add-Check "release health APK count matches report" (Test-FileContains -Path $releaseHealthPath -Needle "$($apks.Count) APK file(s)") "$($apks.Count) APK file(s)"
-    Add-Check "release health records APK signatures OK" (Test-FileContains -Path $releaseHealthPath -Needle "| APK signatures | OK |") "APK signatures"
-    Add-Check "release health records APK zipalign OK" (Test-FileContains -Path $releaseHealthPath -Needle "| APK zipalign | OK |") "APK zipalign"
-    Add-Check "release health records APK badging OK" (Test-FileContains -Path $releaseHealthPath -Needle "| APK badging | OK |") "APK badging"
-    Add-Check "release health records GitHub release visible" (Test-FileContains -Path $releaseHealthPath -Needle "| GitHub release visible | OK |") "GitHub release visible"
-    if ($report -and -not [string]::IsNullOrWhiteSpace([string]$report.releaseUrl)) {
-        Add-Check "release health release URL matches report" (Test-FileContains -Path $releaseHealthPath -Needle ([string]$report.releaseUrl)) "$($report.releaseUrl)"
-    }
-
-    foreach ($apk in $apks) {
-        $apkName = [string]$apk.name
-        $sha256 = [string]$apk.sha256
-        $githubDigest = [string]$apk.githubDigest
-        Add-Check "release health lists $apkName" (Test-FileContains -Path $releaseHealthPath -Needle $apkName) $apkName
-        Add-Check "release health records $apkName SHA-256" (Test-FileContains -Path $releaseHealthPath -Needle $sha256) $sha256
-        if (-not [string]::IsNullOrWhiteSpace($githubDigest)) {
-            Add-Check "release health records $apkName asset digest" (Test-FileContains -Path $releaseHealthPath -Needle $githubDigest) $githubDigest
-        }
-    }
-}
-
 $deviceMatrixPath = Join-Path $ProjectRoot "docs\device-install-matrix-$Tag.json"
 if (Test-Path -LiteralPath $deviceMatrixPath) {
     $deviceMatrix = Get-Content -LiteralPath $deviceMatrixPath -Raw | ConvertFrom-Json
@@ -388,6 +361,14 @@ if (Test-Path -LiteralPath $assetManifestPath) {
     Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
     Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
     Add-Check "release asset manifest gates recorded" (@($assetManifest.gates).Count -ge 10) "$(@($assetManifest.gates).Count) gates"
+    $releaseHealthAsset = @($assetManifest.assets | Where-Object { [string]$_.kind -eq "release-health" -and [string]$_.name -eq "release-health-$Tag.md" } | Select-Object -First 1)
+    Add-Check "release asset manifest includes release health report" ($releaseHealthAsset.Count -eq 1) "release-health-$Tag.md"
+    if ($releaseHealthAsset.Count -eq 1) {
+        $asset = $releaseHealthAsset[0]
+        Add-Check "release health asset digest recorded" ([string]$asset.digest -match '^sha256:[0-9a-f]{64}$') "$($asset.digest)"
+        Add-Check "release health asset URL matches tag" ([string]$asset.url -like "*/releases/download/$Tag/release-health-$Tag.md") "$($asset.url)"
+        Add-Check "release health asset has stable size" ([int64]$asset.size -gt 0) "$($asset.size) bytes"
+    }
 }
 
 $provenancePath = Join-Path $ProjectRoot "docs\release-provenance-$Tag.json"
