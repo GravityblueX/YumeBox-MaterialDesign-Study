@@ -35,7 +35,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Parse PowerShell report scripts
         shell: pwsh
@@ -57,3 +57,34 @@ jobs:
           $jsonOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.json"
           $markdownOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.md"
           ./scripts/study-apk-contract.ps1 -JsonOut $jsonOut -MarkdownOut $markdownOut
+
+      - name: Assert study APK contract report
+        shell: pwsh
+        run: |
+          $jsonOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.json"
+          if (-not (Test-Path -LiteralPath $jsonOut)) {
+            throw "study APK contract JSON was not generated: $jsonOut"
+          }
+
+          $report = Get-Content -LiteralPath $jsonOut -Raw | ConvertFrom-Json
+          if (-not [bool]$report.ok) {
+            $failures = @($report.failures | ForEach-Object { "- $($_.name): $($_.detail)" })
+            throw "study APK contract failed:`n$($failures -join "`n")"
+          }
+
+          $checkCount = @($report.checks).Count
+          if ($checkCount -lt 200) {
+            throw "study APK contract produced too few checks: $checkCount"
+          }
+
+          "Validated study APK contract: tag=$($report.tag), checks=$checkCount"
+
+      - name: Upload study APK contract report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: study-apk-contract-report
+          path: |
+            ${{ runner.temp }}/study-apk-contract.json
+            ${{ runner.temp }}/study-apk-contract.md
+          if-no-files-found: error
