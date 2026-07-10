@@ -1,0 +1,59 @@
+name: Release Evidence Contract
+
+on:
+  pull_request:
+    branches:
+      - Yume
+      - Dev
+    paths:
+      - ".github/workflows/release-evidence-contract.yml"
+      - "README.md"
+      - "RELEASE_STUDY.md"
+      - "gradle.properties"
+      - "release-health-v*.md"
+      - "docs/**"
+      - "scripts/*.ps1"
+  push:
+    branches:
+      - Yume
+    paths:
+      - ".github/workflows/release-evidence-contract.yml"
+      - "README.md"
+      - "RELEASE_STUDY.md"
+      - "gradle.properties"
+      - "release-health-v*.md"
+      - "docs/**"
+      - "scripts/*.ps1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Validate Release Evidence
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Parse PowerShell report scripts
+        shell: pwsh
+        run: |
+          $parseErrors = @()
+          $scripts = @(Get-ChildItem -Path scripts -Filter *.ps1)
+          foreach ($script in $scripts) {
+            [System.Management.Automation.Language.Parser]::ParseFile($script.FullName, [ref]$null, [ref]$parseErrors) | Out-Null
+          }
+          if ($parseErrors.Count -gt 0) {
+            $parseErrors | Format-List *
+            exit 1
+          }
+          "Parsed $($scripts.Count) PowerShell scripts."
+
+      - name: Run study APK contract
+        shell: pwsh
+        run: |
+          $jsonOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.json"
+          $markdownOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.md"
+          ./scripts/study-apk-contract.ps1 -JsonOut $jsonOut -MarkdownOut $markdownOut
