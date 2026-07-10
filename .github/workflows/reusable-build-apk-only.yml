@@ -117,9 +117,17 @@ jobs:
             -Pupdate.metaAssetName="${{ inputs.meta_asset_name }}" \
             :${{ inputs.module }}:assembleRelease
 
+      - name: Verify release APK outputs
+        shell: bash
+        run: |
+          set -eu
+          apk_dir="${{ inputs.module }}/build/outputs/apk/release"
+          find "$apk_dir" -maxdepth 1 -type f -name '*.apk' -print | sort
+          test "$(find "$apk_dir" -maxdepth 1 -type f -name '*.apk' | wc -l)" -gt 0
+
       - name: Upload raw APK artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.raw_apk_artifact_name }}
-          path: ${{ inputs.module }}/build/outputs/apk/release/*arm64-v8a*release*.apk
+          path: ${{ inputs.module }}/build/outputs/apk/release/*.apk
           if-no-files-found: error
