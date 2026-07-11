@@ -79,10 +79,15 @@ jobs:
       - name: Install NDK
         run: sdkmanager "ndk;29.0.14206865"
 
+      - name: Export NDK environment
+        run: |
+          ndk_path="${ANDROID_SDK_ROOT}/ndk/29.0.14206865"
+          echo "ANDROID_NDK_HOME=${ndk_path}" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_ROOT=${ndk_path}" >> "$GITHUB_ENV"
+
       - name: Configure local.properties
         run: |
           echo "sdk.dir=${ANDROID_SDK_ROOT}" > local.properties
-          echo "ndk.dir=${ANDROID_SDK_ROOT}/ndk/29.0.14206865" >> local.properties
 
       - name: Update CA certificates
         run: |
@@ -103,6 +108,7 @@ jobs:
           ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/29.0.14206865
+          ANDROID_NDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}/ndk/29.0.14206865
         run: kotlin scripts/native-build.main.kts --go --rust --cpp
 
       - name: Verify native outputs
