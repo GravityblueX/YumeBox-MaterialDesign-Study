@@ -42,6 +42,9 @@ jobs:
         with:
           go-download-base-url: 'https://github.com/MetaCubeX/go/releases/download/build'
           go-version: '1.26'
+          cache-dependency-path: |
+            lib/native/go/go.sum
+            lib/mihomo/go.sum
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
