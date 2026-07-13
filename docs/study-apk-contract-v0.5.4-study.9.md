@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-13T22:13:59.7301446+08:00
+Generated: 2026-07-13T22:23:10.4124889+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -153,6 +153,9 @@ Status: `OK`
 | release flow documents Gradle cache relocation | OK | GradleUserHome |
 | release flow documents Gradle cache threshold | OK | MinGradleDriveFreeGb |
 | release flow documents release health failure summary | OK | release-health stderr summary |
+| CI channel skips study contract script | OK | paths-ignore |
+| PR CI skips study contract script | OK | paths-ignore |
+| release evidence contract covers PowerShell scripts | OK | release evidence paths |
 | report ok flag | OK | ok=True |
 | report tag matches | OK | tag=v0.5.4-study.9 |
 | report package matches gradle | OK | com.github.yizuka17.yumebox.md3 |

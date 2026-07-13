@@ -293,6 +293,13 @@ Add-Check "release flow documents Gradle cache relocation" (Test-FileContains -P
 Add-Check "release flow documents Gradle cache threshold" (Test-FileContains -Path (Join-Path $ProjectRoot "RELEASE_STUDY.md") -Needle "MinGradleDriveFreeGb") "MinGradleDriveFreeGb"
 Add-Check "release flow documents release health failure summary" (Test-FileContains -Path (Join-Path $ProjectRoot "RELEASE_STUDY.md") -Needle "失败检查名") "release-health stderr summary"
 
+$ciChannelWorkflowPath = Join-Path $ProjectRoot ".github\workflows\ci-channel.yml"
+$pullRequestWorkflowPath = Join-Path $ProjectRoot ".github\workflows\pull-request.yml"
+$releaseEvidenceWorkflowPath = Join-Path $ProjectRoot ".github\workflows\release-evidence-contract.yml"
+Add-Check "CI channel skips study contract script" (Test-FileContains -Path $ciChannelWorkflowPath -Needle "scripts/study-apk-contract.ps1") "paths-ignore"
+Add-Check "PR CI skips study contract script" (Test-FileContains -Path $pullRequestWorkflowPath -Needle "scripts/study-apk-contract.ps1") "paths-ignore"
+Add-Check "release evidence contract covers PowerShell scripts" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle "scripts/*.ps1") "release evidence paths"
+
 $apks = @()
 $reportPath = Join-Path $ProjectRoot "docs\apk-installability-report-$Tag.json"
 if (Test-Path -LiteralPath $reportPath) {
