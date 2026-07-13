@@ -222,6 +222,7 @@ Add-Check "release provenance code-spans repository header" (Test-FileContains -
 Add-Check "release provenance code-spans status header" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $status') "status header code span"
 Add-Check "release provenance code-spans source commit header" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $head') "source commit header code span"
 Add-Check "release provenance code-spans package names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $subject.annotations.packageName') "package code span"
+Add-Check "release provenance records dirty count" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'dirtyCountWhenGenerated') "dirty count evidence"
 
 $releaseAssetManifestScriptPath = Join-Path $ProjectRoot "scripts\release-asset-manifest.ps1"
 Add-Check "release asset manifest escapes markdown table cells" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'function Escape-Md') "table cell escaping"

@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-13T07:25:36.6378694+08:00
+Generated: 2026-07-13T22:13:59.7301446+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -94,6 +94,7 @@ Status: `OK`
 | release provenance code-spans status header | OK | status header code span |
 | release provenance code-spans source commit header | OK | source commit header code span |
 | release provenance code-spans package names | OK | package code span |
+| release provenance records dirty count | OK | dirty count evidence |
 | release asset manifest escapes markdown table cells | OK | table cell escaping |
 | release asset manifest escapes newlines | OK | newline escaping |
 | release asset manifest escapes APK asset kind | OK | asset kind escaping |

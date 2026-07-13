@@ -1,6 +1,6 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-13T07:25:36.6378694+08:00",
+  "generatedAt": "2026-07-13T22:13:59.7301446+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -434,6 +434,11 @@
       "name": "release provenance code-spans package names",
       "ok": true,
       "detail": "package code span"
+    },
+    {
+      "name": "release provenance records dirty count",
+      "ok": true,
+      "detail": "dirty count evidence"
     },
     {
       "name": "release asset manifest escapes markdown table cells",
