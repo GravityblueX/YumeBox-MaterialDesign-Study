@@ -71,17 +71,33 @@ jobs:
           }
 
           $report = Get-Content -LiteralPath $jsonOut -Raw | ConvertFrom-Json
+          if ([string]$report.reportType -ne "study_apk_contract") {
+            throw "study APK contract JSON had unexpected reportType: $($report.reportType)"
+          }
+
           if (-not [bool]$report.ok) {
             $failures = @($report.failures | ForEach-Object { "- $($_.name): $($_.detail)" })
             throw "study APK contract failed:`n$($failures -join "`n")"
           }
 
           $checkCount = @($report.checks).Count
+          if ([int]$report.summary.checkCount -ne $checkCount) {
+            throw "study APK contract summary check count does not match checks array: summary=$($report.summary.checkCount), checks=$checkCount"
+          }
+          $failureCount = @($report.failures).Count
+          if ([int]$report.summary.failureCount -ne 0 -or $failureCount -ne 0) {
+            throw "study APK contract recorded failures despite ok=true: summary=$($report.summary.failureCount), failures=$failureCount"
+          }
+
           if ($checkCount -lt 190) {
             throw "study APK contract produced too few checks: $checkCount"
           }
 
           $markdown = Get-Content -LiteralPath $markdownOut -Raw
+          $expectedTitle = "# Study APK Contract - $($report.tag)"
+          if (-not $markdown.StartsWith($expectedTitle)) {
+            throw "study APK contract Markdown title does not match JSON tag: $expectedTitle"
+          }
           if ($markdown -notmatch '(?m)^Status:\s+`OK`$') {
             throw "study APK contract Markdown did not record OK status"
           }
@@ -91,6 +107,10 @@ jobs:
           $expectedCheckCountRow = "| Check count | $checkCount |"
           if (-not $markdown.Contains($expectedCheckCountRow)) {
             throw "study APK contract Markdown check count does not match JSON: $expectedCheckCountRow"
+          }
+          $expectedFailureCountRow = "| Failure count | 0 |"
+          if (-not $markdown.Contains($expectedFailureCountRow)) {
+            throw "study APK contract Markdown failure count does not match JSON: $expectedFailureCountRow"
           }
 
           "Validated study APK contract: tag=$($report.tag), checks=$checkCount"
