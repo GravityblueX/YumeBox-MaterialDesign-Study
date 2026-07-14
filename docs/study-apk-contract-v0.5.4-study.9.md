@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T03:11:30.8402640+08:00
+Generated: 2026-07-15T03:47:40.6327924+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 219 |
+| Check count | 227 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -61,6 +61,8 @@ Status: `OK`
 | study contract normalizes SHA-256 digests | OK | digest normalization |
 | study contract cross-checks provenance APK names | OK | provenance asset name parity |
 | study contract cross-checks provenance APK digests | OK | provenance asset digest parity |
+| study contract checks release health markdown | OK | release health markdown |
+| study contract cross-checks release health APK digests | OK | release health APK digests |
 | strict build filters APKs by Gradle task | OK | Get-ApkNamePatternForGradleTask |
 | strict build logs APK name pattern | OK | ApkNamePattern log |
 | strict build preserves Gradle exit code | OK | exit $code |
@@ -227,6 +229,12 @@ Status: `OK`
 | release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
 | release health asset URL matches tag | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md |
 | release health asset has stable size | OK | 2156 bytes |
+| release health markdown exists | OK | release-health-v0.5.4-study.9.md |
+| release health markdown tag matches | OK | tag=v0.5.4-study.9 |
+| release health markdown has checks section | OK | ## Checks |
+| release health markdown records no failed checks | OK | no FAIL rows |
+| release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk | OK | 7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc |
+| release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk | OK | 9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80 |
 | release provenance ok flag | OK | ok=True |
 | release provenance tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |

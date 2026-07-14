@@ -202,6 +202,8 @@ Add-Check "study contract writes UTF-8 without BOM" (Test-FileContains -Path $PS
 Add-Check "study contract normalizes SHA-256 digests" (Test-FileContains -Path $PSCommandPath -Needle 'function Normalize-Sha256Digest') "digest normalization"
 Add-Check "study contract cross-checks provenance APK names" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK subjects match release asset names') "provenance asset name parity"
 Add-Check "study contract cross-checks provenance APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK digests match release assets') "provenance asset digest parity"
+Add-Check "study contract checks release health markdown" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown tag matches') "release health markdown"
+Add-Check "study contract cross-checks release health APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown lists APK digests') "release health APK digests"
 
 $strictBuildPath = Join-Path $ProjectRoot "scripts\build-apk-strict.ps1"
 Add-Check "strict build filters APKs by Gradle task" (Test-FileContains -Path $strictBuildPath -Needle "Get-ApkNamePatternForGradleTask") "Get-ApkNamePatternForGradleTask"
@@ -443,6 +445,20 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         Add-Check "release health asset digest recorded" ([string]$asset.digest -match '^sha256:[0-9a-f]{64}$') "$($asset.digest)"
         Add-Check "release health asset URL matches tag" ([string]$asset.url -like "*/releases/download/$Tag/release-health-$Tag.md") "$($asset.url)"
         Add-Check "release health asset has stable size" ([int64]$asset.size -gt 0) "$($asset.size) bytes"
+    }
+
+    $releaseHealthMarkdownPath = Join-Path $ProjectRoot "release-health-$Tag.md"
+    $releaseHealthMarkdownExists = Test-Path -LiteralPath $releaseHealthMarkdownPath
+    Add-Check "release health markdown exists" $releaseHealthMarkdownExists "release-health-$Tag.md"
+    if ($releaseHealthMarkdownExists) {
+        $releaseHealthMarkdown = Get-Content -LiteralPath $releaseHealthMarkdownPath -Raw
+        Add-Check "release health markdown tag matches" ($releaseHealthMarkdown.Contains("Tag: ``$Tag``")) "tag=$Tag"
+        Add-Check "release health markdown has checks section" ($releaseHealthMarkdown.Contains("## Checks")) "## Checks"
+        Add-Check "release health markdown records no failed checks" (-not ($releaseHealthMarkdown -match '(?m)^\| [^|]+ \| FAIL \|')) "no FAIL rows"
+        foreach ($assetName in $releaseApkAssetDigests.Keys) {
+            $digest = Normalize-Sha256Digest $releaseApkAssetDigests[$assetName]
+            Add-Check "release health markdown lists APK digest $assetName" ($digest -ne "" -and $releaseHealthMarkdown.Contains($digest)) $digest
+        }
     }
 }
 
