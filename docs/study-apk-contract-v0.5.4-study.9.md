@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T01:24:10.6355375+08:00
+Generated: 2026-07-15T03:11:30.8402640+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 217 |
+| Check count | 219 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -175,6 +175,8 @@ Status: `OK`
 | CI channel skips study contract script | OK | paths-ignore |
 | PR CI skips study contract script | OK | paths-ignore |
 | release evidence contract covers PowerShell scripts | OK | release evidence paths |
+| release evidence contract accumulates script parse failures | OK | parse failure collection |
+| release evidence contract reports parse error locations | OK | parse error location |
 | release evidence contract asserts markdown report exists | OK | markdown report existence |
 | release evidence contract asserts JSON report type | OK | JSON reportType |
 | release evidence contract asserts summary check count | OK | summary check count parity |

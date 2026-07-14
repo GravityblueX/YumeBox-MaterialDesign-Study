@@ -40,13 +40,23 @@ jobs:
       - name: Parse PowerShell report scripts
         shell: pwsh
         run: |
-          $parseErrors = @()
+          $parseFailures = [System.Collections.Generic.List[object]]::new()
           $scripts = @(Get-ChildItem -Path scripts -Filter *.ps1)
           foreach ($script in $scripts) {
-            [System.Management.Automation.Language.Parser]::ParseFile($script.FullName, [ref]$null, [ref]$parseErrors) | Out-Null
+            $tokens = $null
+            $parseErrors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($script.FullName, [ref]$tokens, [ref]$parseErrors) | Out-Null
+            foreach ($parseError in @($parseErrors)) {
+              $parseFailures.Add([pscustomobject]@{
+                path = $script.FullName
+                message = $parseError.Message
+                startLineNumber = $parseError.Extent.StartLineNumber
+                startColumnNumber = $parseError.Extent.StartColumnNumber
+              }) | Out-Null
+            }
           }
-          if ($parseErrors.Count -gt 0) {
-            $parseErrors | Format-List *
+          if ($parseFailures.Count -gt 0) {
+            $parseFailures | Format-List *
             exit 1
           }
           "Parsed $($scripts.Count) PowerShell scripts."
