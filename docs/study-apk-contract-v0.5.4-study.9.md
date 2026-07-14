@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T00:01:32.8579754+08:00
+Generated: 2026-07-15T00:45:46.3872469+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 206 |
+| Check count | 212 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -58,6 +58,9 @@ Status: `OK`
 | study contract emits summary section | OK | summary section |
 | study contract records failure count | OK | summary failure count |
 | study contract writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
+| study contract normalizes SHA-256 digests | OK | digest normalization |
+| study contract cross-checks provenance APK names | OK | provenance asset name parity |
+| study contract cross-checks provenance APK digests | OK | provenance asset digest parity |
 | strict build filters APKs by Gradle task | OK | Get-ApkNamePatternForGradleTask |
 | strict build logs APK name pattern | OK | ApkNamePattern log |
 | strict build preserves Gradle exit code | OK | exit $code |
@@ -227,3 +230,6 @@ Status: `OK`
 | build environment tag matches | OK | tag=v0.5.4-study.9 |
 | build environment version matches gradle | OK | 0.5.4-study.9/5409 |
 | build environment build-tools recorded | OK | 36.0.0 |
+| provenance APK comparison evidence present | OK | assets=2, subjects=2 |
+| provenance APK subjects match release asset names | OK | assets=2, subjects=2 |
+| provenance APK digests match release assets | OK | matched=2 |

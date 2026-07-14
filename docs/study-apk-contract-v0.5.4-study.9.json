@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-15T00:01:32.8579754+08:00",
+  "generatedAt": "2026-07-15T00:45:46.3872469+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 206,
+    "checkCount": 212,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -199,6 +199,21 @@
       "name": "study contract writes UTF-8 without BOM",
       "ok": true,
       "detail": "UTF-8 no BOM writer"
+    },
+    {
+      "name": "study contract normalizes SHA-256 digests",
+      "ok": true,
+      "detail": "digest normalization"
+    },
+    {
+      "name": "study contract cross-checks provenance APK names",
+      "ok": true,
+      "detail": "provenance asset name parity"
+    },
+    {
+      "name": "study contract cross-checks provenance APK digests",
+      "ok": true,
+      "detail": "provenance asset digest parity"
     },
     {
       "name": "strict build filters APKs by Gradle task",
@@ -1044,6 +1059,21 @@
       "name": "build environment build-tools recorded",
       "ok": true,
       "detail": "36.0.0"
+    },
+    {
+      "name": "provenance APK comparison evidence present",
+      "ok": true,
+      "detail": "assets=2, subjects=2"
+    },
+    {
+      "name": "provenance APK subjects match release asset names",
+      "ok": true,
+      "detail": "assets=2, subjects=2"
+    },
+    {
+      "name": "provenance APK digests match release assets",
+      "ok": true,
+      "detail": "matched=2"
     }
   ],
   "failures": []

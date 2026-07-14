@@ -91,6 +91,14 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
+function Normalize-Sha256Digest {
+    param([object]$Value)
+    if ($null -eq $Value) { return "" }
+    $text = ([string]$Value).Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) { return "" }
+    return ($text -replace "^sha256:", "").ToLowerInvariant()
+}
+
 function Convert-ToMarkdown {
     param($Payload)
     $status = if ($Payload.ok) { "OK" } else { "FAIL" }
@@ -191,6 +199,9 @@ Add-Check "study contract pads boundary code span backticks" (Test-CodeSpanPadsB
 Add-Check "study contract emits summary section" (Test-FileContains -Path $PSCommandPath -Needle '## Summary') "summary section"
 Add-Check "study contract records failure count" (Test-FileContains -Path $PSCommandPath -Needle 'failureCount = $failed.Count') "summary failure count"
 Add-Check "study contract writes UTF-8 without BOM" (Test-FileContains -Path $PSCommandPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
+Add-Check "study contract normalizes SHA-256 digests" (Test-FileContains -Path $PSCommandPath -Needle 'function Normalize-Sha256Digest') "digest normalization"
+Add-Check "study contract cross-checks provenance APK names" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK subjects match release asset names') "provenance asset name parity"
+Add-Check "study contract cross-checks provenance APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK digests match release assets') "provenance asset digest parity"
 
 $strictBuildPath = Join-Path $ProjectRoot "scripts\build-apk-strict.ps1"
 Add-Check "strict build filters APKs by Gradle task" (Test-FileContains -Path $strictBuildPath -Needle "Get-ApkNamePatternForGradleTask") "Get-ApkNamePatternForGradleTask"
@@ -338,6 +349,8 @@ $deviceMatrixStatus = "missing"
 $permissionReviewStatus = "missing"
 $releaseAssetApkCount = 0
 $provenanceSubjectCount = 0
+$releaseApkAssetDigests = @{}
+$provenanceApkSubjectDigests = @{}
 $reportPath = Join-Path $ProjectRoot "docs\apk-installability-report-$Tag.json"
 if (Test-Path -LiteralPath $reportPath) {
     $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
@@ -410,6 +423,12 @@ if (Test-Path -LiteralPath $assetManifestPath) {
     Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
     Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
     Add-Check "release asset manifest gates recorded" (@($assetManifest.gates).Count -ge 10) "$(@($assetManifest.gates).Count) gates"
+    foreach ($asset in @($assetManifest.assets | Where-Object { [string]$_.kind -in @("debug-apk", "release-apk") })) {
+        $assetName = [string]$asset.name
+        if (-not [string]::IsNullOrWhiteSpace($assetName)) {
+            $releaseApkAssetDigests[$assetName] = Normalize-Sha256Digest $asset.digest
+        }
+    }
     $releaseHealthAsset = @($assetManifest.assets | Where-Object { [string]$_.kind -eq "release-health" -and [string]$_.name -eq "release-health-$Tag.md" } | Select-Object -First 1)
     Add-Check "release asset manifest includes release health report" ($releaseHealthAsset.Count -eq 1) "release-health-$Tag.md"
     if ($releaseHealthAsset.Count -eq 1) {
@@ -428,6 +447,12 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
     Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
     Add-Check "release provenance APK subjects" (@($provenance.subject).Count -ge 2) "$(@($provenance.subject).Count) subject(s)"
+    foreach ($subject in @($provenance.subject | Where-Object { [string]$_.annotations.kind -in @("debug-apk", "release-apk") })) {
+        $subjectName = [string]$subject.name
+        if (-not [string]::IsNullOrWhiteSpace($subjectName)) {
+            $provenanceApkSubjectDigests[$subjectName] = Normalize-Sha256Digest $subject.digest.sha256
+        }
+    }
     $materialUris = @($provenance.predicate.materials | ForEach-Object { [string]$_.uri })
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
     Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
@@ -440,6 +465,34 @@ if (Test-Path -LiteralPath $buildEnvironmentPath) {
     Add-Check "build environment tag matches" ([string]$buildEnvironment.tag -eq $Tag) "tag=$($buildEnvironment.tag)"
     Add-Check "build environment version matches gradle" ([string]$buildEnvironment.project.versionName -eq $versionName -and [string]$buildEnvironment.project.versionCode -eq $versionCode) "$($buildEnvironment.project.versionName)/$($buildEnvironment.project.versionCode)"
     Add-Check "build environment build-tools recorded" (-not [string]::IsNullOrWhiteSpace([string]$buildEnvironment.android.selectedBuildTools)) "$($buildEnvironment.android.selectedBuildTools)"
+}
+
+$assetNames = @($releaseApkAssetDigests.Keys | Sort-Object)
+$subjectNames = @($provenanceApkSubjectDigests.Keys | Sort-Object)
+$hasCrossCheckEvidence = ($assetNames.Count -gt 0 -and $subjectNames.Count -gt 0)
+Add-Check "provenance APK comparison evidence present" $hasCrossCheckEvidence "assets=$($assetNames.Count), subjects=$($subjectNames.Count)"
+if ($hasCrossCheckEvidence) {
+    $missingFromProvenance = @($assetNames | Where-Object { -not $provenanceApkSubjectDigests.ContainsKey($_) })
+    $extraInProvenance = @($subjectNames | Where-Object { -not $releaseApkAssetDigests.ContainsKey($_) })
+    $nameParityOk = ($missingFromProvenance.Count -eq 0 -and $extraInProvenance.Count -eq 0)
+    $nameDetail = if ($nameParityOk) {
+        "assets=$($assetNames.Count), subjects=$($subjectNames.Count)"
+    } else {
+        "missingFromProvenance=$($missingFromProvenance -join ', '); extraInProvenance=$($extraInProvenance -join ', ')"
+    }
+    Add-Check "provenance APK subjects match release asset names" $nameParityOk $nameDetail
+
+    $digestMismatches = @($assetNames | Where-Object {
+        $provenanceApkSubjectDigests.ContainsKey($_) -and $releaseApkAssetDigests[$_] -ne $provenanceApkSubjectDigests[$_]
+    })
+    $digestDetail = if ($digestMismatches.Count -eq 0) {
+        "matched=$($assetNames.Count)"
+    } else {
+        ($digestMismatches | ForEach-Object {
+            "{0}: asset={1}, provenance={2}" -f $_, $releaseApkAssetDigests[$_], $provenanceApkSubjectDigests[$_]
+        }) -join "; "
+    }
+    Add-Check "provenance APK digests match release assets" ($digestMismatches.Count -eq 0) $digestDetail
 }
 
 $checkArray = @()
