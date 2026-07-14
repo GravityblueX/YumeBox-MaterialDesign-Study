@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-14T22:54:13.4138426+08:00
+Generated: 2026-07-15T00:01:32.8579754+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 203 |
+| Check count | 206 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -172,6 +172,9 @@ Status: `OK`
 | CI channel skips study contract script | OK | paths-ignore |
 | PR CI skips study contract script | OK | paths-ignore |
 | release evidence contract covers PowerShell scripts | OK | release evidence paths |
+| release evidence contract asserts markdown report exists | OK | markdown report existence |
+| release evidence contract asserts markdown OK status | OK | markdown OK status |
+| release evidence contract asserts markdown check count | OK | markdown check count parity |
 | report ok flag | OK | ok=True |
 | report tag matches | OK | tag=v0.5.4-study.9 |
 | report package matches gradle | OK | com.github.yizuka17.yumebox.md3 |

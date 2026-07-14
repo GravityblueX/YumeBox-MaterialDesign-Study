@@ -328,6 +328,9 @@ $releaseEvidenceWorkflowPath = Join-Path $ProjectRoot ".github\workflows\release
 Add-Check "CI channel skips study contract script" (Test-FileContains -Path $ciChannelWorkflowPath -Needle "scripts/study-apk-contract.ps1") "paths-ignore"
 Add-Check "PR CI skips study contract script" (Test-FileContains -Path $pullRequestWorkflowPath -Needle "scripts/study-apk-contract.ps1") "paths-ignore"
 Add-Check "release evidence contract covers PowerShell scripts" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle "scripts/*.ps1") "release evidence paths"
+Add-Check "release evidence contract asserts markdown report exists" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle "study APK contract Markdown was not generated") "markdown report existence"
+Add-Check "release evidence contract asserts markdown OK status" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'Status:\s+`OK`') "markdown OK status"
+Add-Check "release evidence contract asserts markdown check count" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$expectedCheckCountRow = "| Check count | $checkCount |"') "markdown check count parity"
 
 $apks = @()
 $apkEvidenceCount = 0

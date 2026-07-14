@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-14T22:54:13.4138426+08:00",
+  "generatedAt": "2026-07-15T00:01:32.8579754+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 203,
+    "checkCount": 206,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -769,6 +769,21 @@
       "name": "release evidence contract covers PowerShell scripts",
       "ok": true,
       "detail": "release evidence paths"
+    },
+    {
+      "name": "release evidence contract asserts markdown report exists",
+      "ok": true,
+      "detail": "markdown report existence"
+    },
+    {
+      "name": "release evidence contract asserts markdown OK status",
+      "ok": true,
+      "detail": "markdown OK status"
+    },
+    {
+      "name": "release evidence contract asserts markdown check count",
+      "ok": true,
+      "detail": "markdown check count parity"
     },
     {
       "name": "report ok flag",

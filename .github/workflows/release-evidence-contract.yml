@@ -62,8 +62,12 @@ jobs:
         shell: pwsh
         run: |
           $jsonOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.json"
+          $markdownOut = Join-Path $env:RUNNER_TEMP "study-apk-contract.md"
           if (-not (Test-Path -LiteralPath $jsonOut)) {
             throw "study APK contract JSON was not generated: $jsonOut"
+          }
+          if (-not (Test-Path -LiteralPath $markdownOut)) {
+            throw "study APK contract Markdown was not generated: $markdownOut"
           }
 
           $report = Get-Content -LiteralPath $jsonOut -Raw | ConvertFrom-Json
@@ -75,6 +79,18 @@ jobs:
           $checkCount = @($report.checks).Count
           if ($checkCount -lt 190) {
             throw "study APK contract produced too few checks: $checkCount"
+          }
+
+          $markdown = Get-Content -LiteralPath $markdownOut -Raw
+          if ($markdown -notmatch '(?m)^Status:\s+`OK`$') {
+            throw "study APK contract Markdown did not record OK status"
+          }
+          if ($markdown -notmatch '(?m)^## Summary$') {
+            throw "study APK contract Markdown did not include a summary section"
+          }
+          $expectedCheckCountRow = "| Check count | $checkCount |"
+          if (-not $markdown.Contains($expectedCheckCountRow)) {
+            throw "study APK contract Markdown check count does not match JSON: $expectedCheckCountRow"
           }
 
           "Validated study APK contract: tag=$($report.tag), checks=$checkCount"
