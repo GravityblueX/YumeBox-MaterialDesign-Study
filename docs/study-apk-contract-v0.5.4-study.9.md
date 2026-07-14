@@ -1,8 +1,21 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-13T22:23:10.4124889+08:00
+Generated: 2026-07-14T22:54:13.4138426+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
+
+## Summary
+
+| Field | Value |
+|---|---|
+| Check count | 203 |
+| Failure count | 0 |
+| Required files | 28 |
+| APK evidence count | 2 |
+| Release APK asset count | 2 |
+| Provenance subject count | 2 |
+| Device matrix status | `no_devices` |
+| Permission review status | `review_required` |
 
 ## Checks
 
@@ -42,6 +55,9 @@ Status: `OK`
 | required file scripts\build-environment-report.ps1 | OK | scripts\build-environment-report.ps1 |
 | required file scripts\publish-apk-assets.ps1 | OK | scripts\publish-apk-assets.ps1 |
 | study contract pads boundary code span backticks | OK | boundary backtick padding |
+| study contract emits summary section | OK | summary section |
+| study contract records failure count | OK | summary failure count |
+| study contract writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | strict build filters APKs by Gradle task | OK | Get-ApkNamePatternForGradleTask |
 | strict build logs APK name pattern | OK | ApkNamePattern log |
 | strict build preserves Gradle exit code | OK | exit $code |
@@ -208,4 +224,3 @@ Status: `OK`
 | build environment tag matches | OK | tag=v0.5.4-study.9 |
 | build environment version matches gradle | OK | 0.5.4-study.9/5409 |
 | build environment build-tools recorded | OK | 36.0.0 |
-

@@ -31,7 +31,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\study-apk-contract.ps1
 ```
 
 `study-apk-contract.ps1` is the fast local contract check for an already archived study release. It compares `gradle.properties` with the installability JSON report and verifies the recorded APK digest, `zipalign`, `aapt badging`, signing, package id, version, and ABI evidence.
-By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `docs/study-apk-contract-<tag>.json`.
+By default it archives the contract to `docs/study-apk-contract-<tag>.md` and `docs/study-apk-contract-<tag>.json`, including a summary of check count, failure count, APK evidence, device matrix status, and permission review status.
 
 `device-install-matrix.ps1` records the real-device layer above APK tooling checks. With connected owned or authorized Android devices it runs `adb install -r -t`; without devices it archives an explicit `no_devices` report instead of pretending a device install happened.
 

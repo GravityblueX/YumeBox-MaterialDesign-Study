@@ -55,7 +55,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-installable-apk.ps1 -FromRelease -Tag v0.5.4-study.9
 ```
 
-`study-apk-contract.ps1` 是快速合同检查：读取 `gradle.properties` 和已归档的安装性 JSON 报告，确认版本、包名、ABI、GitHub digest、zipalign、badging 和签名证据一致。默认会归档 `docs\study-apk-contract-<tag>.md` 和 `docs\study-apk-contract-<tag>.json`。
+`study-apk-contract.ps1` 是快速合同检查：读取 `gradle.properties` 和已归档的安装性 JSON 报告，确认版本、包名、ABI、GitHub digest、zipalign、badging 和签名证据一致。默认会归档 `docs\study-apk-contract-<tag>.md` 和 `docs\study-apk-contract-<tag>.json`，并汇总检查数、失败数、APK 证据数、设备矩阵状态和权限复核状态。
 
 `device-install-matrix.ps1` 是真机/模拟器安装矩阵层：有已连接且授权的设备时执行 `adb install -r -t`，没有设备时归档 `no_devices` 报告，避免把工具链安装性验证误写成真机安装验证。需要强制真机门禁时追加 `-RequireDevice`。
 

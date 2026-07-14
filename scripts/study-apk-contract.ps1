@@ -78,6 +78,19 @@ function Format-MarkdownCodeSpan {
     return "$fence$padded$fence"
 }
 
+function Write-Utf8NoBom {
+    param(
+        [string]$Path,
+        [string]$Content
+    )
+    $normalized = $Content -replace "`r`n?", "`n"
+    if (-not $normalized.EndsWith("`n")) {
+        $normalized += "`n"
+    }
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
+}
+
 function Convert-ToMarkdown {
     param($Payload)
     $status = if ($Payload.ok) { "OK" } else { "FAIL" }
@@ -89,6 +102,19 @@ function Convert-ToMarkdown {
     $lines.Add("Generated: $($Payload.generatedAt)")
     $lines.Add("ProjectRoot: $projectRootCode")
     $lines.Add("Status: $statusCode")
+    $lines.Add("")
+    $lines.Add("## Summary")
+    $lines.Add("")
+    $lines.Add("| Field | Value |")
+    $lines.Add("|---|---|")
+    $lines.Add("| Check count | $($Payload.summary.checkCount) |")
+    $lines.Add("| Failure count | $($Payload.summary.failureCount) |")
+    $lines.Add("| Required files | $($Payload.summary.requiredFileCount) |")
+    $lines.Add("| APK evidence count | $($Payload.summary.apkEvidenceCount) |")
+    $lines.Add("| Release APK asset count | $($Payload.summary.releaseAssetApkCount) |")
+    $lines.Add("| Provenance subject count | $($Payload.summary.provenanceSubjectCount) |")
+    $lines.Add("| Device matrix status | $(Format-MarkdownCodeSpan -Value $Payload.summary.deviceMatrixStatus) |")
+    $lines.Add("| Permission review status | $(Format-MarkdownCodeSpan -Value $Payload.summary.permissionReviewStatus) |")
     $lines.Add("")
     $lines.Add("## Checks")
     $lines.Add("")
@@ -162,6 +188,9 @@ foreach ($relative in $requiredFiles) {
     Add-Check "required file $relative" (Test-Path -LiteralPath $path) $relative
 }
 Add-Check "study contract pads boundary code span backticks" (Test-CodeSpanPadsBoundaryBackticks -Path $PSCommandPath) "boundary backtick padding"
+Add-Check "study contract emits summary section" (Test-FileContains -Path $PSCommandPath -Needle '## Summary') "summary section"
+Add-Check "study contract records failure count" (Test-FileContains -Path $PSCommandPath -Needle 'failureCount = $failed.Count') "summary failure count"
+Add-Check "study contract writes UTF-8 without BOM" (Test-FileContains -Path $PSCommandPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $strictBuildPath = Join-Path $ProjectRoot "scripts\build-apk-strict.ps1"
 Add-Check "strict build filters APKs by Gradle task" (Test-FileContains -Path $strictBuildPath -Needle "Get-ApkNamePatternForGradleTask") "Get-ApkNamePatternForGradleTask"
@@ -301,10 +330,16 @@ Add-Check "PR CI skips study contract script" (Test-FileContains -Path $pullRequ
 Add-Check "release evidence contract covers PowerShell scripts" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle "scripts/*.ps1") "release evidence paths"
 
 $apks = @()
+$apkEvidenceCount = 0
+$deviceMatrixStatus = "missing"
+$permissionReviewStatus = "missing"
+$releaseAssetApkCount = 0
+$provenanceSubjectCount = 0
 $reportPath = Join-Path $ProjectRoot "docs\apk-installability-report-$Tag.json"
 if (Test-Path -LiteralPath $reportPath) {
     $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
     $apks = @($report.apks)
+    $apkEvidenceCount = $apks.Count
     Add-Check "report ok flag" ([bool]$report.ok) "ok=$($report.ok)"
     Add-Check "report tag matches" ([string]$report.tag -eq $Tag) "tag=$($report.tag)"
     Add-Check "report package matches gradle" ([string]$report.expectations.applicationId -eq $applicationId) "$($report.expectations.applicationId)"
@@ -332,6 +367,7 @@ $deviceMatrixPath = Join-Path $ProjectRoot "docs\device-install-matrix-$Tag.json
 if (Test-Path -LiteralPath $deviceMatrixPath) {
     $deviceMatrix = Get-Content -LiteralPath $deviceMatrixPath -Raw | ConvertFrom-Json
     $deviceStatus = [string]$deviceMatrix.status
+    $deviceMatrixStatus = $deviceStatus
     $deviceCount = @($deviceMatrix.devices).Count
     $deviceResults = @($deviceMatrix.results)
     Add-Check "device install matrix ok flag" ([bool]$deviceMatrix.ok) "ok=$($deviceMatrix.ok)"
@@ -347,6 +383,7 @@ if (Test-Path -LiteralPath $deviceMatrixPath) {
 $permissionReviewPath = Join-Path $ProjectRoot "docs\apk-permission-review-$Tag.json"
 if (Test-Path -LiteralPath $permissionReviewPath) {
     $permissionReview = Get-Content -LiteralPath $permissionReviewPath -Raw | ConvertFrom-Json
+    $permissionReviewStatus = [string]$permissionReview.status
     Add-Check "permission review ok flag" ([bool]$permissionReview.ok) "ok=$($permissionReview.ok)"
     Add-Check "permission review tag matches" ([string]$permissionReview.tag -eq $Tag) "tag=$($permissionReview.tag)"
     Add-Check "permission review status recorded" (-not [string]::IsNullOrWhiteSpace([string]$permissionReview.status)) "status=$($permissionReview.status)"
@@ -365,6 +402,7 @@ if (Test-Path -LiteralPath $permissionJustificationPath) {
 $assetManifestPath = Join-Path $ProjectRoot "docs\release-asset-manifest-$Tag.json"
 if (Test-Path -LiteralPath $assetManifestPath) {
     $assetManifest = Get-Content -LiteralPath $assetManifestPath -Raw | ConvertFrom-Json
+    $releaseAssetApkCount = [int]$assetManifest.summary.apkAssetCount
     Add-Check "release asset manifest ok flag" ([bool]$assetManifest.ok) "ok=$($assetManifest.ok)"
     Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
     Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
@@ -382,6 +420,7 @@ if (Test-Path -LiteralPath $assetManifestPath) {
 $provenancePath = Join-Path $ProjectRoot "docs\release-provenance-$Tag.json"
 if (Test-Path -LiteralPath $provenancePath) {
     $provenance = Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
+    $provenanceSubjectCount = @($provenance.subject).Count
     Add-Check "release provenance ok flag" ([bool]$provenance.ok) "ok=$($provenance.ok)"
     Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
     Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
@@ -411,6 +450,16 @@ $payload = New-Object psobject -Property ([ordered]@{
     projectRoot = $ProjectRoot
     tag = $Tag
     ok = ($failed.Count -eq 0)
+    summary = [pscustomobject]@{
+        checkCount = $checkArray.Count
+        failureCount = $failed.Count
+        requiredFileCount = $requiredFiles.Count
+        apkEvidenceCount = $apkEvidenceCount
+        releaseAssetApkCount = $releaseAssetApkCount
+        provenanceSubjectCount = $provenanceSubjectCount
+        deviceMatrixStatus = $deviceMatrixStatus
+        permissionReviewStatus = $permissionReviewStatus
+    }
     checks = $checkArray
     failures = @($failed)
 })
@@ -425,12 +474,12 @@ if ([string]::IsNullOrWhiteSpace($MarkdownOut)) {
 if ($JsonOut) {
     $jsonParent = Split-Path -Parent $JsonOut
     if ($jsonParent) { New-Item -ItemType Directory -Force -Path $jsonParent | Out-Null }
-    $payload | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
+    Write-Utf8NoBom -Path $JsonOut -Content ($payload | ConvertTo-Json -Depth 8)
 }
 if ($MarkdownOut) {
     $markdownParent = Split-Path -Parent $MarkdownOut
     if ($markdownParent) { New-Item -ItemType Directory -Force -Path $markdownParent | Out-Null }
-    Convert-ToMarkdown -Payload $payload | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
+    Write-Utf8NoBom -Path $MarkdownOut -Content (Convert-ToMarkdown -Payload $payload)
 }
 
 if ($Json) {
