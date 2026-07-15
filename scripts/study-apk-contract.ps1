@@ -284,6 +284,9 @@ Add-Check "release provenance code-spans source commit header" (Test-FileContain
 Add-Check "release provenance code-spans package names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $subject.annotations.packageName') "package code span"
 Add-Check "release provenance records dirty count" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'dirtyCountWhenGenerated') "dirty count evidence"
 Add-Check "release provenance writes UTF-8 without BOM" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
+Add-Check "release provenance gates non-empty material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have URIs') "material URI presence"
+Add-Check "release provenance gates unique material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'material URIs are unique') "material URI uniqueness"
+Add-Check "release provenance gates material digest evidence" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have digest evidence') "material digest evidence"
 
 $releaseAssetManifestScriptPath = Join-Path $ProjectRoot "scripts\release-asset-manifest.ps1"
 Add-Check "release asset manifest escapes markdown table cells" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'function Escape-Md') "table cell escaping"
@@ -505,6 +508,18 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance tag matches" ([string]$provenance.tag -eq $Tag) "tag=$($provenance.tag)"
     Add-Check "release provenance predicate recorded" ([string]$provenance.predicateType -eq "https://slsa.dev/provenance/v1") "$($provenance.predicateType)"
     Add-Check "release provenance APK subjects" (@($provenance.subject).Count -ge 2) "$(@($provenance.subject).Count) subject(s)"
+    $provenanceGateByName = @{}
+    foreach ($gate in @($provenance.gates)) {
+        $gateName = [string]$gate.name
+        if (-not [string]::IsNullOrWhiteSpace($gateName)) {
+            $provenanceGateByName[$gateName] = $gate
+        }
+    }
+    foreach ($requiredGateName in @("all materials have URIs", "material URIs are unique", "all materials have digest evidence")) {
+        $gate = $provenanceGateByName[$requiredGateName]
+        $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }
+        Add-Check "release provenance gate passes: $requiredGateName" ($null -ne $gate -and [bool]$gate.ok) $gateDetail
+    }
     foreach ($subject in @($provenance.subject | Where-Object { [string]$_.annotations.kind -in @("debug-apk", "release-apk") })) {
         $subjectName = [string]$subject.name
         if (-not [string]::IsNullOrWhiteSpace($subjectName)) {

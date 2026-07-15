@@ -164,6 +164,40 @@ $head = Git-Text @("rev-parse", "HEAD")
 $branch = Git-Text @("branch", "--show-current")
 $remote = Git-Text @("remote", "get-url", "origin")
 $dirtyLines = @((Git-Text @("status", "--short")) -split "`r?`n" | Where-Object { $_.Trim() })
+$materials = @(
+    [pscustomobject]@{
+        uri = $remote
+        digest = [pscustomobject]@{ gitCommit = $head }
+    },
+    [pscustomobject]@{
+        uri = "file://docs/release-asset-manifest-$Tag.json"
+        digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $AssetManifestJson }
+    },
+    [pscustomobject]@{
+        uri = "file://docs/build-environment-$Tag.json"
+        digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $BuildEnvironmentJson }
+    },
+    [pscustomobject]@{
+        uri = "file://docs/apk-permission-justification-$Tag.json"
+        digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $PermissionJustificationJson }
+    }
+)
+$materialUris = @($materials | ForEach-Object { [string]$_.uri })
+$materialsMissingUri = @($materials | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.uri) })
+$duplicateMaterialUris = @(
+    $materialUris |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
+$materialsMissingDigest = @(
+    $materials | Where-Object {
+        $digest = $_.digest
+        [string]::IsNullOrWhiteSpace([string]$digest.gitCommit) -and
+            [string]::IsNullOrWhiteSpace([string]$digest.sha256)
+    }
+)
 
 Add-Gate $gates "asset manifest ok" ([bool]$manifest.ok) "ok=$($manifest.ok)"
 Add-Gate $gates "asset manifest tag matches" ([string]$manifest.tag -eq $Tag) "tag=$($manifest.tag)"
@@ -173,6 +207,9 @@ Add-Gate $gates "git commit available" (-not [string]::IsNullOrWhiteSpace($head)
 Add-Gate $gates "release is not draft" (-not [bool]$manifest.release.isDraft) "isDraft=$($manifest.release.isDraft)"
 Add-Gate $gates "package id recorded" (-not [string]::IsNullOrWhiteSpace($applicationId)) $applicationId
 Add-Gate $gates "version recorded" (-not [string]::IsNullOrWhiteSpace($versionName) -and -not [string]::IsNullOrWhiteSpace($versionCode)) "$versionName/$versionCode"
+Add-Gate $gates "all materials have URIs" ($materialsMissingUri.Count -eq 0) "materials=$($materials.Count), missing=$($materialsMissingUri.Count)"
+Add-Gate $gates "material URIs are unique" ($duplicateMaterialUris.Count -eq 0) "materials=$($materials.Count), duplicates=$($duplicateMaterialUris.Count)"
+Add-Gate $gates "all materials have digest evidence" ($materialsMissingDigest.Count -eq 0) "materials=$($materials.Count), missing=$($materialsMissingDigest.Count)"
 
 $gateArray = @(foreach ($gate in $gates) { $gate })
 $failures = @($gateArray | Where-Object { -not [bool]$_.ok })
@@ -210,24 +247,7 @@ $payload = [pscustomobject]@{
                 finishedOn = (Get-Date).ToString("o")
             }
         }
-        materials = @(
-            [pscustomobject]@{
-                uri = $remote
-                digest = [pscustomobject]@{ gitCommit = $head }
-            },
-            [pscustomobject]@{
-                uri = "file://docs/release-asset-manifest-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $AssetManifestJson }
-            },
-            [pscustomobject]@{
-                uri = "file://docs/build-environment-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $BuildEnvironmentJson }
-            },
-            [pscustomobject]@{
-                uri = "file://docs/apk-permission-justification-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $PermissionJustificationJson }
-            }
-        )
+        materials = @($materials)
     }
     gates = $gateArray
     failures = @($failures)

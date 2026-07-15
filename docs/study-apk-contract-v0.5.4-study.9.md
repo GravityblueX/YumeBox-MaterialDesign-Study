@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T16:45:55.8114534+08:00
+Generated: 2026-07-15T17:53:12.0760411+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 237 |
+| Check count | 243 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -118,6 +118,9 @@ Status: `OK`
 | release provenance code-spans package names | OK | package code span |
 | release provenance records dirty count | OK | dirty count evidence |
 | release provenance writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
+| release provenance gates non-empty material URIs | OK | material URI presence |
+| release provenance gates unique material URIs | OK | material URI uniqueness |
+| release provenance gates material digest evidence | OK | material digest evidence |
 | release asset manifest escapes markdown table cells | OK | table cell escaping |
 | release asset manifest escapes newlines | OK | newline escaping |
 | release asset manifest escapes APK asset kind | OK | asset kind escaping |
@@ -240,12 +243,15 @@ Status: `OK`
 | release health markdown tag matches | OK | tag=v0.5.4-study.9 |
 | release health markdown has checks section | OK | ## Checks |
 | release health markdown records no failed checks | OK | no FAIL rows |
-| release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk | OK | 7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc |
 | release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk | OK | 9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80 |
+| release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk | OK | 7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc |
 | release provenance ok flag | OK | ok=True |
 | release provenance tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |
 | release provenance APK subjects | OK | 2 subject(s) |
+| release provenance gate passes: all materials have URIs | OK | materials=4, missing=0 |
+| release provenance gate passes: material URIs are unique | OK | materials=4, duplicates=0 |
+| release provenance gate passes: all materials have digest evidence | OK | materials=4, missing=0 |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance material digest matches release asset manifest | OK | recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551 |

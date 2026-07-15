@@ -1,1207 +1,1235 @@
 {
-    "reportType":  "study_apk_contract",
-    "generatedAt":  "2026-07-15T16:45:55.8114534+08:00",
-    "projectRoot":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
-    "tag":  "v0.5.4-study.9",
-    "ok":  true,
-    "summary":  {
-                    "checkCount":  237,
-                    "failureCount":  0,
-                    "requiredFileCount":  28,
-                    "apkEvidenceCount":  2,
-                    "releaseAssetApkCount":  2,
-                    "provenanceSubjectCount":  2,
-                    "deviceMatrixStatus":  "no_devices",
-                    "permissionReviewStatus":  "review_required"
-                },
-    "checks":  [
-                   {
-                       "name":  "gradle.properties exists",
-                       "ok":  true,
-                       "detail":  "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\gradle.properties"
-                   },
-                   {
-                       "name":  "version name present",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9"
-                   },
-                   {
-                       "name":  "version code present",
-                       "ok":  true,
-                       "detail":  "5409"
-                   },
-                   {
-                       "name":  "application id present",
-                       "ok":  true,
-                       "detail":  "com.github.yizuka17.yumebox.md3"
-                   },
-                   {
-                       "name":  "arm64 ABI configured",
-                       "ok":  true,
-                       "detail":  "arm64-v8a"
-                   },
-                   {
-                       "name":  "required file README.md",
-                       "ok":  true,
-                       "detail":  "README.md"
-                   },
-                   {
-                       "name":  "required file RELEASE_STUDY.md",
-                       "ok":  true,
-                       "detail":  "RELEASE_STUDY.md"
-                   },
-                   {
-                       "name":  "required file docs\\apk-release-assurance.md",
-                       "ok":  true,
-                       "detail":  "docs\\apk-release-assurance.md"
-                   },
-                   {
-                       "name":  "required file docs\\apk-installability-report-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\apk-installability-report-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\apk-installability-report-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\apk-installability-report-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\device-install-matrix-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\device-install-matrix-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\device-install-matrix-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\device-install-matrix-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\apk-permission-review-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\apk-permission-review-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\apk-permission-review-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\apk-permission-review-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\apk-permission-justification-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\apk-permission-justification-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\apk-permission-justification-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\apk-permission-justification-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\release-asset-manifest-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\release-asset-manifest-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\release-asset-manifest-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\release-asset-manifest-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\release-provenance-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\release-provenance-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\release-provenance-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\release-provenance-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file docs\\build-environment-v0.5.4-study.9.md",
-                       "ok":  true,
-                       "detail":  "docs\\build-environment-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "required file docs\\build-environment-v0.5.4-study.9.json",
-                       "ok":  true,
-                       "detail":  "docs\\build-environment-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "required file scripts\\build-apk-strict.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\build-apk-strict.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\verify-installable-apk.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\verify-installable-apk.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\release-health.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\release-health.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\apk-installability-report.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\apk-installability-report.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\device-install-matrix.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\device-install-matrix.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\apk-permission-review.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\apk-permission-review.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\apk-permission-justification.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\apk-permission-justification.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\release-asset-manifest.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\release-asset-manifest.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\release-provenance.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\release-provenance.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\build-environment-report.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\build-environment-report.ps1"
-                   },
-                   {
-                       "name":  "required file scripts\\publish-apk-assets.ps1",
-                       "ok":  true,
-                       "detail":  "scripts\\publish-apk-assets.ps1"
-                   },
-                   {
-                       "name":  "study contract pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "study contract emits summary section",
-                       "ok":  true,
-                       "detail":  "summary section"
-                   },
-                   {
-                       "name":  "study contract records failure count",
-                       "ok":  true,
-                       "detail":  "summary failure count"
-                   },
-                   {
-                       "name":  "study contract writes UTF-8 without BOM",
-                       "ok":  true,
-                       "detail":  "UTF-8 no BOM writer"
-                   },
-                   {
-                       "name":  "study contract normalizes SHA-256 digests",
-                       "ok":  true,
-                       "detail":  "digest normalization"
-                   },
-                   {
-                       "name":  "study contract cross-checks provenance APK names",
-                       "ok":  true,
-                       "detail":  "provenance asset name parity"
-                   },
-                   {
-                       "name":  "study contract cross-checks provenance APK digests",
-                       "ok":  true,
-                       "detail":  "provenance asset digest parity"
-                   },
-                   {
-                       "name":  "study contract cross-checks provenance material digests",
-                       "ok":  true,
-                       "detail":  "provenance material digest parity"
-                   },
-                   {
-                       "name":  "study contract checks release health markdown",
-                       "ok":  true,
-                       "detail":  "release health markdown"
-                   },
-                   {
-                       "name":  "study contract cross-checks release health APK digests",
-                       "ok":  true,
-                       "detail":  "release health APK digests"
-                   },
-                   {
-                       "name":  "strict build filters APKs by Gradle task",
-                       "ok":  true,
-                       "detail":  "Get-ApkNamePatternForGradleTask"
-                   },
-                   {
-                       "name":  "strict build logs APK name pattern",
-                       "ok":  true,
-                       "detail":  "ApkNamePattern log"
-                   },
-                   {
-                       "name":  "strict build preserves Gradle exit code",
-                       "ok":  true,
-                       "detail":  "exit $code"
-                   },
-                   {
-                       "name":  "strict build creates Gradle cache dir",
-                       "ok":  true,
-                       "detail":  "GRADLE_USER_HOME mkdir"
-                   },
-                   {
-                       "name":  "strict build supports ambient JAVA_HOME fallback",
-                       "ok":  true,
-                       "detail":  "ambient JAVA_HOME"
-                   },
-                   {
-                       "name":  "strict build exposes Gradle cache relocation",
-                       "ok":  true,
-                       "detail":  "GradleUserHome parameter"
-                   },
-                   {
-                       "name":  "strict build logs Gradle cache home",
-                       "ok":  true,
-                       "detail":  "GRADLE_USER_HOME log"
-                   },
-                   {
-                       "name":  "strict build enforces Gradle cache free space",
-                       "ok":  true,
-                       "detail":  "MinGradleDriveFreeGb"
-                   },
-                   {
-                       "name":  "release health requests release assets",
-                       "ok":  true,
-                       "detail":  "gh release assets"
-                   },
-                   {
-                       "name":  "release health records asset digests",
-                       "ok":  true,
-                       "detail":  "asset digest"
-                   },
-                   {
-                       "name":  "release health records APK SHA-256",
-                       "ok":  true,
-                       "detail":  "APK SHA-256"
-                   },
-                   {
-                       "name":  "release health omits itself from asset table",
-                       "ok":  true,
-                       "detail":  "skip OutputName"
-                   },
-                   {
-                       "name":  "release health marks failed checks as FAIL",
-                       "ok":  true,
-                       "detail":  "FAIL status"
-                   },
-                   {
-                       "name":  "release health collects failed checks",
-                       "ok":  true,
-                       "detail":  "failedChecks"
-                   },
-                   {
-                       "name":  "release health exits nonzero on failure",
-                       "ok":  true,
-                       "detail":  "exit 1 on failures"
-                   },
-                   {
-                       "name":  "release health captures GitHub release errors",
-                       "ok":  true,
-                       "detail":  "gh release stderr"
-                   },
-                   {
-                       "name":  "release health has release error fallback",
-                       "ok":  true,
-                       "detail":  "release error fallback"
-                   },
-                   {
-                       "name":  "release health only falls back when release is missing",
-                       "ok":  true,
-                       "detail":  "fallback requires missing release"
-                   },
-                   {
-                       "name":  "release health prints failed check names",
-                       "ok":  true,
-                       "detail":  "failed check summary"
-                   },
-                   {
-                       "name":  "release health failure summary preserves explicit exit",
-                       "ok":  true,
-                       "detail":  "stderr without Write-Error termination"
-                   },
-                   {
-                       "name":  "release health escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "release health escapes check details",
-                       "ok":  true,
-                       "detail":  "check detail escaping"
-                   },
-                   {
-                       "name":  "release health escapes APK status fields",
-                       "ok":  true,
-                       "detail":  "APK status escaping"
-                   },
-                   {
-                       "name":  "release health formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "release health code-spans APK SHA-256",
-                       "ok":  true,
-                       "detail":  "APK SHA-256 code span"
-                   },
-                   {
-                       "name":  "release health pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "release health code-spans repository header",
-                       "ok":  true,
-                       "detail":  "repository header code span"
-                   },
-                   {
-                       "name":  "release health code-spans version header",
-                       "ok":  true,
-                       "detail":  "version header code span"
-                   },
-                   {
-                       "name":  "release health code-spans tag header",
-                       "ok":  true,
-                       "detail":  "tag header code span"
-                   },
-                   {
-                       "name":  "installability report escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "installability report escapes APK status cells",
-                       "ok":  true,
-                       "detail":  "status escaping"
-                   },
-                   {
-                       "name":  "installability report escapes metadata labels",
-                       "ok":  true,
-                       "detail":  "label escaping"
-                   },
-                   {
-                       "name":  "installability report formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "installability report code-spans APK names",
-                       "ok":  true,
-                       "detail":  "APK name code span"
-                   },
-                   {
-                       "name":  "installability report pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "installability report code-spans repository header",
-                       "ok":  true,
-                       "detail":  "repository header code span"
-                   },
-                   {
-                       "name":  "installability report code-spans Android SDK header",
-                       "ok":  true,
-                       "detail":  "Android SDK header code span"
-                   },
-                   {
-                       "name":  "installability report code-spans build tools header",
-                       "ok":  true,
-                       "detail":  "build tools header code span"
-                   },
-                   {
-                       "name":  "installability report code-spans SHA-256 values",
-                       "ok":  true,
-                       "detail":  "SHA-256 code span"
-                   },
-                   {
-                       "name":  "installability report code-spans GitHub digests",
-                       "ok":  true,
-                       "detail":  "GitHub digest code span"
-                   },
-                   {
-                       "name":  "installability report code-spans package names",
-                       "ok":  true,
-                       "detail":  "package name code span"
-                   },
-                   {
-                       "name":  "release provenance escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "release provenance formats subject names as code spans",
-                       "ok":  true,
-                       "detail":  "subject name code span"
-                   },
-                   {
-                       "name":  "release provenance escapes gate details",
-                       "ok":  true,
-                       "detail":  "gate detail escaping"
-                   },
-                   {
-                       "name":  "release provenance formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "release provenance code-spans APK digests",
-                       "ok":  true,
-                       "detail":  "digest code span"
-                   },
-                   {
-                       "name":  "release provenance code-spans predicate header",
-                       "ok":  true,
-                       "detail":  "predicate header code span"
-                   },
-                   {
-                       "name":  "release provenance pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "release provenance code-spans repository header",
-                       "ok":  true,
-                       "detail":  "repository header code span"
-                   },
-                   {
-                       "name":  "release provenance code-spans status header",
-                       "ok":  true,
-                       "detail":  "status header code span"
-                   },
-                   {
-                       "name":  "release provenance code-spans source commit header",
-                       "ok":  true,
-                       "detail":  "source commit header code span"
-                   },
-                   {
-                       "name":  "release provenance code-spans package names",
-                       "ok":  true,
-                       "detail":  "package code span"
-                   },
-                   {
-                       "name":  "release provenance records dirty count",
-                       "ok":  true,
-                       "detail":  "dirty count evidence"
-                   },
-                   {
-                       "name":  "release provenance writes UTF-8 without BOM",
-                       "ok":  true,
-                       "detail":  "UTF-8 no BOM writer"
-                   },
-                   {
-                       "name":  "release asset manifest escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "release asset manifest escapes newlines",
-                       "ok":  true,
-                       "detail":  "newline escaping"
-                   },
-                   {
-                       "name":  "release asset manifest escapes APK asset kind",
-                       "ok":  true,
-                       "detail":  "asset kind escaping"
-                   },
-                   {
-                       "name":  "release asset manifest formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans APK asset names",
-                       "ok":  true,
-                       "detail":  "asset name code span"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans repository header",
-                       "ok":  true,
-                       "detail":  "repository header code span"
-                   },
-                   {
-                       "name":  "release asset manifest pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans release header",
-                       "ok":  true,
-                       "detail":  "release header code span"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans status header",
-                       "ok":  true,
-                       "detail":  "status header code span"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans APK asset digests",
-                       "ok":  true,
-                       "detail":  "APK digest code span"
-                   },
-                   {
-                       "name":  "release asset manifest code-spans supporting asset digests",
-                       "ok":  true,
-                       "detail":  "supporting digest code span"
-                   },
-                   {
-                       "name":  "release asset manifest gates canonical APK digests",
-                       "ok":  true,
-                       "detail":  "canonical digest gate"
-                   },
-                   {
-                       "name":  "release asset manifest gates release-tag APK URLs",
-                       "ok":  true,
-                       "detail":  "release URL gate"
-                   },
-                   {
-                       "name":  "release asset manifest writes UTF-8 without BOM",
-                       "ok":  true,
-                       "detail":  "UTF-8 no BOM writer"
-                   },
-                   {
-                       "name":  "build environment report escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "build environment report escapes newlines",
-                       "ok":  true,
-                       "detail":  "newline escaping"
-                   },
-                   {
-                       "name":  "build environment report escapes gate details",
-                       "ok":  true,
-                       "detail":  "gate detail escaping"
-                   },
-                   {
-                       "name":  "build environment report formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "build environment report code-spans SDK root",
-                       "ok":  true,
-                       "detail":  "SDK root code span"
-                   },
-                   {
-                       "name":  "build environment report pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "build environment report code-spans command output",
-                       "ok":  true,
-                       "detail":  "command output code span"
-                   },
-                   {
-                       "name":  "permission review escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "permission review escapes markdown text",
-                       "ok":  true,
-                       "detail":  "inline text escaping"
-                   },
-                   {
-                       "name":  "permission review escapes attention reasons",
-                       "ok":  true,
-                       "detail":  "attention reason escaping"
-                   },
-                   {
-                       "name":  "permission review formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "permission review code-spans APK summary names",
-                       "ok":  true,
-                       "detail":  "APK summary code span"
-                   },
-                   {
-                       "name":  "permission review code-spans attention permissions",
-                       "ok":  true,
-                       "detail":  "attention permission code span"
-                   },
-                   {
-                       "name":  "permission review pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "permission review code-spans status header",
-                       "ok":  true,
-                       "detail":  "status header code span"
-                   },
-                   {
-                       "name":  "permission review code-spans installability report path",
-                       "ok":  true,
-                       "detail":  "installability path code span"
-                   },
-                   {
-                       "name":  "permission review removes fixed attention code spans",
-                       "ok":  true,
-                       "detail":  "no fixed attention code span"
-                   },
-                   {
-                       "name":  "permission review removes fixed summary code spans",
-                       "ok":  true,
-                       "detail":  "no fixed summary code span"
-                   },
-                   {
-                       "name":  "permission justification escapes markdown table cells",
-                       "ok":  true,
-                       "detail":  "table cell escaping"
-                   },
-                   {
-                       "name":  "permission justification accepts object table cells",
-                       "ok":  true,
-                       "detail":  "object-to-string normalization"
-                   },
-                   {
-                       "name":  "permission justification formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "permission justification code-spans status header",
-                       "ok":  true,
-                       "detail":  "status header code span"
-                   },
-                   {
-                       "name":  "permission justification code-spans review path",
-                       "ok":  true,
-                       "detail":  "review path code span"
-                   },
-                   {
-                       "name":  "permission justification pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "permission justification escapes gate names",
-                       "ok":  true,
-                       "detail":  "gate name escaping"
-                   },
-                   {
-                       "name":  "permission justification escapes gate details",
-                       "ok":  true,
-                       "detail":  "gate detail escaping"
-                   },
-                   {
-                       "name":  "permission justification escapes permission names",
-                       "ok":  true,
-                       "detail":  "permission name escaping"
-                   },
-                   {
-                       "name":  "device install matrix escapes markdown inline values",
-                       "ok":  true,
-                       "detail":  "inline escaping"
-                   },
-                   {
-                       "name":  "device install matrix escapes APK path",
-                       "ok":  true,
-                       "detail":  "APK path escaping"
-                   },
-                   {
-                       "name":  "device install matrix escapes application id",
-                       "ok":  true,
-                       "detail":  "application id escaping"
-                   },
-                   {
-                       "name":  "device install matrix escapes version text",
-                       "ok":  true,
-                       "detail":  "version escaping"
-                   },
-                   {
-                       "name":  "device install matrix escapes device serials",
-                       "ok":  true,
-                       "detail":  "serial escaping"
-                   },
-                   {
-                       "name":  "device install matrix captures native command output",
-                       "ok":  true,
-                       "detail":  "native command capture"
-                   },
-                   {
-                       "name":  "device install matrix captures adb devices stderr",
-                       "ok":  true,
-                       "detail":  "adb devices capture"
-                   },
-                   {
-                       "name":  "device install matrix captures adb install stderr",
-                       "ok":  true,
-                       "detail":  "adb install capture"
-                   },
-                   {
-                       "name":  "device install matrix formats markdown code spans",
-                       "ok":  true,
-                       "detail":  "code span fencing"
-                   },
-                   {
-                       "name":  "device install matrix code-spans APK path",
-                       "ok":  true,
-                       "detail":  "APK path code span"
-                   },
-                   {
-                       "name":  "device install matrix pads boundary code span backticks",
-                       "ok":  true,
-                       "detail":  "boundary backtick padding"
-                   },
-                   {
-                       "name":  "device install matrix code-spans device serials",
-                       "ok":  true,
-                       "detail":  "device serial code span"
-                   },
-                   {
-                       "name":  "device install matrix preserves RequireDevice code span",
-                       "ok":  true,
-                       "detail":  "RequireDevice code span"
-                   },
-                   {
-                       "name":  "README mentions tag",
-                       "ok":  true,
-                       "detail":  "v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "release flow mentions installability",
-                       "ok":  true,
-                       "detail":  "verify-installable-apk.ps1"
-                   },
-                   {
-                       "name":  "README documents Gradle cache relocation",
-                       "ok":  true,
-                       "detail":  "GradleUserHome"
-                   },
-                   {
-                       "name":  "README documents Gradle cache threshold",
-                       "ok":  true,
-                       "detail":  "MinGradleDriveFreeGb"
-                   },
-                   {
-                       "name":  "release flow documents Gradle cache relocation",
-                       "ok":  true,
-                       "detail":  "GradleUserHome"
-                   },
-                   {
-                       "name":  "release flow documents Gradle cache threshold",
-                       "ok":  true,
-                       "detail":  "MinGradleDriveFreeGb"
-                   },
-                   {
-                       "name":  "release flow documents release health failure summary",
-                       "ok":  true,
-                       "detail":  "release-health stderr summary"
-                   },
-                   {
-                       "name":  "CI channel skips study contract script",
-                       "ok":  true,
-                       "detail":  "paths-ignore"
-                   },
-                   {
-                       "name":  "PR CI skips study contract script",
-                       "ok":  true,
-                       "detail":  "paths-ignore"
-                   },
-                   {
-                       "name":  "release evidence contract covers PowerShell scripts",
-                       "ok":  true,
-                       "detail":  "release evidence paths"
-                   },
-                   {
-                       "name":  "release evidence contract accumulates script parse failures",
-                       "ok":  true,
-                       "detail":  "parse failure collection"
-                   },
-                   {
-                       "name":  "release evidence contract reports parse error locations",
-                       "ok":  true,
-                       "detail":  "parse error location"
-                   },
-                   {
-                       "name":  "release evidence contract asserts markdown report exists",
-                       "ok":  true,
-                       "detail":  "markdown report existence"
-                   },
-                   {
-                       "name":  "release evidence contract asserts JSON report type",
-                       "ok":  true,
-                       "detail":  "JSON reportType"
-                   },
-                   {
-                       "name":  "release evidence contract asserts summary check count",
-                       "ok":  true,
-                       "detail":  "summary check count parity"
-                   },
-                   {
-                       "name":  "release evidence contract asserts zero failure summary",
-                       "ok":  true,
-                       "detail":  "summary failure count"
-                   },
-                   {
-                       "name":  "release evidence contract asserts markdown title tag",
-                       "ok":  true,
-                       "detail":  "markdown title/tag parity"
-                   },
-                   {
-                       "name":  "release evidence contract asserts markdown OK status",
-                       "ok":  true,
-                       "detail":  "markdown OK status"
-                   },
-                   {
-                       "name":  "release evidence contract asserts markdown check count",
-                       "ok":  true,
-                       "detail":  "markdown check count parity"
-                   },
-                   {
-                       "name":  "release evidence contract asserts markdown failure count",
-                       "ok":  true,
-                       "detail":  "markdown failure count parity"
-                   },
-                   {
-                       "name":  "report ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "report tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "report package matches gradle",
-                       "ok":  true,
-                       "detail":  "com.github.yizuka17.yumebox.md3"
-                   },
-                   {
-                       "name":  "report version name matches gradle",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9"
-                   },
-                   {
-                       "name":  "report version code matches gradle",
-                       "ok":  true,
-                       "detail":  "5409"
-                   },
-                   {
-                       "name":  "report has debug and release APKs",
-                       "ok":  true,
-                       "detail":  "2 APKs"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk digest matches",
-                       "ok":  true,
-                       "detail":  "sha256:9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk zipalign",
-                       "ok":  true,
-                       "detail":  "OK"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk badging",
-                       "ok":  true,
-                       "detail":  "OK"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk signature",
-                       "ok":  true,
-                       "detail":  "C=US, O=Android, CN=Android Debug"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk package metadata",
-                       "ok":  true,
-                       "detail":  "com.github.yizuka17.yumebox.md3"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk version metadata",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9/5409"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk ABI metadata",
-                       "ok":  true,
-                       "detail":  "arm64-v8a"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk digest matches",
-                       "ok":  true,
-                       "detail":  "sha256:7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk zipalign",
-                       "ok":  true,
-                       "detail":  "OK"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk badging",
-                       "ok":  true,
-                       "detail":  "OK"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk signature",
-                       "ok":  true,
-                       "detail":  "C=US, O=Android, CN=Android Debug"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk package metadata",
-                       "ok":  true,
-                       "detail":  "com.github.yizuka17.yumebox.md3"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk version metadata",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9/5409"
-                   },
-                   {
-                       "name":  "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk ABI metadata",
-                       "ok":  true,
-                       "detail":  "arm64-v8a"
-                   },
-                   {
-                       "name":  "device install matrix ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "device install matrix tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "device install matrix package matches gradle",
-                       "ok":  true,
-                       "detail":  "com.github.yizuka17.yumebox.md3"
-                   },
-                   {
-                       "name":  "device install matrix version matches gradle",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9/5409"
-                   },
-                   {
-                       "name":  "device install matrix status recorded",
-                       "ok":  true,
-                       "detail":  "status=no_devices"
-                   },
-                   {
-                       "name":  "device install matrix result boundary",
-                       "ok":  true,
-                       "detail":  "status=no_devices, devices=0, results=0"
-                   },
-                   {
-                       "name":  "permission review ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "permission review tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "permission review status recorded",
-                       "ok":  true,
-                       "detail":  "status=review_required"
-                   },
-                   {
-                       "name":  "permission review covers APKs",
-                       "ok":  true,
-                       "detail":  "2 APKs"
-                   },
-                   {
-                       "name":  "permission justification ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "permission justification tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "permission justification covers permissions",
-                       "ok":  true,
-                       "detail":  "20 permission(s)"
-                   },
-                   {
-                       "name":  "permission justification has gates",
-                       "ok":  true,
-                       "detail":  "6 gates"
-                   },
-                   {
-                       "name":  "release asset manifest ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "release asset manifest tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "release asset manifest APK assets",
-                       "ok":  true,
-                       "detail":  "debug=1, release=1"
-                   },
-                   {
-                       "name":  "release asset manifest gates recorded",
-                       "ok":  true,
-                       "detail":  "20 gates"
-                   },
-                   {
-                       "name":  "release asset manifest gate passes: APK asset digests are canonical SHA-256",
-                       "ok":  true,
-                       "detail":  "invalid=0; apkAssets=2"
-                   },
-                   {
-                       "name":  "release asset manifest gate passes: APK asset URLs match release tag",
-                       "ok":  true,
-                       "detail":  "invalid=0; tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "release asset manifest includes release health report",
-                       "ok":  true,
-                       "detail":  "release-health-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "release health asset digest recorded",
-                       "ok":  true,
-                       "detail":  "sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630"
-                   },
-                   {
-                       "name":  "release health asset URL matches tag",
-                       "ok":  true,
-                       "detail":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "release health asset has stable size",
-                       "ok":  true,
-                       "detail":  "2156 bytes"
-                   },
-                   {
-                       "name":  "release health markdown exists",
-                       "ok":  true,
-                       "detail":  "release-health-v0.5.4-study.9.md"
-                   },
-                   {
-                       "name":  "release health markdown tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "release health markdown has checks section",
-                       "ok":  true,
-                       "detail":  "## Checks"
-                   },
-                   {
-                       "name":  "release health markdown records no failed checks",
-                       "ok":  true,
-                       "detail":  "no FAIL rows"
-                   },
-                   {
-                       "name":  "release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
-                       "ok":  true,
-                       "detail":  "7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc"
-                   },
-                   {
-                       "name":  "release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
-                       "ok":  true,
-                       "detail":  "9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80"
-                   },
-                   {
-                       "name":  "release provenance ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "release provenance tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "release provenance predicate recorded",
-                       "ok":  true,
-                       "detail":  "https://slsa.dev/provenance/v1"
-                   },
-                   {
-                       "name":  "release provenance APK subjects",
-                       "ok":  true,
-                       "detail":  "2 subject(s)"
-                   },
-                   {
-                       "name":  "release provenance links build environment",
-                       "ok":  true,
-                       "detail":  "build-environment-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "release provenance links permission justification",
-                       "ok":  true,
-                       "detail":  "apk-permission-justification-v0.5.4-study.9.json"
-                   },
-                   {
-                       "name":  "release provenance material digest matches release asset manifest",
-                       "ok":  true,
-                       "detail":  "recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551"
-                   },
-                   {
-                       "name":  "release provenance material digest matches build environment",
-                       "ok":  true,
-                       "detail":  "recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b"
-                   },
-                   {
-                       "name":  "release provenance material digest matches permission justification",
-                       "ok":  true,
-                       "detail":  "recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b"
-                   },
-                   {
-                       "name":  "build environment ok flag",
-                       "ok":  true,
-                       "detail":  "ok=True"
-                   },
-                   {
-                       "name":  "build environment tag matches",
-                       "ok":  true,
-                       "detail":  "tag=v0.5.4-study.9"
-                   },
-                   {
-                       "name":  "build environment version matches gradle",
-                       "ok":  true,
-                       "detail":  "0.5.4-study.9/5409"
-                   },
-                   {
-                       "name":  "build environment build-tools recorded",
-                       "ok":  true,
-                       "detail":  "36.0.0"
-                   },
-                   {
-                       "name":  "provenance APK comparison evidence present",
-                       "ok":  true,
-                       "detail":  "assets=2, subjects=2"
-                   },
-                   {
-                       "name":  "provenance APK subjects match release asset names",
-                       "ok":  true,
-                       "detail":  "assets=2, subjects=2"
-                   },
-                   {
-                       "name":  "provenance APK digests match release assets",
-                       "ok":  true,
-                       "detail":  "matched=2"
-                   }
-               ],
-    "failures":  [
-
-                 ]
+  "reportType": "study_apk_contract",
+  "generatedAt": "2026-07-15T17:53:12.0760411+08:00",
+  "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
+  "tag": "v0.5.4-study.9",
+  "ok": true,
+  "summary": {
+    "checkCount": 243,
+    "failureCount": 0,
+    "requiredFileCount": 28,
+    "apkEvidenceCount": 2,
+    "releaseAssetApkCount": 2,
+    "provenanceSubjectCount": 2,
+    "deviceMatrixStatus": "no_devices",
+    "permissionReviewStatus": "review_required"
+  },
+  "checks": [
+    {
+      "name": "gradle.properties exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\gradle.properties"
+    },
+    {
+      "name": "version name present",
+      "ok": true,
+      "detail": "0.5.4-study.9"
+    },
+    {
+      "name": "version code present",
+      "ok": true,
+      "detail": "5409"
+    },
+    {
+      "name": "application id present",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "arm64 ABI configured",
+      "ok": true,
+      "detail": "arm64-v8a"
+    },
+    {
+      "name": "required file README.md",
+      "ok": true,
+      "detail": "README.md"
+    },
+    {
+      "name": "required file RELEASE_STUDY.md",
+      "ok": true,
+      "detail": "RELEASE_STUDY.md"
+    },
+    {
+      "name": "required file docs\\apk-release-assurance.md",
+      "ok": true,
+      "detail": "docs\\apk-release-assurance.md"
+    },
+    {
+      "name": "required file docs\\apk-installability-report-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\apk-installability-report-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\apk-installability-report-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\apk-installability-report-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\device-install-matrix-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\device-install-matrix-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\device-install-matrix-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\device-install-matrix-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\apk-permission-review-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\apk-permission-review-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\apk-permission-review-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\apk-permission-review-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\apk-permission-justification-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\apk-permission-justification-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\apk-permission-justification-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\apk-permission-justification-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\release-asset-manifest-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\release-asset-manifest-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\release-asset-manifest-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\release-asset-manifest-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\release-provenance-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\release-provenance-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\release-provenance-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\release-provenance-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file docs\\build-environment-v0.5.4-study.9.md",
+      "ok": true,
+      "detail": "docs\\build-environment-v0.5.4-study.9.md"
+    },
+    {
+      "name": "required file docs\\build-environment-v0.5.4-study.9.json",
+      "ok": true,
+      "detail": "docs\\build-environment-v0.5.4-study.9.json"
+    },
+    {
+      "name": "required file scripts\\build-apk-strict.ps1",
+      "ok": true,
+      "detail": "scripts\\build-apk-strict.ps1"
+    },
+    {
+      "name": "required file scripts\\verify-installable-apk.ps1",
+      "ok": true,
+      "detail": "scripts\\verify-installable-apk.ps1"
+    },
+    {
+      "name": "required file scripts\\release-health.ps1",
+      "ok": true,
+      "detail": "scripts\\release-health.ps1"
+    },
+    {
+      "name": "required file scripts\\apk-installability-report.ps1",
+      "ok": true,
+      "detail": "scripts\\apk-installability-report.ps1"
+    },
+    {
+      "name": "required file scripts\\device-install-matrix.ps1",
+      "ok": true,
+      "detail": "scripts\\device-install-matrix.ps1"
+    },
+    {
+      "name": "required file scripts\\apk-permission-review.ps1",
+      "ok": true,
+      "detail": "scripts\\apk-permission-review.ps1"
+    },
+    {
+      "name": "required file scripts\\apk-permission-justification.ps1",
+      "ok": true,
+      "detail": "scripts\\apk-permission-justification.ps1"
+    },
+    {
+      "name": "required file scripts\\release-asset-manifest.ps1",
+      "ok": true,
+      "detail": "scripts\\release-asset-manifest.ps1"
+    },
+    {
+      "name": "required file scripts\\release-provenance.ps1",
+      "ok": true,
+      "detail": "scripts\\release-provenance.ps1"
+    },
+    {
+      "name": "required file scripts\\build-environment-report.ps1",
+      "ok": true,
+      "detail": "scripts\\build-environment-report.ps1"
+    },
+    {
+      "name": "required file scripts\\publish-apk-assets.ps1",
+      "ok": true,
+      "detail": "scripts\\publish-apk-assets.ps1"
+    },
+    {
+      "name": "study contract pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "study contract emits summary section",
+      "ok": true,
+      "detail": "summary section"
+    },
+    {
+      "name": "study contract records failure count",
+      "ok": true,
+      "detail": "summary failure count"
+    },
+    {
+      "name": "study contract writes UTF-8 without BOM",
+      "ok": true,
+      "detail": "UTF-8 no BOM writer"
+    },
+    {
+      "name": "study contract normalizes SHA-256 digests",
+      "ok": true,
+      "detail": "digest normalization"
+    },
+    {
+      "name": "study contract cross-checks provenance APK names",
+      "ok": true,
+      "detail": "provenance asset name parity"
+    },
+    {
+      "name": "study contract cross-checks provenance APK digests",
+      "ok": true,
+      "detail": "provenance asset digest parity"
+    },
+    {
+      "name": "study contract cross-checks provenance material digests",
+      "ok": true,
+      "detail": "provenance material digest parity"
+    },
+    {
+      "name": "study contract checks release health markdown",
+      "ok": true,
+      "detail": "release health markdown"
+    },
+    {
+      "name": "study contract cross-checks release health APK digests",
+      "ok": true,
+      "detail": "release health APK digests"
+    },
+    {
+      "name": "strict build filters APKs by Gradle task",
+      "ok": true,
+      "detail": "Get-ApkNamePatternForGradleTask"
+    },
+    {
+      "name": "strict build logs APK name pattern",
+      "ok": true,
+      "detail": "ApkNamePattern log"
+    },
+    {
+      "name": "strict build preserves Gradle exit code",
+      "ok": true,
+      "detail": "exit $code"
+    },
+    {
+      "name": "strict build creates Gradle cache dir",
+      "ok": true,
+      "detail": "GRADLE_USER_HOME mkdir"
+    },
+    {
+      "name": "strict build supports ambient JAVA_HOME fallback",
+      "ok": true,
+      "detail": "ambient JAVA_HOME"
+    },
+    {
+      "name": "strict build exposes Gradle cache relocation",
+      "ok": true,
+      "detail": "GradleUserHome parameter"
+    },
+    {
+      "name": "strict build logs Gradle cache home",
+      "ok": true,
+      "detail": "GRADLE_USER_HOME log"
+    },
+    {
+      "name": "strict build enforces Gradle cache free space",
+      "ok": true,
+      "detail": "MinGradleDriveFreeGb"
+    },
+    {
+      "name": "release health requests release assets",
+      "ok": true,
+      "detail": "gh release assets"
+    },
+    {
+      "name": "release health records asset digests",
+      "ok": true,
+      "detail": "asset digest"
+    },
+    {
+      "name": "release health records APK SHA-256",
+      "ok": true,
+      "detail": "APK SHA-256"
+    },
+    {
+      "name": "release health omits itself from asset table",
+      "ok": true,
+      "detail": "skip OutputName"
+    },
+    {
+      "name": "release health marks failed checks as FAIL",
+      "ok": true,
+      "detail": "FAIL status"
+    },
+    {
+      "name": "release health collects failed checks",
+      "ok": true,
+      "detail": "failedChecks"
+    },
+    {
+      "name": "release health exits nonzero on failure",
+      "ok": true,
+      "detail": "exit 1 on failures"
+    },
+    {
+      "name": "release health captures GitHub release errors",
+      "ok": true,
+      "detail": "gh release stderr"
+    },
+    {
+      "name": "release health has release error fallback",
+      "ok": true,
+      "detail": "release error fallback"
+    },
+    {
+      "name": "release health only falls back when release is missing",
+      "ok": true,
+      "detail": "fallback requires missing release"
+    },
+    {
+      "name": "release health prints failed check names",
+      "ok": true,
+      "detail": "failed check summary"
+    },
+    {
+      "name": "release health failure summary preserves explicit exit",
+      "ok": true,
+      "detail": "stderr without Write-Error termination"
+    },
+    {
+      "name": "release health escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "release health escapes check details",
+      "ok": true,
+      "detail": "check detail escaping"
+    },
+    {
+      "name": "release health escapes APK status fields",
+      "ok": true,
+      "detail": "APK status escaping"
+    },
+    {
+      "name": "release health formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "release health code-spans APK SHA-256",
+      "ok": true,
+      "detail": "APK SHA-256 code span"
+    },
+    {
+      "name": "release health pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "release health code-spans repository header",
+      "ok": true,
+      "detail": "repository header code span"
+    },
+    {
+      "name": "release health code-spans version header",
+      "ok": true,
+      "detail": "version header code span"
+    },
+    {
+      "name": "release health code-spans tag header",
+      "ok": true,
+      "detail": "tag header code span"
+    },
+    {
+      "name": "installability report escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "installability report escapes APK status cells",
+      "ok": true,
+      "detail": "status escaping"
+    },
+    {
+      "name": "installability report escapes metadata labels",
+      "ok": true,
+      "detail": "label escaping"
+    },
+    {
+      "name": "installability report formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "installability report code-spans APK names",
+      "ok": true,
+      "detail": "APK name code span"
+    },
+    {
+      "name": "installability report pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "installability report code-spans repository header",
+      "ok": true,
+      "detail": "repository header code span"
+    },
+    {
+      "name": "installability report code-spans Android SDK header",
+      "ok": true,
+      "detail": "Android SDK header code span"
+    },
+    {
+      "name": "installability report code-spans build tools header",
+      "ok": true,
+      "detail": "build tools header code span"
+    },
+    {
+      "name": "installability report code-spans SHA-256 values",
+      "ok": true,
+      "detail": "SHA-256 code span"
+    },
+    {
+      "name": "installability report code-spans GitHub digests",
+      "ok": true,
+      "detail": "GitHub digest code span"
+    },
+    {
+      "name": "installability report code-spans package names",
+      "ok": true,
+      "detail": "package name code span"
+    },
+    {
+      "name": "release provenance escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "release provenance formats subject names as code spans",
+      "ok": true,
+      "detail": "subject name code span"
+    },
+    {
+      "name": "release provenance escapes gate details",
+      "ok": true,
+      "detail": "gate detail escaping"
+    },
+    {
+      "name": "release provenance formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "release provenance code-spans APK digests",
+      "ok": true,
+      "detail": "digest code span"
+    },
+    {
+      "name": "release provenance code-spans predicate header",
+      "ok": true,
+      "detail": "predicate header code span"
+    },
+    {
+      "name": "release provenance pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "release provenance code-spans repository header",
+      "ok": true,
+      "detail": "repository header code span"
+    },
+    {
+      "name": "release provenance code-spans status header",
+      "ok": true,
+      "detail": "status header code span"
+    },
+    {
+      "name": "release provenance code-spans source commit header",
+      "ok": true,
+      "detail": "source commit header code span"
+    },
+    {
+      "name": "release provenance code-spans package names",
+      "ok": true,
+      "detail": "package code span"
+    },
+    {
+      "name": "release provenance records dirty count",
+      "ok": true,
+      "detail": "dirty count evidence"
+    },
+    {
+      "name": "release provenance writes UTF-8 without BOM",
+      "ok": true,
+      "detail": "UTF-8 no BOM writer"
+    },
+    {
+      "name": "release provenance gates non-empty material URIs",
+      "ok": true,
+      "detail": "material URI presence"
+    },
+    {
+      "name": "release provenance gates unique material URIs",
+      "ok": true,
+      "detail": "material URI uniqueness"
+    },
+    {
+      "name": "release provenance gates material digest evidence",
+      "ok": true,
+      "detail": "material digest evidence"
+    },
+    {
+      "name": "release asset manifest escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "release asset manifest escapes newlines",
+      "ok": true,
+      "detail": "newline escaping"
+    },
+    {
+      "name": "release asset manifest escapes APK asset kind",
+      "ok": true,
+      "detail": "asset kind escaping"
+    },
+    {
+      "name": "release asset manifest formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "release asset manifest code-spans APK asset names",
+      "ok": true,
+      "detail": "asset name code span"
+    },
+    {
+      "name": "release asset manifest code-spans repository header",
+      "ok": true,
+      "detail": "repository header code span"
+    },
+    {
+      "name": "release asset manifest pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "release asset manifest code-spans release header",
+      "ok": true,
+      "detail": "release header code span"
+    },
+    {
+      "name": "release asset manifest code-spans status header",
+      "ok": true,
+      "detail": "status header code span"
+    },
+    {
+      "name": "release asset manifest code-spans APK asset digests",
+      "ok": true,
+      "detail": "APK digest code span"
+    },
+    {
+      "name": "release asset manifest code-spans supporting asset digests",
+      "ok": true,
+      "detail": "supporting digest code span"
+    },
+    {
+      "name": "release asset manifest gates canonical APK digests",
+      "ok": true,
+      "detail": "canonical digest gate"
+    },
+    {
+      "name": "release asset manifest gates release-tag APK URLs",
+      "ok": true,
+      "detail": "release URL gate"
+    },
+    {
+      "name": "release asset manifest writes UTF-8 without BOM",
+      "ok": true,
+      "detail": "UTF-8 no BOM writer"
+    },
+    {
+      "name": "build environment report escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "build environment report escapes newlines",
+      "ok": true,
+      "detail": "newline escaping"
+    },
+    {
+      "name": "build environment report escapes gate details",
+      "ok": true,
+      "detail": "gate detail escaping"
+    },
+    {
+      "name": "build environment report formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "build environment report code-spans SDK root",
+      "ok": true,
+      "detail": "SDK root code span"
+    },
+    {
+      "name": "build environment report pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "build environment report code-spans command output",
+      "ok": true,
+      "detail": "command output code span"
+    },
+    {
+      "name": "permission review escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "permission review escapes markdown text",
+      "ok": true,
+      "detail": "inline text escaping"
+    },
+    {
+      "name": "permission review escapes attention reasons",
+      "ok": true,
+      "detail": "attention reason escaping"
+    },
+    {
+      "name": "permission review formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "permission review code-spans APK summary names",
+      "ok": true,
+      "detail": "APK summary code span"
+    },
+    {
+      "name": "permission review code-spans attention permissions",
+      "ok": true,
+      "detail": "attention permission code span"
+    },
+    {
+      "name": "permission review pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "permission review code-spans status header",
+      "ok": true,
+      "detail": "status header code span"
+    },
+    {
+      "name": "permission review code-spans installability report path",
+      "ok": true,
+      "detail": "installability path code span"
+    },
+    {
+      "name": "permission review removes fixed attention code spans",
+      "ok": true,
+      "detail": "no fixed attention code span"
+    },
+    {
+      "name": "permission review removes fixed summary code spans",
+      "ok": true,
+      "detail": "no fixed summary code span"
+    },
+    {
+      "name": "permission justification escapes markdown table cells",
+      "ok": true,
+      "detail": "table cell escaping"
+    },
+    {
+      "name": "permission justification accepts object table cells",
+      "ok": true,
+      "detail": "object-to-string normalization"
+    },
+    {
+      "name": "permission justification formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "permission justification code-spans status header",
+      "ok": true,
+      "detail": "status header code span"
+    },
+    {
+      "name": "permission justification code-spans review path",
+      "ok": true,
+      "detail": "review path code span"
+    },
+    {
+      "name": "permission justification pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "permission justification escapes gate names",
+      "ok": true,
+      "detail": "gate name escaping"
+    },
+    {
+      "name": "permission justification escapes gate details",
+      "ok": true,
+      "detail": "gate detail escaping"
+    },
+    {
+      "name": "permission justification escapes permission names",
+      "ok": true,
+      "detail": "permission name escaping"
+    },
+    {
+      "name": "device install matrix escapes markdown inline values",
+      "ok": true,
+      "detail": "inline escaping"
+    },
+    {
+      "name": "device install matrix escapes APK path",
+      "ok": true,
+      "detail": "APK path escaping"
+    },
+    {
+      "name": "device install matrix escapes application id",
+      "ok": true,
+      "detail": "application id escaping"
+    },
+    {
+      "name": "device install matrix escapes version text",
+      "ok": true,
+      "detail": "version escaping"
+    },
+    {
+      "name": "device install matrix escapes device serials",
+      "ok": true,
+      "detail": "serial escaping"
+    },
+    {
+      "name": "device install matrix captures native command output",
+      "ok": true,
+      "detail": "native command capture"
+    },
+    {
+      "name": "device install matrix captures adb devices stderr",
+      "ok": true,
+      "detail": "adb devices capture"
+    },
+    {
+      "name": "device install matrix captures adb install stderr",
+      "ok": true,
+      "detail": "adb install capture"
+    },
+    {
+      "name": "device install matrix formats markdown code spans",
+      "ok": true,
+      "detail": "code span fencing"
+    },
+    {
+      "name": "device install matrix code-spans APK path",
+      "ok": true,
+      "detail": "APK path code span"
+    },
+    {
+      "name": "device install matrix pads boundary code span backticks",
+      "ok": true,
+      "detail": "boundary backtick padding"
+    },
+    {
+      "name": "device install matrix code-spans device serials",
+      "ok": true,
+      "detail": "device serial code span"
+    },
+    {
+      "name": "device install matrix preserves RequireDevice code span",
+      "ok": true,
+      "detail": "RequireDevice code span"
+    },
+    {
+      "name": "README mentions tag",
+      "ok": true,
+      "detail": "v0.5.4-study.9"
+    },
+    {
+      "name": "release flow mentions installability",
+      "ok": true,
+      "detail": "verify-installable-apk.ps1"
+    },
+    {
+      "name": "README documents Gradle cache relocation",
+      "ok": true,
+      "detail": "GradleUserHome"
+    },
+    {
+      "name": "README documents Gradle cache threshold",
+      "ok": true,
+      "detail": "MinGradleDriveFreeGb"
+    },
+    {
+      "name": "release flow documents Gradle cache relocation",
+      "ok": true,
+      "detail": "GradleUserHome"
+    },
+    {
+      "name": "release flow documents Gradle cache threshold",
+      "ok": true,
+      "detail": "MinGradleDriveFreeGb"
+    },
+    {
+      "name": "release flow documents release health failure summary",
+      "ok": true,
+      "detail": "release-health stderr summary"
+    },
+    {
+      "name": "CI channel skips study contract script",
+      "ok": true,
+      "detail": "paths-ignore"
+    },
+    {
+      "name": "PR CI skips study contract script",
+      "ok": true,
+      "detail": "paths-ignore"
+    },
+    {
+      "name": "release evidence contract covers PowerShell scripts",
+      "ok": true,
+      "detail": "release evidence paths"
+    },
+    {
+      "name": "release evidence contract accumulates script parse failures",
+      "ok": true,
+      "detail": "parse failure collection"
+    },
+    {
+      "name": "release evidence contract reports parse error locations",
+      "ok": true,
+      "detail": "parse error location"
+    },
+    {
+      "name": "release evidence contract asserts markdown report exists",
+      "ok": true,
+      "detail": "markdown report existence"
+    },
+    {
+      "name": "release evidence contract asserts JSON report type",
+      "ok": true,
+      "detail": "JSON reportType"
+    },
+    {
+      "name": "release evidence contract asserts summary check count",
+      "ok": true,
+      "detail": "summary check count parity"
+    },
+    {
+      "name": "release evidence contract asserts zero failure summary",
+      "ok": true,
+      "detail": "summary failure count"
+    },
+    {
+      "name": "release evidence contract asserts markdown title tag",
+      "ok": true,
+      "detail": "markdown title/tag parity"
+    },
+    {
+      "name": "release evidence contract asserts markdown OK status",
+      "ok": true,
+      "detail": "markdown OK status"
+    },
+    {
+      "name": "release evidence contract asserts markdown check count",
+      "ok": true,
+      "detail": "markdown check count parity"
+    },
+    {
+      "name": "release evidence contract asserts markdown failure count",
+      "ok": true,
+      "detail": "markdown failure count parity"
+    },
+    {
+      "name": "report ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "report tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "report package matches gradle",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "report version name matches gradle",
+      "ok": true,
+      "detail": "0.5.4-study.9"
+    },
+    {
+      "name": "report version code matches gradle",
+      "ok": true,
+      "detail": "5409"
+    },
+    {
+      "name": "report has debug and release APKs",
+      "ok": true,
+      "detail": "2 APKs"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk digest matches",
+      "ok": true,
+      "detail": "sha256:9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk zipalign",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk badging",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk signature",
+      "ok": true,
+      "detail": "C=US, O=Android, CN=Android Debug"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk package metadata",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk version metadata",
+      "ok": true,
+      "detail": "0.5.4-study.9/5409"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk ABI metadata",
+      "ok": true,
+      "detail": "arm64-v8a"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk digest matches",
+      "ok": true,
+      "detail": "sha256:7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk zipalign",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk badging",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk signature",
+      "ok": true,
+      "detail": "C=US, O=Android, CN=Android Debug"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk package metadata",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk version metadata",
+      "ok": true,
+      "detail": "0.5.4-study.9/5409"
+    },
+    {
+      "name": "APK YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk ABI metadata",
+      "ok": true,
+      "detail": "arm64-v8a"
+    },
+    {
+      "name": "device install matrix ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "device install matrix tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "device install matrix package matches gradle",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "device install matrix version matches gradle",
+      "ok": true,
+      "detail": "0.5.4-study.9/5409"
+    },
+    {
+      "name": "device install matrix status recorded",
+      "ok": true,
+      "detail": "status=no_devices"
+    },
+    {
+      "name": "device install matrix result boundary",
+      "ok": true,
+      "detail": "status=no_devices, devices=0, results=0"
+    },
+    {
+      "name": "permission review ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "permission review tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "permission review status recorded",
+      "ok": true,
+      "detail": "status=review_required"
+    },
+    {
+      "name": "permission review covers APKs",
+      "ok": true,
+      "detail": "2 APKs"
+    },
+    {
+      "name": "permission justification ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "permission justification tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "permission justification covers permissions",
+      "ok": true,
+      "detail": "20 permission(s)"
+    },
+    {
+      "name": "permission justification has gates",
+      "ok": true,
+      "detail": "6 gates"
+    },
+    {
+      "name": "release asset manifest ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "release asset manifest tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release asset manifest APK assets",
+      "ok": true,
+      "detail": "debug=1, release=1"
+    },
+    {
+      "name": "release asset manifest gates recorded",
+      "ok": true,
+      "detail": "20 gates"
+    },
+    {
+      "name": "release asset manifest gate passes: APK asset digests are canonical SHA-256",
+      "ok": true,
+      "detail": "invalid=0; apkAssets=2"
+    },
+    {
+      "name": "release asset manifest gate passes: APK asset URLs match release tag",
+      "ok": true,
+      "detail": "invalid=0; tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release asset manifest includes release health report",
+      "ok": true,
+      "detail": "release-health-v0.5.4-study.9.md"
+    },
+    {
+      "name": "release health asset digest recorded",
+      "ok": true,
+      "detail": "sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630"
+    },
+    {
+      "name": "release health asset URL matches tag",
+      "ok": true,
+      "detail": "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md"
+    },
+    {
+      "name": "release health asset has stable size",
+      "ok": true,
+      "detail": "2156 bytes"
+    },
+    {
+      "name": "release health markdown exists",
+      "ok": true,
+      "detail": "release-health-v0.5.4-study.9.md"
+    },
+    {
+      "name": "release health markdown tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release health markdown has checks section",
+      "ok": true,
+      "detail": "## Checks"
+    },
+    {
+      "name": "release health markdown records no failed checks",
+      "ok": true,
+      "detail": "no FAIL rows"
+    },
+    {
+      "name": "release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
+      "ok": true,
+      "detail": "9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80"
+    },
+    {
+      "name": "release health markdown lists APK digest YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
+      "ok": true,
+      "detail": "7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc"
+    },
+    {
+      "name": "release provenance ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "release provenance tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release provenance predicate recorded",
+      "ok": true,
+      "detail": "https://slsa.dev/provenance/v1"
+    },
+    {
+      "name": "release provenance APK subjects",
+      "ok": true,
+      "detail": "2 subject(s)"
+    },
+    {
+      "name": "release provenance gate passes: all materials have URIs",
+      "ok": true,
+      "detail": "materials=4, missing=0"
+    },
+    {
+      "name": "release provenance gate passes: material URIs are unique",
+      "ok": true,
+      "detail": "materials=4, duplicates=0"
+    },
+    {
+      "name": "release provenance gate passes: all materials have digest evidence",
+      "ok": true,
+      "detail": "materials=4, missing=0"
+    },
+    {
+      "name": "release provenance links build environment",
+      "ok": true,
+      "detail": "build-environment-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release provenance links permission justification",
+      "ok": true,
+      "detail": "apk-permission-justification-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release provenance material digest matches release asset manifest",
+      "ok": true,
+      "detail": "recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551"
+    },
+    {
+      "name": "release provenance material digest matches build environment",
+      "ok": true,
+      "detail": "recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b"
+    },
+    {
+      "name": "release provenance material digest matches permission justification",
+      "ok": true,
+      "detail": "recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b"
+    },
+    {
+      "name": "build environment ok flag",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "build environment tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "build environment version matches gradle",
+      "ok": true,
+      "detail": "0.5.4-study.9/5409"
+    },
+    {
+      "name": "build environment build-tools recorded",
+      "ok": true,
+      "detail": "36.0.0"
+    },
+    {
+      "name": "provenance APK comparison evidence present",
+      "ok": true,
+      "detail": "assets=2, subjects=2"
+    },
+    {
+      "name": "provenance APK subjects match release asset names",
+      "ok": true,
+      "detail": "assets=2, subjects=2"
+    },
+    {
+      "name": "provenance APK digests match release assets",
+      "ok": true,
+      "detail": "matched=2"
+    }
+  ],
+  "failures": []
 }
