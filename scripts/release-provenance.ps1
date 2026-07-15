@@ -167,6 +167,14 @@ $subjectsMissingName = @($subjects | Where-Object { [string]::IsNullOrWhiteSpace
 $subjectsMissingUri = @($subjects | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.uri) })
 $subjectsWithInvalidSize = @($subjects | Where-Object { [int64]$_.size -le 0 })
 $subjectsWithInvalidSha256 = @($subjects | Where-Object { [string]$_.digest.sha256 -notmatch $canonicalSha256Pattern })
+$expectedSubjectUriPrefix = "https://github.com/$Repo/releases/download/$Tag/"
+$subjectReleaseTagUriFailures = @($subjects | Where-Object {
+    $expectedSuffix = "/releases/download/$Tag/$($_.name)"
+    -not ([string]$_.uri).EndsWith($expectedSuffix, [System.StringComparison]::Ordinal)
+})
+$subjectGithubDownloadUriFailures = @($subjects | Where-Object {
+    -not ([string]$_.uri).StartsWith($expectedSubjectUriPrefix, [System.StringComparison]::Ordinal)
+})
 $duplicateSubjectNames = @(
     $subjectNames |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
@@ -251,6 +259,8 @@ Add-Gate $gates "all subjects have names" ($subjectsMissingName.Count -eq 0) "su
 Add-Gate $gates "subject names are unique" ($duplicateSubjectNames.Count -eq 0) "subjects=$($subjects.Count), duplicates=$($duplicateSubjectNames.Count)"
 Add-Gate $gates "all subjects have URIs" ($subjectsMissingUri.Count -eq 0) "subjects=$($subjects.Count), missing=$($subjectsMissingUri.Count)"
 Add-Gate $gates "subject URIs are unique" ($duplicateSubjectUris.Count -eq 0) "subjects=$($subjects.Count), duplicates=$($duplicateSubjectUris.Count)"
+Add-Gate $gates "all subjects match release tag asset URIs" ($subjectReleaseTagUriFailures.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectReleaseTagUriFailures.Count); tag=$Tag"
+Add-Gate $gates "all subjects use GitHub HTTPS release downloads" ($subjectGithubDownloadUriFailures.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectGithubDownloadUriFailures.Count); prefix=$expectedSubjectUriPrefix"
 Add-Gate $gates "all subjects have positive sizes" ($subjectsWithInvalidSize.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSize.Count)"
 Add-Gate $gates "all subjects have canonical sha256" ($subjectsWithInvalidSha256.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSha256.Count)"
 Add-Gate $gates "git commit available" (-not [string]::IsNullOrWhiteSpace($head)) $head

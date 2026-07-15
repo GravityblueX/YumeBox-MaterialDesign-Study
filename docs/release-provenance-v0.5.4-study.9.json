@@ -1,7 +1,7 @@
 {
   "reportType": "yumebox_release_provenance",
   "predicateType": "https://slsa.dev/provenance/v1",
-  "generatedAt": "2026-07-15T22:32:37.9989993+08:00",
+  "generatedAt": "2026-07-15T23:17:47.5868470+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -49,7 +49,7 @@
       },
       "internalParameters": {
         "sourceBranch": "Yume",
-        "sourceCommit": "df458192f59c04bb262e66f9943988c5bceac6ef",
+        "sourceCommit": "10d4e935495007135469ad93baf533345f54427a",
         "sourceRemote": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git"
       }
     },
@@ -60,14 +60,14 @@
       "metadata": {
         "invocationId": "manual-local-v0.5.4-study.9",
         "startedOn": "2026-07-15T22:32:18.8103596+08:00",
-        "finishedOn": "2026-07-15T22:32:38.0023807+08:00"
+        "finishedOn": "2026-07-15T23:17:47.5903423+08:00"
       }
     },
     "materials": [
       {
         "uri": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git",
         "digest": {
-          "gitCommit": "df458192f59c04bb262e66f9943988c5bceac6ef"
+          "gitCommit": "10d4e935495007135469ad93baf533345f54427a"
         }
       },
       {
@@ -147,6 +147,16 @@
       "detail": "subjects=2, duplicates=0"
     },
     {
+      "name": "all subjects match release tag asset URIs",
+      "ok": true,
+      "detail": "subjects=2, invalid=0; tag=v0.5.4-study.9"
+    },
+    {
+      "name": "all subjects use GitHub HTTPS release downloads",
+      "ok": true,
+      "detail": "subjects=2, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/"
+    },
+    {
       "name": "all subjects have positive sizes",
       "ok": true,
       "detail": "subjects=2, invalid=0"
@@ -159,7 +169,7 @@
     {
       "name": "git commit available",
       "ok": true,
-      "detail": "df458192f59c04bb262e66f9943988c5bceac6ef"
+      "detail": "10d4e935495007135469ad93baf533345f54427a"
     },
     {
       "name": "release is not draft",
@@ -208,7 +218,7 @@
     }
   ],
   "failures": [],
-  "dirtyCountWhenGenerated": 4,
+  "dirtyCountWhenGenerated": 2,
   "referenceBasis": [
     "SLSA provenance style subject and material digest mapping",
     "GitHub Release assets remain the downloadable APK source of truth",

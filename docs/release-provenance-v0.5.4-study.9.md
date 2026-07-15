@@ -1,10 +1,10 @@
 # Release Provenance - v0.5.4-study.9
 
-Generated: 2026-07-15T22:32:37.9989993+08:00
+Generated: 2026-07-15T23:17:47.5868470+08:00
 Predicate: `https://slsa.dev/provenance/v1`
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Status: `OK`
-Source commit: `df458192f59c04bb262e66f9943988c5bceac6ef`
+Source commit: `10d4e935495007135469ad93baf533345f54427a`
 
 ## Subjects
 
@@ -28,9 +28,11 @@ Source commit: `df458192f59c04bb262e66f9943988c5bceac6ef`
 | subject names are unique | OK | subjects=2, duplicates=0 |
 | all subjects have URIs | OK | subjects=2, missing=0 |
 | subject URIs are unique | OK | subjects=2, duplicates=0 |
+| all subjects match release tag asset URIs | OK | subjects=2, invalid=0; tag=v0.5.4-study.9 |
+| all subjects use GitHub HTTPS release downloads | OK | subjects=2, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
-| git commit available | OK | df458192f59c04bb262e66f9943988c5bceac6ef |
+| git commit available | OK | 10d4e935495007135469ad93baf533345f54427a |
 | release is not draft | OK | isDraft=False |
 | package id recorded | OK | com.github.yizuka17.yumebox.md3 |
 | version recorded | OK | 0.5.4-study.9/5409 |

@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-15T22:33:00.4845980+08:00",
+  "generatedAt": "2026-07-15T23:17:48.2646264+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 284,
+    "checkCount": 288,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -549,6 +549,16 @@
       "name": "release provenance gates unique subject URIs",
       "ok": true,
       "detail": "subject URI uniqueness"
+    },
+    {
+      "name": "release provenance gates release-tag subject URIs",
+      "ok": true,
+      "detail": "subject URI release tag"
+    },
+    {
+      "name": "release provenance gates GitHub HTTPS subject URIs",
+      "ok": true,
+      "detail": "subject URI GitHub HTTPS"
     },
     {
       "name": "release provenance gates positive subject sizes",
@@ -1351,6 +1361,16 @@
       "detail": "subjects=2, duplicates=0"
     },
     {
+      "name": "release provenance gate passes: all subjects match release tag asset URIs",
+      "ok": true,
+      "detail": "subjects=2, invalid=0; tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release provenance gate passes: all subjects use GitHub HTTPS release downloads",
+      "ok": true,
+      "detail": "subjects=2, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/"
+    },
+    {
       "name": "release provenance gate passes: all subjects have positive sizes",
       "ok": true,
       "detail": "subjects=2, invalid=0"
@@ -1368,7 +1388,7 @@
     {
       "name": "release provenance repo material commit matches source commit",
       "ok": true,
-      "detail": "material=df458192f59c04bb262e66f9943988c5bceac6ef, source=df458192f59c04bb262e66f9943988c5bceac6ef"
+      "detail": "material=10d4e935495007135469ad93baf533345f54427a, source=10d4e935495007135469ad93baf533345f54427a"
     },
     {
       "name": "release provenance links build environment",

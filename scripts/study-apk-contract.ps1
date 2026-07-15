@@ -294,6 +294,8 @@ Add-Check "release provenance gates non-empty subject names" (Test-FileContains 
 Add-Check "release provenance gates unique subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject names are unique') "subject name uniqueness"
 Add-Check "release provenance gates non-empty subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have URIs') "subject URI presence"
 Add-Check "release provenance gates unique subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject URIs are unique') "subject URI uniqueness"
+Add-Check "release provenance gates release-tag subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects match release tag asset URIs') "subject URI release tag"
+Add-Check "release provenance gates GitHub HTTPS subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects use GitHub HTTPS release downloads') "subject URI GitHub HTTPS"
 Add-Check "release provenance gates positive subject sizes" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have positive sizes') "subject size gate"
 Add-Check "release provenance gates canonical subject SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have canonical sha256') "subject digest format"
 
@@ -558,6 +560,8 @@ if (Test-Path -LiteralPath $provenancePath) {
         "subject names are unique",
         "all subjects have URIs",
         "subject URIs are unique",
+        "all subjects match release tag asset URIs",
+        "all subjects use GitHub HTTPS release downloads",
         "all subjects have positive sizes",
         "all subjects have canonical sha256"
     )) {
