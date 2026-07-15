@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T03:47:40.6327924+08:00
+Generated: 2026-07-15T16:42:01.2886081+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 227 |
+| Check count | 237 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -61,6 +61,7 @@ Status: `OK`
 | study contract normalizes SHA-256 digests | OK | digest normalization |
 | study contract cross-checks provenance APK names | OK | provenance asset name parity |
 | study contract cross-checks provenance APK digests | OK | provenance asset digest parity |
+| study contract cross-checks provenance material digests | OK | provenance material digest parity |
 | study contract checks release health markdown | OK | release health markdown |
 | study contract cross-checks release health APK digests | OK | release health APK digests |
 | strict build filters APKs by Gradle task | OK | Get-ApkNamePatternForGradleTask |
@@ -116,6 +117,7 @@ Status: `OK`
 | release provenance code-spans source commit header | OK | source commit header code span |
 | release provenance code-spans package names | OK | package code span |
 | release provenance records dirty count | OK | dirty count evidence |
+| release provenance writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | release asset manifest escapes markdown table cells | OK | table cell escaping |
 | release asset manifest escapes newlines | OK | newline escaping |
 | release asset manifest escapes APK asset kind | OK | asset kind escaping |
@@ -127,6 +129,9 @@ Status: `OK`
 | release asset manifest code-spans status header | OK | status header code span |
 | release asset manifest code-spans APK asset digests | OK | APK digest code span |
 | release asset manifest code-spans supporting asset digests | OK | supporting digest code span |
+| release asset manifest gates canonical APK digests | OK | canonical digest gate |
+| release asset manifest gates release-tag APK URLs | OK | release URL gate |
+| release asset manifest writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | build environment report escapes markdown table cells | OK | table cell escaping |
 | build environment report escapes newlines | OK | newline escaping |
 | build environment report escapes gate details | OK | gate detail escaping |
@@ -224,7 +229,9 @@ Status: `OK`
 | release asset manifest ok flag | OK | ok=True |
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
-| release asset manifest gates recorded | OK | 18 gates |
+| release asset manifest gates recorded | OK | 20 gates |
+| release asset manifest gate passes: APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
+| release asset manifest gate passes: APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |
 | release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
 | release health asset URL matches tag | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md |
@@ -241,6 +248,9 @@ Status: `OK`
 | release provenance APK subjects | OK | 2 subject(s) |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
+| release provenance material digest matches release asset manifest | OK | recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551 |
+| release provenance material digest matches build environment | OK | recorded=0a2af50b899bb2779cc8e5b9b042118ae84e6c4642e0826b5a49dabc45826fbd, actual=0a2af50b899bb2779cc8e5b9b042118ae84e6c4642e0826b5a49dabc45826fbd |
+| release provenance material digest matches permission justification | OK | recorded=133096e3401ff1c2bab1873cafbbf28a692e56d623d6f7070e5acb807856d3db, actual=133096e3401ff1c2bab1873cafbbf28a692e56d623d6f7070e5acb807856d3db |
 | build environment ok flag | OK | ok=True |
 | build environment tag matches | OK | tag=v0.5.4-study.9 |
 | build environment version matches gradle | OK | 0.5.4-study.9/5409 |

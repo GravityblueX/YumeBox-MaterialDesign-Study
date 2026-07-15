@@ -79,6 +79,19 @@ function Format-MdCodeSpan {
     return "$fence$padded$fence"
 }
 
+function Write-Utf8NoBom {
+    param(
+        [string]$Path,
+        [string]$Content
+    )
+    $normalized = $Content -replace "`r`n?", "`n"
+    if (-not $normalized.EndsWith("`n")) {
+        $normalized += "`n"
+    }
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
+}
+
 $props = Read-PropertiesFile -Path (Join-Path $ProjectRoot "gradle.properties")
 $versionName = [string]$props["project.version.name"]
 if ([string]::IsNullOrWhiteSpace($Tag)) { $Tag = "v$versionName" }
@@ -184,11 +197,19 @@ $apkAssets = @($assets | Where-Object { $_.kind -in @("debug-apk", "release-apk"
 $debugApks = @($assets | Where-Object { $_.kind -eq "debug-apk" })
 $releaseApks = @($assets | Where-Object { $_.kind -eq "release-apk" })
 $uploadedReports = @($assets | Where-Object { $_.kind -in @("installability-json", "installability-md", "release-health") })
+$canonicalDigestPattern = '^sha256:[0-9a-f]{64}$'
+$apkDigestFormatFailures = @($apkAssets | Where-Object { [string]$_.digest -notmatch $canonicalDigestPattern })
+$apkUrlFailures = @($apkAssets | Where-Object {
+    $expectedSuffix = "/releases/download/$Tag/$($_.name)"
+    -not ([string]$_.url).EndsWith($expectedSuffix, [System.StringComparison]::Ordinal)
+})
 
 Add-Gate $gates "debug APK asset present" ($debugApks.Count -ge 1) "$($debugApks.Count) debug APK asset(s)"
 Add-Gate $gates "release APK asset present" ($releaseApks.Count -ge 1) "$($releaseApks.Count) release APK asset(s)"
 Add-Gate $gates "support reports uploaded" ($uploadedReports.Count -ge 3) "$($uploadedReports.Count) report asset(s)"
 Add-Gate $gates "release APK assets uploaded" (($apkAssets | Where-Object { $_.state -ne "uploaded" }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
+Add-Gate $gates "APK asset digests are canonical SHA-256" ($apkDigestFormatFailures.Count -eq 0) "invalid=$($apkDigestFormatFailures.Count); apkAssets=$($apkAssets.Count)"
+Add-Gate $gates "APK asset URLs match release tag" ($apkUrlFailures.Count -eq 0) "invalid=$($apkUrlFailures.Count); tag=$Tag"
 Add-Gate $gates "all release APKs in installability report" (($apkAssets | Where-Object { -not $_.installability.present }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "all installability APKs in release" ((@($installability.apks | Where-Object { -not (@($apkAssets.name) -contains [string]$_.name) })).Count -eq 0) "reportApks=$(@($installability.apks).Count)"
 Add-Gate $gates "APK asset digests match report" (($apkAssets | Where-Object { $_.installability.present -and -not $_.installability.digestMatches }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
@@ -235,7 +256,7 @@ $payload = [pscustomobject]@{
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $JsonOut) | Out-Null
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Out-Null
-$payload | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
+Write-Utf8NoBom -Path $JsonOut -Content ($payload | ConvertTo-Json -Depth 10)
 
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
 $repoCode = Format-MdCodeSpan -Value $Repo
@@ -308,7 +329,7 @@ $lines.Add("")
 $lines.Add("- This manifest proves release asset consistency against archived APK installability and permission-review reports.")
 $lines.Add("- It does not replace a real-device install matrix, privacy review, or production release-signing audit.")
 $lines.Add("")
-($lines -join "`n") | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
+Write-Utf8NoBom -Path $MarkdownOut -Content ($lines -join "`n")
 
 Write-Host "Status=$status"
 Write-Host "JsonOut=$JsonOut"

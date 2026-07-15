@@ -1,6 +1,6 @@
-﻿{
+{
     "reportType":  "yumebox_release_asset_manifest",
-    "generatedAt":  "2026-06-24T11:22:24.5336925+08:00",
+    "generatedAt":  "2026-07-15T16:41:58.8334825+08:00",
     "repo":  "GravityblueX/YumeBox-MaterialDesign-Study",
     "tag":  "v0.5.4-study.9",
     "release":  {
@@ -82,6 +82,16 @@
                       "detail":  "apkAssets=2"
                   },
                   {
+                      "name":  "APK asset digests are canonical SHA-256",
+                      "ok":  true,
+                      "detail":  "invalid=0; apkAssets=2"
+                  },
+                  {
+                      "name":  "APK asset URLs match release tag",
+                      "ok":  true,
+                      "detail":  "invalid=0; tag=v0.5.4-study.9"
+                  },
+                  {
                       "name":  "all release APKs in installability report",
                       "ok":  true,
                       "detail":  "apkAssets=2"
@@ -123,7 +133,7 @@
                        "digest":  "sha256:9aa9c71d0de27ac08a0d224da6a40dff2baf8428013115b3590a593931a1ab80",
                        "state":  "uploaded",
                        "contentType":  "application/vnd.android.package-archive",
-                       "downloadCount":  13,
+                       "downloadCount":  18,
                        "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/YumeBox-Study-v0.5.4-study.9-arm64-v8a-debug.apk",
                        "installability":  {
                                               "present":  true,
@@ -154,7 +164,7 @@
                        "digest":  "sha256:826313061bbe42ac85cb073fa752814a612ffbe3c069222b93883700fd9e3b30",
                        "state":  "uploaded",
                        "contentType":  "application/json",
-                       "downloadCount":  0,
+                       "downloadCount":  1,
                        "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/apk-installability-report-v0.5.4-study.9.json",
                        "installability":  {
                                               "present":  false
@@ -186,7 +196,7 @@
                        "digest":  "sha256:7f7fb26716ab10333121e615421f79be76a2f32c3857a2e4631d4a6a3a760cdc",
                        "state":  "uploaded",
                        "contentType":  "application/vnd.android.package-archive",
-                       "downloadCount":  13,
+                       "downloadCount":  17,
                        "url":  "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/YumeBox-Study-v0.5.4-study.9-arm64-v8a-release.apk",
                        "installability":  {
                                               "present":  true,

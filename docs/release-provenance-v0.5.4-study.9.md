@@ -1,10 +1,10 @@
-﻿# Release Provenance - v0.5.4-study.9
+# Release Provenance - v0.5.4-study.9
 
-Generated: 2026-06-24T11:59:38.4769026+08:00
+Generated: 2026-07-15T16:41:59.9454618+08:00
 Predicate: `https://slsa.dev/provenance/v1`
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Status: `OK`
-Source commit: `33843ba31bc3e39ec7d69568ea0835de6822df79`
+Source commit: `cd4dd23d19aed0cbc8ad7af294c32d8ee57b53bf`
 
 ## Subjects
 
@@ -24,7 +24,7 @@ Source commit: `33843ba31bc3e39ec7d69568ea0835de6822df79`
 | asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | debug and release APK subjects | OK | 2 subject(s) |
 | all subjects have sha256 | OK | 2 subject(s) |
-| git commit available | OK | 33843ba31bc3e39ec7d69568ea0835de6822df79 |
+| git commit available | OK | cd4dd23d19aed0cbc8ad7af294c32d8ee57b53bf |
 | release is not draft | OK | isDraft=False |
 | package id recorded | OK | com.github.yizuka17.yumebox.md3 |
 | version recorded | OK | 0.5.4-study.9/5409 |
@@ -34,4 +34,3 @@ Source commit: `33843ba31bc3e39ec7d69568ea0835de6822df79`
 - This provenance statement is study-release evidence, not a hosted trusted builder attestation.
 - It links downloadable APK subjects to local build metadata, release asset manifest, and git source commit.
 - Production release still requires private release signing, device matrix, privacy review, and trusted CI provenance.
-

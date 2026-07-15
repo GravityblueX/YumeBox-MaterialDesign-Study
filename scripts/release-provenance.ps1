@@ -67,6 +67,19 @@ function Format-MarkdownCodeSpan {
     return "$fence$padded$fence"
 }
 
+function Write-Utf8NoBom {
+    param(
+        [string]$Path,
+        [string]$Content
+    )
+    $normalized = $Content -replace "`r`n?", "`n"
+    if (-not $normalized.EndsWith("`n")) {
+        $normalized += "`n"
+    }
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
+}
+
 function Git-Text {
     param([string[]]$GitArgs)
     $output = & git -C $ProjectRoot @GitArgs 2>$null
@@ -212,7 +225,7 @@ $payload = [pscustomobject]@{
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $JsonOut) | Out-Null
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $MarkdownOut) | Out-Null
-$payload | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $JsonOut -Encoding UTF8
+Write-Utf8NoBom -Path $JsonOut -Content ($payload | ConvertTo-Json -Depth 12)
 
 $status = if ($payload.ok) { "OK" } else { "FAIL" }
 $predicateCode = Format-MarkdownCodeSpan -Value $payload.predicateType
@@ -258,7 +271,7 @@ $lines.Add("- This provenance statement is study-release evidence, not a hosted 
 $lines.Add("- It links downloadable APK subjects to local build metadata, release asset manifest, and git source commit.")
 $lines.Add("- Production release still requires private release signing, device matrix, privacy review, and trusted CI provenance.")
 $lines.Add("")
-($lines -join "`n") | Set-Content -LiteralPath $MarkdownOut -Encoding UTF8
+Write-Utf8NoBom -Path $MarkdownOut -Content ($lines -join "`n")
 
 Write-Host "Status=$status"
 Write-Host "JsonOut=$JsonOut"

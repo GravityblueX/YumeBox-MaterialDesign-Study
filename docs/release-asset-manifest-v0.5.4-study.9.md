@@ -1,6 +1,6 @@
-﻿# Release Asset Manifest - v0.5.4-study.9
+# Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-06-24T11:22:24.5336925+08:00
+Generated: 2026-07-15T16:41:58.8334825+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
 Published: 2026-06-23T23:55:21Z
@@ -32,6 +32,8 @@ Status: `OK`
 | release APK asset present | OK | 1 release APK asset(s) |
 | support reports uploaded | OK | 3 report asset(s) |
 | release APK assets uploaded | OK | apkAssets=2 |
+| APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
+| APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | all release APKs in installability report | OK | apkAssets=2 |
 | all installability APKs in release | OK | reportApks=2 |
 | APK asset digests match report | OK | apkAssets=2 |
@@ -58,4 +60,3 @@ Status: `OK`
 
 - This manifest proves release asset consistency against archived APK installability and permission-review reports.
 - It does not replace a real-device install matrix, privacy review, or production release-signing audit.
-

@@ -99,6 +99,14 @@ function Normalize-Sha256Digest {
     return ($text -replace "^sha256:", "").ToLowerInvariant()
 }
 
+function Get-FileSha256 {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
+        return ""
+    }
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
 function Convert-ToMarkdown {
     param($Payload)
     $status = if ($Payload.ok) { "OK" } else { "FAIL" }
@@ -202,6 +210,7 @@ Add-Check "study contract writes UTF-8 without BOM" (Test-FileContains -Path $PS
 Add-Check "study contract normalizes SHA-256 digests" (Test-FileContains -Path $PSCommandPath -Needle 'function Normalize-Sha256Digest') "digest normalization"
 Add-Check "study contract cross-checks provenance APK names" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK subjects match release asset names') "provenance asset name parity"
 Add-Check "study contract cross-checks provenance APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK digests match release assets') "provenance asset digest parity"
+Add-Check "study contract cross-checks provenance material digests" (Test-FileContains -Path $PSCommandPath -Needle 'release provenance material digest matches release asset manifest') "provenance material digest parity"
 Add-Check "study contract checks release health markdown" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown tag matches') "release health markdown"
 Add-Check "study contract cross-checks release health APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown lists APK digests') "release health APK digests"
 
@@ -265,6 +274,7 @@ Add-Check "release provenance code-spans status header" (Test-FileContains -Path
 Add-Check "release provenance code-spans source commit header" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $head') "source commit header code span"
 Add-Check "release provenance code-spans package names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Format-MarkdownCodeSpan -Value $subject.annotations.packageName') "package code span"
 Add-Check "release provenance records dirty count" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'dirtyCountWhenGenerated') "dirty count evidence"
+Add-Check "release provenance writes UTF-8 without BOM" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $releaseAssetManifestScriptPath = Join-Path $ProjectRoot "scripts\release-asset-manifest.ps1"
 Add-Check "release asset manifest escapes markdown table cells" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'function Escape-Md') "table cell escaping"
@@ -278,6 +288,9 @@ Add-Check "release asset manifest code-spans release header" (Test-FileContains 
 Add-Check "release asset manifest code-spans status header" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Format-MdCodeSpan -Value $status') "status header code span"
 Add-Check "release asset manifest code-spans APK asset digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Format-MdCodeSpan -Value (Normalize-Digest $asset.digest)') "APK digest code span"
 Add-Check "release asset manifest code-spans supporting asset digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Format-MdCodeSpan -Value $asset.digest') "supporting digest code span"
+Add-Check "release asset manifest gates canonical APK digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset digests are canonical SHA-256') "canonical digest gate"
+Add-Check "release asset manifest gates release-tag APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs match release tag') "release URL gate"
+Add-Check "release asset manifest writes UTF-8 without BOM" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $buildEnvironmentReportScriptPath = Join-Path $ProjectRoot "scripts\build-environment-report.ps1"
 Add-Check "build environment report escapes markdown table cells" (Test-FileContains -Path $buildEnvironmentReportScriptPath -Needle 'function Escape-MarkdownTableCell') "table cell escaping"
@@ -432,6 +445,18 @@ if (Test-Path -LiteralPath $assetManifestPath) {
     Add-Check "release asset manifest tag matches" ([string]$assetManifest.tag -eq $Tag) "tag=$($assetManifest.tag)"
     Add-Check "release asset manifest APK assets" ([int]$assetManifest.summary.debugApkCount -ge 1 -and [int]$assetManifest.summary.releaseApkCount -ge 1) "debug=$($assetManifest.summary.debugApkCount), release=$($assetManifest.summary.releaseApkCount)"
     Add-Check "release asset manifest gates recorded" (@($assetManifest.gates).Count -ge 10) "$(@($assetManifest.gates).Count) gates"
+    $assetManifestGateByName = @{}
+    foreach ($gate in @($assetManifest.gates)) {
+        $gateName = [string]$gate.name
+        if (-not [string]::IsNullOrWhiteSpace($gateName)) {
+            $assetManifestGateByName[$gateName] = $gate
+        }
+    }
+    foreach ($requiredGateName in @("APK asset digests are canonical SHA-256", "APK asset URLs match release tag")) {
+        $gate = $assetManifestGateByName[$requiredGateName]
+        $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }
+        Add-Check "release asset manifest gate passes: $requiredGateName" ($null -ne $gate -and [bool]$gate.ok) $gateDetail
+    }
     foreach ($asset in @($assetManifest.assets | Where-Object { [string]$_.kind -in @("debug-apk", "release-apk") })) {
         $assetName = [string]$asset.name
         if (-not [string]::IsNullOrWhiteSpace($assetName)) {
@@ -462,6 +487,7 @@ if (Test-Path -LiteralPath $assetManifestPath) {
     }
 }
 
+$buildEnvironmentPath = Join-Path $ProjectRoot "docs\build-environment-$Tag.json"
 $provenancePath = Join-Path $ProjectRoot "docs\release-provenance-$Tag.json"
 if (Test-Path -LiteralPath $provenancePath) {
     $provenance = Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
@@ -477,11 +503,32 @@ if (Test-Path -LiteralPath $provenancePath) {
         }
     }
     $materialUris = @($provenance.predicate.materials | ForEach-Object { [string]$_.uri })
+    $materialSha256ByUri = @{}
+    foreach ($material in @($provenance.predicate.materials)) {
+        $materialUri = [string]$material.uri
+        if (-not [string]::IsNullOrWhiteSpace($materialUri)) {
+            $materialSha256ByUri[$materialUri] = Normalize-Sha256Digest $material.digest.sha256
+        }
+    }
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
     Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
+
+    $assetManifestMaterialUri = "file://docs/release-asset-manifest-$Tag.json"
+    $assetManifestSha256 = Get-FileSha256 -Path $assetManifestPath
+    $recordedAssetManifestSha256 = [string]$materialSha256ByUri[$assetManifestMaterialUri]
+    Add-Check "release provenance material digest matches release asset manifest" ($assetManifestSha256 -ne "" -and $recordedAssetManifestSha256 -eq $assetManifestSha256) "recorded=$recordedAssetManifestSha256, actual=$assetManifestSha256"
+
+    $buildEnvironmentMaterialUri = "file://docs/build-environment-$Tag.json"
+    $buildEnvironmentSha256 = Get-FileSha256 -Path $buildEnvironmentPath
+    $recordedBuildEnvironmentSha256 = [string]$materialSha256ByUri[$buildEnvironmentMaterialUri]
+    Add-Check "release provenance material digest matches build environment" ($buildEnvironmentSha256 -ne "" -and $recordedBuildEnvironmentSha256 -eq $buildEnvironmentSha256) "recorded=$recordedBuildEnvironmentSha256, actual=$buildEnvironmentSha256"
+
+    $permissionJustificationMaterialUri = "file://docs/apk-permission-justification-$Tag.json"
+    $permissionJustificationSha256 = Get-FileSha256 -Path $permissionJustificationPath
+    $recordedPermissionJustificationSha256 = [string]$materialSha256ByUri[$permissionJustificationMaterialUri]
+    Add-Check "release provenance material digest matches permission justification" ($permissionJustificationSha256 -ne "" -and $recordedPermissionJustificationSha256 -eq $permissionJustificationSha256) "recorded=$recordedPermissionJustificationSha256, actual=$permissionJustificationSha256"
 }
 
-$buildEnvironmentPath = Join-Path $ProjectRoot "docs\build-environment-$Tag.json"
 if (Test-Path -LiteralPath $buildEnvironmentPath) {
     $buildEnvironment = Get-Content -LiteralPath $buildEnvironmentPath -Raw | ConvertFrom-Json
     Add-Check "build environment ok flag" ([bool]$buildEnvironment.ok) "ok=$($buildEnvironment.ok)"
