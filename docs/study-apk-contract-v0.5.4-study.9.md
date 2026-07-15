@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T17:53:12.0760411+08:00
+Generated: 2026-07-15T18:47:25.6258503+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 243 |
+| Check count | 255 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -121,6 +121,12 @@ Status: `OK`
 | release provenance gates non-empty material URIs | OK | material URI presence |
 | release provenance gates unique material URIs | OK | material URI uniqueness |
 | release provenance gates material digest evidence | OK | material digest evidence |
+| release provenance gates non-empty subject names | OK | subject name presence |
+| release provenance gates unique subject names | OK | subject name uniqueness |
+| release provenance gates non-empty subject URIs | OK | subject URI presence |
+| release provenance gates unique subject URIs | OK | subject URI uniqueness |
+| release provenance gates positive subject sizes | OK | subject size gate |
+| release provenance gates canonical subject SHA-256 | OK | subject digest format |
 | release asset manifest escapes markdown table cells | OK | table cell escaping |
 | release asset manifest escapes newlines | OK | newline escaping |
 | release asset manifest escapes APK asset kind | OK | asset kind escaping |
@@ -252,6 +258,12 @@ Status: `OK`
 | release provenance gate passes: all materials have URIs | OK | materials=4, missing=0 |
 | release provenance gate passes: material URIs are unique | OK | materials=4, duplicates=0 |
 | release provenance gate passes: all materials have digest evidence | OK | materials=4, missing=0 |
+| release provenance gate passes: all subjects have names | OK | subjects=2, missing=0 |
+| release provenance gate passes: subject names are unique | OK | subjects=2, duplicates=0 |
+| release provenance gate passes: all subjects have URIs | OK | subjects=2, missing=0 |
+| release provenance gate passes: subject URIs are unique | OK | subjects=2, duplicates=0 |
+| release provenance gate passes: all subjects have positive sizes | OK | subjects=2, invalid=0 |
+| release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance material digest matches release asset manifest | OK | recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551 |

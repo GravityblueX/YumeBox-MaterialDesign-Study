@@ -142,6 +142,7 @@ if (-not (Test-Path -LiteralPath $PermissionJustificationJson)) {
 $manifest = Get-Content -LiteralPath $AssetManifestJson -Raw | ConvertFrom-Json
 $apkAssets = @($manifest.assets | Where-Object { $_.kind -in @("debug-apk", "release-apk", "apk") })
 $subjects = @()
+$canonicalSha256Pattern = '^[0-9a-f]{64}$'
 foreach ($asset in $apkAssets) {
     $subjects += [pscustomobject]@{
         name = [string]$asset.name
@@ -159,6 +160,26 @@ foreach ($asset in $apkAssets) {
         }
     }
 }
+$subjectNames = @($subjects | ForEach-Object { [string]$_.name })
+$subjectUris = @($subjects | ForEach-Object { [string]$_.uri })
+$subjectsMissingName = @($subjects | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.name) })
+$subjectsMissingUri = @($subjects | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.uri) })
+$subjectsWithInvalidSize = @($subjects | Where-Object { [int64]$_.size -le 0 })
+$subjectsWithInvalidSha256 = @($subjects | Where-Object { [string]$_.digest.sha256 -notmatch $canonicalSha256Pattern })
+$duplicateSubjectNames = @(
+    $subjectNames |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
+$duplicateSubjectUris = @(
+    $subjectUris |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
 
 $head = Git-Text @("rev-parse", "HEAD")
 $branch = Git-Text @("branch", "--show-current")
@@ -203,6 +224,12 @@ Add-Gate $gates "asset manifest ok" ([bool]$manifest.ok) "ok=$($manifest.ok)"
 Add-Gate $gates "asset manifest tag matches" ([string]$manifest.tag -eq $Tag) "tag=$($manifest.tag)"
 Add-Gate $gates "debug and release APK subjects" (@($subjects | Where-Object { $_.annotations.kind -eq "debug-apk" }).Count -ge 1 -and @($subjects | Where-Object { $_.annotations.kind -eq "release-apk" }).Count -ge 1) "$(@($subjects).Count) subject(s)"
 Add-Gate $gates "all subjects have sha256" (@($subjects | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.digest.sha256) }).Count -eq 0) "$(@($subjects).Count) subject(s)"
+Add-Gate $gates "all subjects have names" ($subjectsMissingName.Count -eq 0) "subjects=$($subjects.Count), missing=$($subjectsMissingName.Count)"
+Add-Gate $gates "subject names are unique" ($duplicateSubjectNames.Count -eq 0) "subjects=$($subjects.Count), duplicates=$($duplicateSubjectNames.Count)"
+Add-Gate $gates "all subjects have URIs" ($subjectsMissingUri.Count -eq 0) "subjects=$($subjects.Count), missing=$($subjectsMissingUri.Count)"
+Add-Gate $gates "subject URIs are unique" ($duplicateSubjectUris.Count -eq 0) "subjects=$($subjects.Count), duplicates=$($duplicateSubjectUris.Count)"
+Add-Gate $gates "all subjects have positive sizes" ($subjectsWithInvalidSize.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSize.Count)"
+Add-Gate $gates "all subjects have canonical sha256" ($subjectsWithInvalidSha256.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSha256.Count)"
 Add-Gate $gates "git commit available" (-not [string]::IsNullOrWhiteSpace($head)) $head
 Add-Gate $gates "release is not draft" (-not [bool]$manifest.release.isDraft) "isDraft=$($manifest.release.isDraft)"
 Add-Gate $gates "package id recorded" (-not [string]::IsNullOrWhiteSpace($applicationId)) $applicationId

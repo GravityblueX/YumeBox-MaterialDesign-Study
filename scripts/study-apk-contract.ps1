@@ -287,6 +287,12 @@ Add-Check "release provenance writes UTF-8 without BOM" (Test-FileContains -Path
 Add-Check "release provenance gates non-empty material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have URIs') "material URI presence"
 Add-Check "release provenance gates unique material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'material URIs are unique') "material URI uniqueness"
 Add-Check "release provenance gates material digest evidence" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have digest evidence') "material digest evidence"
+Add-Check "release provenance gates non-empty subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have names') "subject name presence"
+Add-Check "release provenance gates unique subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject names are unique') "subject name uniqueness"
+Add-Check "release provenance gates non-empty subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have URIs') "subject URI presence"
+Add-Check "release provenance gates unique subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject URIs are unique') "subject URI uniqueness"
+Add-Check "release provenance gates positive subject sizes" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have positive sizes') "subject size gate"
+Add-Check "release provenance gates canonical subject SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have canonical sha256') "subject digest format"
 
 $releaseAssetManifestScriptPath = Join-Path $ProjectRoot "scripts\release-asset-manifest.ps1"
 Add-Check "release asset manifest escapes markdown table cells" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'function Escape-Md') "table cell escaping"
@@ -515,7 +521,17 @@ if (Test-Path -LiteralPath $provenancePath) {
             $provenanceGateByName[$gateName] = $gate
         }
     }
-    foreach ($requiredGateName in @("all materials have URIs", "material URIs are unique", "all materials have digest evidence")) {
+    foreach ($requiredGateName in @(
+        "all materials have URIs",
+        "material URIs are unique",
+        "all materials have digest evidence",
+        "all subjects have names",
+        "subject names are unique",
+        "all subjects have URIs",
+        "subject URIs are unique",
+        "all subjects have positive sizes",
+        "all subjects have canonical sha256"
+    )) {
         $gate = $provenanceGateByName[$requiredGateName]
         $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }
         Add-Check "release provenance gate passes: $requiredGateName" ($null -ne $gate -and [bool]$gate.ok) $gateDetail
