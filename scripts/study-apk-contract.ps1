@@ -317,8 +317,10 @@ Add-Check "release asset manifest gates positive asset sizes" (Test-FileContains
 Add-Check "release asset manifest gates uploaded assets" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release assets are uploaded') "asset upload state gate"
 Add-Check "release asset manifest gates canonical asset digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset digests are canonical SHA-256') "asset digest gate"
 Add-Check "release asset manifest gates release-tag asset URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset URLs match release tag') "asset URL tag gate"
+Add-Check "release asset manifest gates GitHub HTTPS asset URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset URLs use GitHub HTTPS downloads') "GitHub HTTPS asset URL gate"
 Add-Check "release asset manifest gates canonical APK digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset digests are canonical SHA-256') "canonical digest gate"
 Add-Check "release asset manifest gates release-tag APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs match release tag') "release URL gate"
+Add-Check "release asset manifest gates GitHub HTTPS APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs use GitHub HTTPS downloads') "GitHub HTTPS APK URL gate"
 Add-Check "release asset manifest writes UTF-8 without BOM" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $buildEnvironmentReportScriptPath = Join-Path $ProjectRoot "scripts\build-environment-report.ps1"
@@ -490,8 +492,10 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "all release assets are uploaded",
         "all release asset digests are canonical SHA-256",
         "all release asset URLs match release tag",
+        "all release asset URLs use GitHub HTTPS downloads",
         "APK asset digests are canonical SHA-256",
-        "APK asset URLs match release tag"
+        "APK asset URLs match release tag",
+        "APK asset URLs use GitHub HTTPS downloads"
     )) {
         $gate = $assetManifestGateByName[$requiredGateName]
         $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }

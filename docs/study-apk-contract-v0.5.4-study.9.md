@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T21:41:04.2763754+08:00
+Generated: 2026-07-15T22:33:00.4845980+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 280 |
+| Check count | 284 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -149,8 +149,10 @@ Status: `OK`
 | release asset manifest gates uploaded assets | OK | asset upload state gate |
 | release asset manifest gates canonical asset digests | OK | asset digest gate |
 | release asset manifest gates release-tag asset URLs | OK | asset URL tag gate |
+| release asset manifest gates GitHub HTTPS asset URLs | OK | GitHub HTTPS asset URL gate |
 | release asset manifest gates canonical APK digests | OK | canonical digest gate |
 | release asset manifest gates release-tag APK URLs | OK | release URL gate |
+| release asset manifest gates GitHub HTTPS APK URLs | OK | GitHub HTTPS APK URL gate |
 | release asset manifest writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | build environment report escapes markdown table cells | OK | table cell escaping |
 | build environment report escapes newlines | OK | newline escaping |
@@ -249,7 +251,7 @@ Status: `OK`
 | release asset manifest ok flag | OK | ok=True |
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
-| release asset manifest gates recorded | OK | 28 gates |
+| release asset manifest gates recorded | OK | 30 gates |
 | release asset manifest gate passes: all release assets have names | OK | assets=5, missing=0 |
 | release asset manifest gate passes: release asset names are unique | OK | assets=5, duplicates=0 |
 | release asset manifest gate passes: all release assets have URLs | OK | assets=5, missing=0 |
@@ -258,8 +260,10 @@ Status: `OK`
 | release asset manifest gate passes: all release assets are uploaded | OK | assets=5, invalid=0 |
 | release asset manifest gate passes: all release asset digests are canonical SHA-256 | OK | assets=5, invalid=0 |
 | release asset manifest gate passes: all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
+| release asset manifest gate passes: all release asset URLs use GitHub HTTPS downloads | OK | assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest gate passes: APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
+| release asset manifest gate passes: APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |
 | release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
 | release health asset URL matches tag | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md |
@@ -287,11 +291,11 @@ Status: `OK`
 | release provenance gate passes: all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
 | release provenance repo material commit is canonical | OK | repoMaterials=1, canonical=1 |
-| release provenance repo material commit matches source commit | OK | material=ef5a692a0f6cd58a25b2589c6c23cb2a08e86097, source=ef5a692a0f6cd58a25b2589c6c23cb2a08e86097 |
+| release provenance repo material commit matches source commit | OK | material=df458192f59c04bb262e66f9943988c5bceac6ef, source=df458192f59c04bb262e66f9943988c5bceac6ef |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance file materials match expected evidence | OK | fileMaterials=3 |
-| release provenance material digest matches release asset manifest | OK | recorded=0867170f87b363d59a95bb06b351d89e16831daa598c789d9e0e77e9a9628fbe, actual=0867170f87b363d59a95bb06b351d89e16831daa598c789d9e0e77e9a9628fbe |
+| release provenance material digest matches release asset manifest | OK | recorded=bb8b24edd8e25ad15072d9f97c09d47c468e4eb2f00d31dbbdc0bfc3c444c122, actual=bb8b24edd8e25ad15072d9f97c09d47c468e4eb2f00d31dbbdc0bfc3c444c122 |
 | release provenance material digest matches build environment | OK | recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b |
 | release provenance material digest matches permission justification | OK | recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b |
 | build environment ok flag | OK | ok=True |
