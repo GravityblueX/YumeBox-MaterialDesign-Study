@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T16:42:01.2886081+08:00
+Generated: 2026-07-15T16:45:55.8114534+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -249,8 +249,8 @@ Status: `OK`
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance material digest matches release asset manifest | OK | recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551 |
-| release provenance material digest matches build environment | OK | recorded=0a2af50b899bb2779cc8e5b9b042118ae84e6c4642e0826b5a49dabc45826fbd, actual=0a2af50b899bb2779cc8e5b9b042118ae84e6c4642e0826b5a49dabc45826fbd |
-| release provenance material digest matches permission justification | OK | recorded=133096e3401ff1c2bab1873cafbbf28a692e56d623d6f7070e5acb807856d3db, actual=133096e3401ff1c2bab1873cafbbf28a692e56d623d6f7070e5acb807856d3db |
+| release provenance material digest matches build environment | OK | recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b |
+| release provenance material digest matches permission justification | OK | recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b |
 | build environment ok flag | OK | ok=True |
 | build environment tag matches | OK | tag=v0.5.4-study.9 |
 | build environment version matches gradle | OK | 0.5.4-study.9/5409 |

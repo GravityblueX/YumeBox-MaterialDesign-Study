@@ -104,7 +104,16 @@ function Get-FileSha256 {
     if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
         return ""
     }
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    $content = [System.IO.File]::ReadAllText($Path)
+    $normalized = $content -replace "`r`n?", "`n"
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    $bytes = $encoding.GetBytes($normalized)
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha256.ComputeHash($bytes))).Replace("-", "").ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+    }
 }
 
 function Convert-ToMarkdown {

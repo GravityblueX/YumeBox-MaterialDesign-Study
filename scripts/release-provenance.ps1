@@ -80,6 +80,23 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
+function Get-TextFileSha256 {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
+        return ""
+    }
+    $content = [System.IO.File]::ReadAllText($Path)
+    $normalized = $content -replace "`r`n?", "`n"
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    $bytes = $encoding.GetBytes($normalized)
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha256.ComputeHash($bytes))).Replace("-", "").ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+    }
+}
+
 function Git-Text {
     param([string[]]$GitArgs)
     $output = & git -C $ProjectRoot @GitArgs 2>$null
@@ -200,15 +217,15 @@ $payload = [pscustomobject]@{
             },
             [pscustomobject]@{
                 uri = "file://docs/release-asset-manifest-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $AssetManifestJson -Algorithm SHA256).Hash.ToLowerInvariant() }
+                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $AssetManifestJson }
             },
             [pscustomobject]@{
                 uri = "file://docs/build-environment-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $BuildEnvironmentJson -Algorithm SHA256).Hash.ToLowerInvariant() }
+                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $BuildEnvironmentJson }
             },
             [pscustomobject]@{
                 uri = "file://docs/apk-permission-justification-$Tag.json"
-                digest = [pscustomobject]@{ sha256 = (Get-FileHash -LiteralPath $PermissionJustificationJson -Algorithm SHA256).Hash.ToLowerInvariant() }
+                digest = [pscustomobject]@{ sha256 = Get-TextFileSha256 -Path $PermissionJustificationJson }
             }
         )
     }
