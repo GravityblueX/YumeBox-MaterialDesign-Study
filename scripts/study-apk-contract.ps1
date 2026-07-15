@@ -288,6 +288,7 @@ Add-Check "release provenance gates non-empty material URIs" (Test-FileContains 
 Add-Check "release provenance gates unique material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'material URIs are unique') "material URI uniqueness"
 Add-Check "release provenance gates material digest evidence" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have digest evidence') "material digest evidence"
 Add-Check "release provenance gates canonical file material SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all file materials have canonical sha256') "file material digest format"
+Add-Check "release provenance gates expected file material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all file materials reference expected docs JSON') "file material evidence set"
 Add-Check "release provenance gates canonical repo material commit" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'repo material has canonical git commit') "repo material commit format"
 Add-Check "release provenance gates non-empty subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have names') "subject name presence"
 Add-Check "release provenance gates unique subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject names are unique') "subject name uniqueness"
@@ -500,7 +501,7 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         Add-Check "release health markdown tag matches" ($releaseHealthMarkdown.Contains("Tag: ``$Tag``")) "tag=$Tag"
         Add-Check "release health markdown has checks section" ($releaseHealthMarkdown.Contains("## Checks")) "## Checks"
         Add-Check "release health markdown records no failed checks" (-not ($releaseHealthMarkdown -match '(?m)^\| [^|]+ \| FAIL \|')) "no FAIL rows"
-        foreach ($assetName in $releaseApkAssetDigests.Keys) {
+        foreach ($assetName in @($releaseApkAssetDigests.Keys | Sort-Object)) {
             $digest = Normalize-Sha256Digest $releaseApkAssetDigests[$assetName]
             Add-Check "release health markdown lists APK digest $assetName" ($digest -ne "" -and $releaseHealthMarkdown.Contains($digest)) $digest
         }
@@ -528,6 +529,7 @@ if (Test-Path -LiteralPath $provenancePath) {
         "material URIs are unique",
         "all materials have digest evidence",
         "all file materials have canonical sha256",
+        "all file materials reference expected docs JSON",
         "repo material has canonical git commit",
         "all subjects have names",
         "subject names are unique",
@@ -564,6 +566,21 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance repo material commit matches source commit" ($repoMaterialCommits.Count -eq 1 -and $repoMaterialCommits[0] -eq $sourceCommit) "material=$($repoMaterialCommits[0]), source=$sourceCommit"
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
     Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
+
+    $expectedFileMaterialUris = @(
+        "file://docs/release-asset-manifest-$Tag.json",
+        "file://docs/build-environment-$Tag.json",
+        "file://docs/apk-permission-justification-$Tag.json"
+    )
+    $fileMaterialUris = @($materialUris | Where-Object { $_ -like "file://*" })
+    $unexpectedFileMaterialUris = @($fileMaterialUris | Where-Object { $expectedFileMaterialUris -notcontains $_ })
+    $missingExpectedFileMaterialUris = @($expectedFileMaterialUris | Where-Object { $fileMaterialUris -notcontains $_ })
+    $fileMaterialDetail = if ($unexpectedFileMaterialUris.Count -eq 0 -and $missingExpectedFileMaterialUris.Count -eq 0) {
+        "fileMaterials=$($fileMaterialUris.Count)"
+    } else {
+        "unexpected=$($unexpectedFileMaterialUris -join ', '); missing=$($missingExpectedFileMaterialUris -join ', ')"
+    }
+    Add-Check "release provenance file materials match expected evidence" ($unexpectedFileMaterialUris.Count -eq 0 -and $missingExpectedFileMaterialUris.Count -eq 0) $fileMaterialDetail
 
     $assetManifestMaterialUri = "file://docs/release-asset-manifest-$Tag.json"
     $assetManifestSha256 = Get-FileSha256 -Path $assetManifestPath

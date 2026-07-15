@@ -222,6 +222,20 @@ $materialsMissingDigest = @(
 )
 $fileMaterials = @($materials | Where-Object { [string]$_.uri -like "file://*" })
 $repoMaterials = @($materials | Where-Object { [string]$_.uri -notlike "file://*" })
+$expectedFileMaterialUris = @(
+    "file://docs/release-asset-manifest-$Tag.json",
+    "file://docs/build-environment-$Tag.json",
+    "file://docs/apk-permission-justification-$Tag.json"
+)
+$unexpectedFileMaterialUris = @(
+    $fileMaterials |
+        ForEach-Object { [string]$_.uri } |
+        Where-Object { $expectedFileMaterialUris -notcontains $_ }
+)
+$missingExpectedFileMaterialUris = @(
+    $expectedFileMaterialUris |
+        Where-Object { $materialUris -notcontains $_ }
+)
 $fileMaterialsWithInvalidSha256 = @(
     $fileMaterials | Where-Object { [string]$_.digest.sha256 -notmatch $canonicalSha256Pattern }
 )
@@ -247,6 +261,7 @@ Add-Gate $gates "all materials have URIs" ($materialsMissingUri.Count -eq 0) "ma
 Add-Gate $gates "material URIs are unique" ($duplicateMaterialUris.Count -eq 0) "materials=$($materials.Count), duplicates=$($duplicateMaterialUris.Count)"
 Add-Gate $gates "all materials have digest evidence" ($materialsMissingDigest.Count -eq 0) "materials=$($materials.Count), missing=$($materialsMissingDigest.Count)"
 Add-Gate $gates "all file materials have canonical sha256" ($fileMaterials.Count -gt 0 -and $fileMaterialsWithInvalidSha256.Count -eq 0) "fileMaterials=$($fileMaterials.Count), invalid=$($fileMaterialsWithInvalidSha256.Count)"
+Add-Gate $gates "all file materials reference expected docs JSON" ($unexpectedFileMaterialUris.Count -eq 0 -and $missingExpectedFileMaterialUris.Count -eq 0) "fileMaterials=$($fileMaterials.Count), expected=$($expectedFileMaterialUris.Count), unexpected=$($unexpectedFileMaterialUris.Count), missing=$($missingExpectedFileMaterialUris.Count)"
 Add-Gate $gates "repo material has canonical git commit" ($repoMaterials.Count -eq 1 -and $repoMaterialsWithInvalidGitCommit.Count -eq 0) "repoMaterials=$($repoMaterials.Count), invalid=$($repoMaterialsWithInvalidGitCommit.Count)"
 
 $gateArray = @(foreach ($gate in $gates) { $gate })

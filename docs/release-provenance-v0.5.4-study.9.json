@@ -1,7 +1,7 @@
 {
   "reportType": "yumebox_release_provenance",
   "predicateType": "https://slsa.dev/provenance/v1",
-  "generatedAt": "2026-07-15T19:28:02.2248601+08:00",
+  "generatedAt": "2026-07-15T20:40:34.8076255+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -49,7 +49,7 @@
       },
       "internalParameters": {
         "sourceBranch": "Yume",
-        "sourceCommit": "956f7f1de11a50fed64166a8d6b125e09defccec",
+        "sourceCommit": "c95a25542b3aa8bc2d988653080271c29303d05a",
         "sourceRemote": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git"
       }
     },
@@ -60,14 +60,14 @@
       "metadata": {
         "invocationId": "manual-local-v0.5.4-study.9",
         "startedOn": "2026-07-15T16:41:58.8334825+08:00",
-        "finishedOn": "2026-07-15T19:28:02.2305269+08:00"
+        "finishedOn": "2026-07-15T20:40:34.8109812+08:00"
       }
     },
     "materials": [
       {
         "uri": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git",
         "digest": {
-          "gitCommit": "956f7f1de11a50fed64166a8d6b125e09defccec"
+          "gitCommit": "c95a25542b3aa8bc2d988653080271c29303d05a"
         }
       },
       {
@@ -159,7 +159,7 @@
     {
       "name": "git commit available",
       "ok": true,
-      "detail": "956f7f1de11a50fed64166a8d6b125e09defccec"
+      "detail": "c95a25542b3aa8bc2d988653080271c29303d05a"
     },
     {
       "name": "release is not draft",
@@ -195,6 +195,11 @@
       "name": "all file materials have canonical sha256",
       "ok": true,
       "detail": "fileMaterials=3, invalid=0"
+    },
+    {
+      "name": "all file materials reference expected docs JSON",
+      "ok": true,
+      "detail": "fileMaterials=3, expected=3, unexpected=0, missing=0"
     },
     {
       "name": "repo material has canonical git commit",

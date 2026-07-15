@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T19:28:03.9195411+08:00
+Generated: 2026-07-15T20:41:09.0885186+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 261 |
+| Check count | 264 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -122,6 +122,7 @@ Status: `OK`
 | release provenance gates unique material URIs | OK | material URI uniqueness |
 | release provenance gates material digest evidence | OK | material digest evidence |
 | release provenance gates canonical file material SHA-256 | OK | file material digest format |
+| release provenance gates expected file material URIs | OK | file material evidence set |
 | release provenance gates canonical repo material commit | OK | repo material commit format |
 | release provenance gates non-empty subject names | OK | subject name presence |
 | release provenance gates unique subject names | OK | subject name uniqueness |
@@ -261,6 +262,7 @@ Status: `OK`
 | release provenance gate passes: material URIs are unique | OK | materials=4, duplicates=0 |
 | release provenance gate passes: all materials have digest evidence | OK | materials=4, missing=0 |
 | release provenance gate passes: all file materials have canonical sha256 | OK | fileMaterials=3, invalid=0 |
+| release provenance gate passes: all file materials reference expected docs JSON | OK | fileMaterials=3, expected=3, unexpected=0, missing=0 |
 | release provenance gate passes: repo material has canonical git commit | OK | repoMaterials=1, invalid=0 |
 | release provenance gate passes: all subjects have names | OK | subjects=2, missing=0 |
 | release provenance gate passes: subject names are unique | OK | subjects=2, duplicates=0 |
@@ -269,9 +271,10 @@ Status: `OK`
 | release provenance gate passes: all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
 | release provenance repo material commit is canonical | OK | repoMaterials=1, canonical=1 |
-| release provenance repo material commit matches source commit | OK | material=956f7f1de11a50fed64166a8d6b125e09defccec, source=956f7f1de11a50fed64166a8d6b125e09defccec |
+| release provenance repo material commit matches source commit | OK | material=c95a25542b3aa8bc2d988653080271c29303d05a, source=c95a25542b3aa8bc2d988653080271c29303d05a |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
+| release provenance file materials match expected evidence | OK | fileMaterials=3 |
 | release provenance material digest matches release asset manifest | OK | recorded=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551, actual=fc42a0f5d6150f61e4a7b86dc82cc6897904889c3eb6180e19482434336aa551 |
 | release provenance material digest matches build environment | OK | recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b |
 | release provenance material digest matches permission justification | OK | recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b |
