@@ -99,6 +99,18 @@ function Normalize-Sha256Digest {
     return ($text -replace "^sha256:", "").ToLowerInvariant()
 }
 
+function ConvertTo-DateTimeOffsetOrNull {
+    param([object]$Value)
+    if ($null -eq $Value) { return $null }
+    $text = ([string]$Value).Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+    try {
+        return [System.DateTimeOffset]::Parse($text, [System.Globalization.CultureInfo]::InvariantCulture)
+    } catch {
+        return $null
+    }
+}
+
 function Get-FileSha256 {
     param([string]$Path)
     if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
@@ -591,9 +603,27 @@ if (Test-Path -LiteralPath $provenancePath) {
         }
     }
     $canonicalRepoMaterialCommits = @($repoMaterialCommits | Where-Object { $_ -match '^[0-9a-f]{40}$' })
+    $expectedBuildType = "https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/study-apk-release"
+    $buildType = [string]$provenance.predicate.buildDefinition.buildType
+    $externalParameters = $provenance.predicate.buildDefinition.externalParameters
+    $internalParameters = $provenance.predicate.buildDefinition.internalParameters
+    $sourceBranch = [string]$internalParameters.sourceBranch
     $sourceCommit = [string]$provenance.predicate.buildDefinition.internalParameters.sourceCommit
+    $sourceRemote = [string]$internalParameters.sourceRemote
+    $generatedAt = ConvertTo-DateTimeOffsetOrNull $provenance.generatedAt
+    $startedOn = ConvertTo-DateTimeOffsetOrNull $provenance.predicate.runDetails.metadata.startedOn
+    $finishedOn = ConvertTo-DateTimeOffsetOrNull $provenance.predicate.runDetails.metadata.finishedOn
+    $provenanceRepo = [string]$provenance.repo
     Add-Check "release provenance repo material commit is canonical" ($repoMaterialCommits.Count -eq 1 -and $canonicalRepoMaterialCommits.Count -eq 1) "repoMaterials=$($repoMaterialCommits.Count), canonical=$($canonicalRepoMaterialCommits.Count)"
     Add-Check "release provenance repo material commit matches source commit" ($repoMaterialCommits.Count -eq 1 -and $repoMaterialCommits[0] -eq $sourceCommit) "material=$($repoMaterialCommits[0]), source=$sourceCommit"
+    Add-Check "release provenance source branch recorded" (-not [string]::IsNullOrWhiteSpace($sourceBranch)) "branch=$sourceBranch"
+    Add-Check "release provenance source remote matches repo" (-not [string]::IsNullOrWhiteSpace($provenanceRepo) -and $sourceRemote.Contains($provenanceRepo)) "remote=$sourceRemote"
+    Add-Check "release provenance build type matches study release" ($buildType -eq $expectedBuildType) "buildType=$buildType"
+    Add-Check "release provenance external tag matches" ([string]$externalParameters.tag -eq $Tag) "tag=$($externalParameters.tag)"
+    Add-Check "release provenance external package matches gradle" ([string]$externalParameters.packageName -eq $applicationId) "package=$($externalParameters.packageName)"
+    Add-Check "release provenance external version matches gradle" ([string]$externalParameters.versionName -eq $versionName -and [string]$externalParameters.versionCode -eq $versionCode) "$($externalParameters.versionName)/$($externalParameters.versionCode)"
+    Add-Check "release provenance timestamps parse" ($null -ne $generatedAt -and $null -ne $startedOn -and $null -ne $finishedOn) "generated=$($provenance.generatedAt), started=$($provenance.predicate.runDetails.metadata.startedOn), finished=$($provenance.predicate.runDetails.metadata.finishedOn)"
+    Add-Check "release provenance timeline is ordered" ($null -ne $generatedAt -and $null -ne $startedOn -and $null -ne $finishedOn -and $startedOn -le $generatedAt -and $generatedAt -le $finishedOn) "started=$startedOn, generated=$generatedAt, finished=$finishedOn"
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
     Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
 
