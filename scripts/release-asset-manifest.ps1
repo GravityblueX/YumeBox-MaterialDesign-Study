@@ -198,12 +198,45 @@ $debugApks = @($assets | Where-Object { $_.kind -eq "debug-apk" })
 $releaseApks = @($assets | Where-Object { $_.kind -eq "release-apk" })
 $uploadedReports = @($assets | Where-Object { $_.kind -in @("installability-json", "installability-md", "release-health") })
 $canonicalDigestPattern = '^sha256:[0-9a-f]{64}$'
+$assetNames = @($assets | ForEach-Object { [string]$_.name })
+$assetUrls = @($assets | ForEach-Object { [string]$_.url })
+$assetsMissingName = @($assets | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.name) })
+$assetsMissingUrl = @($assets | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.url) })
+$assetsWithInvalidSize = @($assets | Where-Object { [int64]$_.size -le 0 })
+$duplicateAssetNames = @(
+    $assetNames |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
+$duplicateAssetUrls = @(
+    $assetUrls |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
+$assetUploadFailures = @($assets | Where-Object { [string]$_.state -ne "uploaded" })
+$assetDigestFormatFailures = @($assets | Where-Object { [string]$_.digest -notmatch $canonicalDigestPattern })
+$assetUrlFailures = @($assets | Where-Object {
+    $expectedSuffix = "/releases/download/$Tag/$($_.name)"
+    -not ([string]$_.url).EndsWith($expectedSuffix, [System.StringComparison]::Ordinal)
+})
 $apkDigestFormatFailures = @($apkAssets | Where-Object { [string]$_.digest -notmatch $canonicalDigestPattern })
 $apkUrlFailures = @($apkAssets | Where-Object {
     $expectedSuffix = "/releases/download/$Tag/$($_.name)"
     -not ([string]$_.url).EndsWith($expectedSuffix, [System.StringComparison]::Ordinal)
 })
 
+Add-Gate $gates "all release assets have names" ($assetsMissingName.Count -eq 0) "assets=$($assets.Count), missing=$($assetsMissingName.Count)"
+Add-Gate $gates "release asset names are unique" ($duplicateAssetNames.Count -eq 0) "assets=$($assets.Count), duplicates=$($duplicateAssetNames.Count)"
+Add-Gate $gates "all release assets have URLs" ($assetsMissingUrl.Count -eq 0) "assets=$($assets.Count), missing=$($assetsMissingUrl.Count)"
+Add-Gate $gates "release asset URLs are unique" ($duplicateAssetUrls.Count -eq 0) "assets=$($assets.Count), duplicates=$($duplicateAssetUrls.Count)"
+Add-Gate $gates "all release assets have positive sizes" ($assetsWithInvalidSize.Count -eq 0) "assets=$($assets.Count), invalid=$($assetsWithInvalidSize.Count)"
+Add-Gate $gates "all release assets are uploaded" ($assetUploadFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetUploadFailures.Count)"
+Add-Gate $gates "all release asset digests are canonical SHA-256" ($assetDigestFormatFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetDigestFormatFailures.Count)"
+Add-Gate $gates "all release asset URLs match release tag" ($assetUrlFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetUrlFailures.Count); tag=$Tag"
 Add-Gate $gates "debug APK asset present" ($debugApks.Count -ge 1) "$($debugApks.Count) debug APK asset(s)"
 Add-Gate $gates "release APK asset present" ($releaseApks.Count -ge 1) "$($releaseApks.Count) release APK asset(s)"
 Add-Gate $gates "support reports uploaded" ($uploadedReports.Count -ge 3) "$($uploadedReports.Count) report asset(s)"

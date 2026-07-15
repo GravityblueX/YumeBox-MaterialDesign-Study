@@ -1,9 +1,9 @@
 # Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-07-15T16:41:58.8334825+08:00
+Generated: 2026-07-15T21:40:43.8036356+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
-Published: 2026-06-23T23:55:21Z
+Published: 06/23/2026 23:55:21
 Status: `OK`
 
 ## Summary
@@ -28,6 +28,14 @@ Status: `OK`
 | permission review tag matches | OK | tag=v0.5.4-study.9 |
 | release tag matches | OK | tag=v0.5.4-study.9 |
 | release is not draft | OK | isDraft=False |
+| all release assets have names | OK | assets=5, missing=0 |
+| release asset names are unique | OK | assets=5, duplicates=0 |
+| all release assets have URLs | OK | assets=5, missing=0 |
+| release asset URLs are unique | OK | assets=5, duplicates=0 |
+| all release assets have positive sizes | OK | assets=5, invalid=0 |
+| all release assets are uploaded | OK | assets=5, invalid=0 |
+| all release asset digests are canonical SHA-256 | OK | assets=5, invalid=0 |
+| all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
 | debug APK asset present | OK | 1 debug APK asset(s) |
 | release APK asset present | OK | 1 release APK asset(s) |
 | support reports uploaded | OK | 3 report asset(s) |
