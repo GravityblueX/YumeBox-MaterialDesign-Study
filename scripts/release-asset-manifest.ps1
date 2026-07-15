@@ -92,6 +92,52 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
+function Test-GitHubReleaseAssetUrlName {
+    param(
+        [string]$Url,
+        [string]$Repo,
+        [string]$Tag,
+        [string]$Name
+    )
+    if ([string]::IsNullOrWhiteSpace($Url) -or [string]::IsNullOrWhiteSpace($Name)) {
+        return $false
+    }
+
+    $repoParts = $Repo -split "/", 2
+    if ($repoParts.Count -ne 2) {
+        return $false
+    }
+
+    try {
+        $uri = [System.Uri]::new($Url)
+    } catch {
+        return $false
+    }
+
+    if (-not $uri.Scheme.Equals("https", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    if (-not $uri.Host.Equals("github.com", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+
+    $path = $uri.AbsolutePath.Trim("/")
+    if ([string]::IsNullOrWhiteSpace($path)) {
+        return $false
+    }
+
+    $segments = @($path.Split("/") | ForEach-Object { [System.Uri]::UnescapeDataString($_) })
+    return (
+        $segments.Count -eq 6 -and
+        $segments[0].Equals($repoParts[0], [System.StringComparison]::Ordinal) -and
+        $segments[1].Equals($repoParts[1], [System.StringComparison]::Ordinal) -and
+        $segments[2].Equals("releases", [System.StringComparison]::Ordinal) -and
+        $segments[3].Equals("download", [System.StringComparison]::Ordinal) -and
+        $segments[4].Equals($Tag, [System.StringComparison]::Ordinal) -and
+        $segments[5].Equals($Name, [System.StringComparison]::Ordinal)
+    )
+}
+
 $props = Read-PropertiesFile -Path (Join-Path $ProjectRoot "gradle.properties")
 $versionName = [string]$props["project.version.name"]
 if ([string]::IsNullOrWhiteSpace($Tag)) { $Tag = "v$versionName" }
@@ -227,6 +273,9 @@ $expectedAssetUrlPrefix = "https://github.com/$Repo/releases/download/$Tag/"
 $assetGithubDownloadUrlFailures = @($assets | Where-Object {
     -not ([string]$_.url).StartsWith($expectedAssetUrlPrefix, [System.StringComparison]::Ordinal)
 })
+$assetUrlNameFailures = @($assets | Where-Object {
+    -not (Test-GitHubReleaseAssetUrlName -Url ([string]$_.url) -Repo $Repo -Tag $Tag -Name ([string]$_.name))
+})
 $apkDigestFormatFailures = @($apkAssets | Where-Object { [string]$_.digest -notmatch $canonicalDigestPattern })
 $apkUrlFailures = @($apkAssets | Where-Object {
     $expectedSuffix = "/releases/download/$Tag/$($_.name)"
@@ -234,6 +283,9 @@ $apkUrlFailures = @($apkAssets | Where-Object {
 })
 $apkGithubDownloadUrlFailures = @($apkAssets | Where-Object {
     -not ([string]$_.url).StartsWith($expectedAssetUrlPrefix, [System.StringComparison]::Ordinal)
+})
+$apkUrlNameFailures = @($apkAssets | Where-Object {
+    -not (Test-GitHubReleaseAssetUrlName -Url ([string]$_.url) -Repo $Repo -Tag $Tag -Name ([string]$_.name))
 })
 
 Add-Gate $gates "all release assets have names" ($assetsMissingName.Count -eq 0) "assets=$($assets.Count), missing=$($assetsMissingName.Count)"
@@ -245,6 +297,7 @@ Add-Gate $gates "all release assets are uploaded" ($assetUploadFailures.Count -e
 Add-Gate $gates "all release asset digests are canonical SHA-256" ($assetDigestFormatFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetDigestFormatFailures.Count)"
 Add-Gate $gates "all release asset URLs match release tag" ($assetUrlFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetUrlFailures.Count); tag=$Tag"
 Add-Gate $gates "all release asset URLs use GitHub HTTPS downloads" ($assetGithubDownloadUrlFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetGithubDownloadUrlFailures.Count); prefix=$expectedAssetUrlPrefix"
+Add-Gate $gates "all release asset URL filenames match asset names" ($assetUrlNameFailures.Count -eq 0) "assets=$($assets.Count), invalid=$($assetUrlNameFailures.Count)"
 Add-Gate $gates "debug APK asset present" ($debugApks.Count -ge 1) "$($debugApks.Count) debug APK asset(s)"
 Add-Gate $gates "release APK asset present" ($releaseApks.Count -ge 1) "$($releaseApks.Count) release APK asset(s)"
 Add-Gate $gates "support reports uploaded" ($uploadedReports.Count -ge 3) "$($uploadedReports.Count) report asset(s)"
@@ -252,6 +305,7 @@ Add-Gate $gates "release APK assets uploaded" (($apkAssets | Where-Object { $_.s
 Add-Gate $gates "APK asset digests are canonical SHA-256" ($apkDigestFormatFailures.Count -eq 0) "invalid=$($apkDigestFormatFailures.Count); apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "APK asset URLs match release tag" ($apkUrlFailures.Count -eq 0) "invalid=$($apkUrlFailures.Count); tag=$Tag"
 Add-Gate $gates "APK asset URLs use GitHub HTTPS downloads" ($apkGithubDownloadUrlFailures.Count -eq 0) "invalid=$($apkGithubDownloadUrlFailures.Count); prefix=$expectedAssetUrlPrefix"
+Add-Gate $gates "APK asset URL filenames match names" ($apkUrlNameFailures.Count -eq 0) "invalid=$($apkUrlNameFailures.Count); apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "all release APKs in installability report" (($apkAssets | Where-Object { -not $_.installability.present }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "all installability APKs in release" ((@($installability.apks | Where-Object { -not (@($apkAssets.name) -contains [string]$_.name) })).Count -eq 0) "reportApks=$(@($installability.apks).Count)"
 Add-Gate $gates "APK asset digests match report" (($apkAssets | Where-Object { $_.installability.present -and -not $_.installability.digestMatches }).Count -eq 0) "apkAssets=$($apkAssets.Count)"

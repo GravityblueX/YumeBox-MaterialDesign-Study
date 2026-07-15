@@ -80,6 +80,52 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
+function Test-GitHubReleaseAssetUrlName {
+    param(
+        [string]$Url,
+        [string]$Repo,
+        [string]$Tag,
+        [string]$Name
+    )
+    if ([string]::IsNullOrWhiteSpace($Url) -or [string]::IsNullOrWhiteSpace($Name)) {
+        return $false
+    }
+
+    $repoParts = $Repo -split "/", 2
+    if ($repoParts.Count -ne 2) {
+        return $false
+    }
+
+    try {
+        $uri = [System.Uri]::new($Url)
+    } catch {
+        return $false
+    }
+
+    if (-not $uri.Scheme.Equals("https", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    if (-not $uri.Host.Equals("github.com", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+
+    $path = $uri.AbsolutePath.Trim("/")
+    if ([string]::IsNullOrWhiteSpace($path)) {
+        return $false
+    }
+
+    $segments = @($path.Split("/") | ForEach-Object { [System.Uri]::UnescapeDataString($_) })
+    return (
+        $segments.Count -eq 6 -and
+        $segments[0].Equals($repoParts[0], [System.StringComparison]::Ordinal) -and
+        $segments[1].Equals($repoParts[1], [System.StringComparison]::Ordinal) -and
+        $segments[2].Equals("releases", [System.StringComparison]::Ordinal) -and
+        $segments[3].Equals("download", [System.StringComparison]::Ordinal) -and
+        $segments[4].Equals($Tag, [System.StringComparison]::Ordinal) -and
+        $segments[5].Equals($Name, [System.StringComparison]::Ordinal)
+    )
+}
+
 function Get-TextFileSha256 {
     param([string]$Path)
     if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
@@ -175,6 +221,9 @@ $subjectReleaseTagUriFailures = @($subjects | Where-Object {
 $subjectGithubDownloadUriFailures = @($subjects | Where-Object {
     -not ([string]$_.uri).StartsWith($expectedSubjectUriPrefix, [System.StringComparison]::Ordinal)
 })
+$subjectUriNameFailures = @($subjects | Where-Object {
+    -not (Test-GitHubReleaseAssetUrlName -Url ([string]$_.uri) -Repo $Repo -Tag $Tag -Name ([string]$_.name))
+})
 $duplicateSubjectNames = @(
     $subjectNames |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
@@ -261,6 +310,7 @@ Add-Gate $gates "all subjects have URIs" ($subjectsMissingUri.Count -eq 0) "subj
 Add-Gate $gates "subject URIs are unique" ($duplicateSubjectUris.Count -eq 0) "subjects=$($subjects.Count), duplicates=$($duplicateSubjectUris.Count)"
 Add-Gate $gates "all subjects match release tag asset URIs" ($subjectReleaseTagUriFailures.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectReleaseTagUriFailures.Count); tag=$Tag"
 Add-Gate $gates "all subjects use GitHub HTTPS release downloads" ($subjectGithubDownloadUriFailures.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectGithubDownloadUriFailures.Count); prefix=$expectedSubjectUriPrefix"
+Add-Gate $gates "all subject URI filenames match names" ($subjectUriNameFailures.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectUriNameFailures.Count)"
 Add-Gate $gates "all subjects have positive sizes" ($subjectsWithInvalidSize.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSize.Count)"
 Add-Gate $gates "all subjects have canonical sha256" ($subjectsWithInvalidSha256.Count -eq 0) "subjects=$($subjects.Count), invalid=$($subjectsWithInvalidSha256.Count)"
 Add-Gate $gates "git commit available" (-not [string]::IsNullOrWhiteSpace($head)) $head

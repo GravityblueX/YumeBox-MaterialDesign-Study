@@ -296,6 +296,7 @@ Add-Check "release provenance gates non-empty subject URIs" (Test-FileContains -
 Add-Check "release provenance gates unique subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject URIs are unique') "subject URI uniqueness"
 Add-Check "release provenance gates release-tag subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects match release tag asset URIs') "subject URI release tag"
 Add-Check "release provenance gates GitHub HTTPS subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects use GitHub HTTPS release downloads') "subject URI GitHub HTTPS"
+Add-Check "release provenance gates decoded subject URI filenames" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subject URI filenames match names') "subject URI filename match"
 Add-Check "release provenance gates positive subject sizes" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have positive sizes') "subject size gate"
 Add-Check "release provenance gates canonical subject SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have canonical sha256') "subject digest format"
 
@@ -320,9 +321,11 @@ Add-Check "release asset manifest gates uploaded assets" (Test-FileContains -Pat
 Add-Check "release asset manifest gates canonical asset digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset digests are canonical SHA-256') "asset digest gate"
 Add-Check "release asset manifest gates release-tag asset URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset URLs match release tag') "asset URL tag gate"
 Add-Check "release asset manifest gates GitHub HTTPS asset URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset URLs use GitHub HTTPS downloads') "GitHub HTTPS asset URL gate"
+Add-Check "release asset manifest gates decoded asset URL filenames" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'all release asset URL filenames match asset names') "asset URL filename match"
 Add-Check "release asset manifest gates canonical APK digests" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset digests are canonical SHA-256') "canonical digest gate"
 Add-Check "release asset manifest gates release-tag APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs match release tag') "release URL gate"
 Add-Check "release asset manifest gates GitHub HTTPS APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs use GitHub HTTPS downloads') "GitHub HTTPS APK URL gate"
+Add-Check "release asset manifest gates decoded APK URL filenames" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URL filenames match names') "APK URL filename match"
 Add-Check "release asset manifest writes UTF-8 without BOM" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $buildEnvironmentReportScriptPath = Join-Path $ProjectRoot "scripts\build-environment-report.ps1"
