@@ -143,6 +143,7 @@ $manifest = Get-Content -LiteralPath $AssetManifestJson -Raw | ConvertFrom-Json
 $apkAssets = @($manifest.assets | Where-Object { $_.kind -in @("debug-apk", "release-apk", "apk") })
 $subjects = @()
 $canonicalSha256Pattern = '^[0-9a-f]{64}$'
+$canonicalGitCommitPattern = '^[0-9a-f]{40}$'
 foreach ($asset in $apkAssets) {
     $subjects += [pscustomobject]@{
         name = [string]$asset.name
@@ -219,6 +220,14 @@ $materialsMissingDigest = @(
             [string]::IsNullOrWhiteSpace([string]$digest.sha256)
     }
 )
+$fileMaterials = @($materials | Where-Object { [string]$_.uri -like "file://*" })
+$repoMaterials = @($materials | Where-Object { [string]$_.uri -notlike "file://*" })
+$fileMaterialsWithInvalidSha256 = @(
+    $fileMaterials | Where-Object { [string]$_.digest.sha256 -notmatch $canonicalSha256Pattern }
+)
+$repoMaterialsWithInvalidGitCommit = @(
+    $repoMaterials | Where-Object { [string]$_.digest.gitCommit -notmatch $canonicalGitCommitPattern }
+)
 
 Add-Gate $gates "asset manifest ok" ([bool]$manifest.ok) "ok=$($manifest.ok)"
 Add-Gate $gates "asset manifest tag matches" ([string]$manifest.tag -eq $Tag) "tag=$($manifest.tag)"
@@ -237,6 +246,8 @@ Add-Gate $gates "version recorded" (-not [string]::IsNullOrWhiteSpace($versionNa
 Add-Gate $gates "all materials have URIs" ($materialsMissingUri.Count -eq 0) "materials=$($materials.Count), missing=$($materialsMissingUri.Count)"
 Add-Gate $gates "material URIs are unique" ($duplicateMaterialUris.Count -eq 0) "materials=$($materials.Count), duplicates=$($duplicateMaterialUris.Count)"
 Add-Gate $gates "all materials have digest evidence" ($materialsMissingDigest.Count -eq 0) "materials=$($materials.Count), missing=$($materialsMissingDigest.Count)"
+Add-Gate $gates "all file materials have canonical sha256" ($fileMaterials.Count -gt 0 -and $fileMaterialsWithInvalidSha256.Count -eq 0) "fileMaterials=$($fileMaterials.Count), invalid=$($fileMaterialsWithInvalidSha256.Count)"
+Add-Gate $gates "repo material has canonical git commit" ($repoMaterials.Count -eq 1 -and $repoMaterialsWithInvalidGitCommit.Count -eq 0) "repoMaterials=$($repoMaterials.Count), invalid=$($repoMaterialsWithInvalidGitCommit.Count)"
 
 $gateArray = @(foreach ($gate in $gates) { $gate })
 $failures = @($gateArray | Where-Object { -not [bool]$_.ok })

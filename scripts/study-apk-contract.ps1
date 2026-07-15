@@ -287,6 +287,8 @@ Add-Check "release provenance writes UTF-8 without BOM" (Test-FileContains -Path
 Add-Check "release provenance gates non-empty material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have URIs') "material URI presence"
 Add-Check "release provenance gates unique material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'material URIs are unique') "material URI uniqueness"
 Add-Check "release provenance gates material digest evidence" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all materials have digest evidence') "material digest evidence"
+Add-Check "release provenance gates canonical file material SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all file materials have canonical sha256') "file material digest format"
+Add-Check "release provenance gates canonical repo material commit" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'repo material has canonical git commit') "repo material commit format"
 Add-Check "release provenance gates non-empty subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have names') "subject name presence"
 Add-Check "release provenance gates unique subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject names are unique') "subject name uniqueness"
 Add-Check "release provenance gates non-empty subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have URIs') "subject URI presence"
@@ -525,6 +527,8 @@ if (Test-Path -LiteralPath $provenancePath) {
         "all materials have URIs",
         "material URIs are unique",
         "all materials have digest evidence",
+        "all file materials have canonical sha256",
+        "repo material has canonical git commit",
         "all subjects have names",
         "subject names are unique",
         "all subjects have URIs",
@@ -544,12 +548,20 @@ if (Test-Path -LiteralPath $provenancePath) {
     }
     $materialUris = @($provenance.predicate.materials | ForEach-Object { [string]$_.uri })
     $materialSha256ByUri = @{}
+    $repoMaterialCommits = @()
     foreach ($material in @($provenance.predicate.materials)) {
         $materialUri = [string]$material.uri
         if (-not [string]::IsNullOrWhiteSpace($materialUri)) {
             $materialSha256ByUri[$materialUri] = Normalize-Sha256Digest $material.digest.sha256
+            if ($materialUri -notlike "file://*") {
+                $repoMaterialCommits += [string]$material.digest.gitCommit
+            }
         }
     }
+    $canonicalRepoMaterialCommits = @($repoMaterialCommits | Where-Object { $_ -match '^[0-9a-f]{40}$' })
+    $sourceCommit = [string]$provenance.predicate.buildDefinition.internalParameters.sourceCommit
+    Add-Check "release provenance repo material commit is canonical" ($repoMaterialCommits.Count -eq 1 -and $canonicalRepoMaterialCommits.Count -eq 1) "repoMaterials=$($repoMaterialCommits.Count), canonical=$($canonicalRepoMaterialCommits.Count)"
+    Add-Check "release provenance repo material commit matches source commit" ($repoMaterialCommits.Count -eq 1 -and $repoMaterialCommits[0] -eq $sourceCommit) "material=$($repoMaterialCommits[0]), source=$sourceCommit"
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"
     Add-Check "release provenance links permission justification" (@($materialUris | Where-Object { $_ -like "*apk-permission-justification-$Tag.json" }).Count -ge 1) "apk-permission-justification-$Tag.json"
 
