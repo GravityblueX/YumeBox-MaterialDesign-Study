@@ -1,9 +1,9 @@
 # Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-07-15T22:32:18.8103596+08:00
+Generated: 2026-07-19T07:42:01.4841755+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
-Published: 06/23/2026 23:55:21
+Published: 2026-06-23T23:55:21.0000000+08:00
 Status: `OK`
 
 ## Summary
@@ -28,6 +28,7 @@ Status: `OK`
 | permission review tag matches | OK | tag=v0.5.4-study.9 |
 | release tag matches | OK | tag=v0.5.4-study.9 |
 | release is not draft | OK | isDraft=False |
+| release published timestamp recorded | OK | publishedAt=06/23/2026 23:55:21 |
 | all release assets have names | OK | assets=5, missing=0 |
 | release asset names are unique | OK | assets=5, duplicates=0 |
 | all release assets have URLs | OK | assets=5, missing=0 |
@@ -37,6 +38,7 @@ Status: `OK`
 | all release asset digests are canonical SHA-256 | OK | assets=5, invalid=0 |
 | all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
 | all release asset URLs use GitHub HTTPS downloads | OK | assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
+| all release asset URL filenames match asset names | OK | assets=5, invalid=0 |
 | debug APK asset present | OK | 1 debug APK asset(s) |
 | release APK asset present | OK | 1 release APK asset(s) |
 | support reports uploaded | OK | 3 report asset(s) |
@@ -44,6 +46,7 @@ Status: `OK`
 | APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
+| APK asset URL filenames match names | OK | invalid=0; apkAssets=2 |
 | all release APKs in installability report | OK | apkAssets=2 |
 | all installability APKs in release | OK | reportApks=2 |
 | APK asset digests match report | OK | apkAssets=2 |

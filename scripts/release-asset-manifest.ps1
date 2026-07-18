@@ -92,6 +92,18 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
+function ConvertTo-DateTimeOffsetOrNull {
+    param([object]$Value)
+    if ($null -eq $Value) { return $null }
+    $text = ([string]$Value).Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+    try {
+        return [System.DateTimeOffset]::Parse($text, [System.Globalization.CultureInfo]::InvariantCulture)
+    } catch {
+        return $null
+    }
+}
+
 function Test-GitHubReleaseAssetUrlName {
     param(
         [string]$Url,
@@ -177,8 +189,10 @@ if ($LASTEXITCODE -ne 0) {
     throw "gh release view failed for $Repo $Tag`: $($releaseRaw -join "`n")"
 }
 $release = ($releaseRaw -join "`n") | ConvertFrom-Json
+$publishedAt = ConvertTo-DateTimeOffsetOrNull $release.publishedAt
 Add-Gate $gates "release tag matches" ([string]$release.tagName -eq $Tag) "tag=$($release.tagName)"
 Add-Gate $gates "release is not draft" (-not [bool]$release.isDraft) "isDraft=$($release.isDraft)"
+Add-Gate $gates "release published timestamp recorded" ($null -ne $publishedAt) "publishedAt=$($release.publishedAt)"
 
 $installabilityByName = @{}
 foreach ($apk in @($installability.apks)) {
@@ -327,7 +341,7 @@ $payload = [pscustomobject]@{
         tagName = [string]$release.tagName
         isDraft = [bool]$release.isDraft
         isPrerelease = [bool]$release.isPrerelease
-        publishedAt = [string]$release.publishedAt
+        publishedAt = if ($null -ne $publishedAt) { $publishedAt.ToString("o") } else { [string]$release.publishedAt }
     }
     installabilityReport = $InstallabilityJson
     permissionReview = $PermissionReviewJson

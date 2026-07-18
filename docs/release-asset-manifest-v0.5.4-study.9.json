@@ -1,6 +1,6 @@
 {
   "reportType": "yumebox_release_asset_manifest",
-  "generatedAt": "2026-07-15T22:32:18.8103596+08:00",
+  "generatedAt": "2026-07-19T07:42:01.4841755+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "release": {
@@ -8,7 +8,7 @@
     "tagName": "v0.5.4-study.9",
     "isDraft": false,
     "isPrerelease": false,
-    "publishedAt": "06/23/2026 23:55:21"
+    "publishedAt": "2026-06-23T23:55:21.0000000+08:00"
   },
   "installabilityReport": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-installability-report-v0.5.4-study.9.json",
   "permissionReview": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json",
@@ -62,6 +62,11 @@
       "detail": "isDraft=False"
     },
     {
+      "name": "release published timestamp recorded",
+      "ok": true,
+      "detail": "publishedAt=06/23/2026 23:55:21"
+    },
+    {
       "name": "all release assets have names",
       "ok": true,
       "detail": "assets=5, missing=0"
@@ -107,6 +112,11 @@
       "detail": "assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/"
     },
     {
+      "name": "all release asset URL filenames match asset names",
+      "ok": true,
+      "detail": "assets=5, invalid=0"
+    },
+    {
       "name": "debug APK asset present",
       "ok": true,
       "detail": "1 debug APK asset(s)"
@@ -140,6 +150,11 @@
       "name": "APK asset URLs use GitHub HTTPS downloads",
       "ok": true,
       "detail": "invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/"
+    },
+    {
+      "name": "APK asset URL filenames match names",
+      "ok": true,
+      "detail": "invalid=0; apkAssets=2"
     },
     {
       "name": "all release APKs in installability report",
