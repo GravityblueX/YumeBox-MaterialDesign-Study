@@ -304,6 +304,7 @@ Add-Check "release provenance gates material digest evidence" (Test-FileContains
 Add-Check "release provenance gates canonical file material SHA-256" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all file materials have canonical sha256') "file material digest format"
 Add-Check "release provenance gates expected file material URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all file materials reference expected docs JSON') "file material evidence set"
 Add-Check "release provenance gates canonical repo material commit" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'repo material has canonical git commit') "repo material commit format"
+Add-Check "release provenance gates repo material URI" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'repo material URI matches configured repo') "repo material repo match"
 Add-Check "release provenance gates non-empty subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have names') "subject name presence"
 Add-Check "release provenance gates unique subject names" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'subject names are unique') "subject name uniqueness"
 Add-Check "release provenance gates non-empty subject URIs" (Test-FileContains -Path $releaseProvenanceScriptPath -Needle 'all subjects have URIs') "subject URI presence"
@@ -574,6 +575,7 @@ if (Test-Path -LiteralPath $provenancePath) {
         "all file materials have canonical sha256",
         "all file materials reference expected docs JSON",
         "repo material has canonical git commit",
+        "repo material URI matches configured repo",
         "all subjects have names",
         "subject names are unique",
         "all subjects have URIs",

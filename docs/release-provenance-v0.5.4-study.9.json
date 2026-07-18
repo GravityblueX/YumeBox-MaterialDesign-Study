@@ -1,7 +1,7 @@
 {
   "reportType": "yumebox_release_provenance",
   "predicateType": "https://slsa.dev/provenance/v1",
-  "generatedAt": "2026-07-19T05:57:32.6183704+08:00",
+  "generatedAt": "2026-07-19T06:38:28.9167942+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -49,7 +49,7 @@
       },
       "internalParameters": {
         "sourceBranch": "Yume",
-        "sourceCommit": "6306c23a371632ff20f3f0b9e89e3c93fb471f5e",
+        "sourceCommit": "1f54834b914a1f211de809769ede23c9331fc016",
         "sourceRemote": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git"
       }
     },
@@ -60,14 +60,14 @@
       "metadata": {
         "invocationId": "manual-local-v0.5.4-study.9",
         "startedOn": "2026-07-15T22:32:18.8103596+08:00",
-        "finishedOn": "2026-07-19T05:57:32.6235379+08:00"
+        "finishedOn": "2026-07-19T06:38:28.9203002+08:00"
       }
     },
     "materials": [
       {
         "uri": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git",
         "digest": {
-          "gitCommit": "6306c23a371632ff20f3f0b9e89e3c93fb471f5e"
+          "gitCommit": "1f54834b914a1f211de809769ede23c9331fc016"
         }
       },
       {
@@ -174,7 +174,7 @@
     {
       "name": "git commit available",
       "ok": true,
-      "detail": "6306c23a371632ff20f3f0b9e89e3c93fb471f5e"
+      "detail": "1f54834b914a1f211de809769ede23c9331fc016"
     },
     {
       "name": "release is not draft",
@@ -220,10 +220,15 @@
       "name": "repo material has canonical git commit",
       "ok": true,
       "detail": "repoMaterials=1, invalid=0"
+    },
+    {
+      "name": "repo material URI matches configured repo",
+      "ok": true,
+      "detail": "repoMaterials=1, invalid=0, repo=GravityblueX/YumeBox-MaterialDesign-Study"
     }
   ],
   "failures": [],
-  "dirtyCountWhenGenerated": 1,
+  "dirtyCountWhenGenerated": 2,
   "referenceBasis": [
     "SLSA provenance style subject and material digest mapping",
     "GitHub Release assets remain the downloadable APK source of truth",

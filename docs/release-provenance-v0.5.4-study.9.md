@@ -1,10 +1,10 @@
 # Release Provenance - v0.5.4-study.9
 
-Generated: 2026-07-19T05:57:32.6183704+08:00
+Generated: 2026-07-19T06:38:28.9167942+08:00
 Predicate: `https://slsa.dev/provenance/v1`
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Status: `OK`
-Source commit: `6306c23a371632ff20f3f0b9e89e3c93fb471f5e`
+Source commit: `1f54834b914a1f211de809769ede23c9331fc016`
 
 ## Subjects
 
@@ -33,7 +33,7 @@ Source commit: `6306c23a371632ff20f3f0b9e89e3c93fb471f5e`
 | all subject URI filenames match names | OK | subjects=2, invalid=0 |
 | all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
-| git commit available | OK | 6306c23a371632ff20f3f0b9e89e3c93fb471f5e |
+| git commit available | OK | 1f54834b914a1f211de809769ede23c9331fc016 |
 | release is not draft | OK | isDraft=False |
 | package id recorded | OK | com.github.yizuka17.yumebox.md3 |
 | version recorded | OK | 0.5.4-study.9/5409 |
@@ -43,6 +43,7 @@ Source commit: `6306c23a371632ff20f3f0b9e89e3c93fb471f5e`
 | all file materials have canonical sha256 | OK | fileMaterials=3, invalid=0 |
 | all file materials reference expected docs JSON | OK | fileMaterials=3, expected=3, unexpected=0, missing=0 |
 | repo material has canonical git commit | OK | repoMaterials=1, invalid=0 |
+| repo material URI matches configured repo | OK | repoMaterials=1, invalid=0, repo=GravityblueX/YumeBox-MaterialDesign-Study |
 
 ## Boundary
 

@@ -126,6 +126,44 @@ function Test-GitHubReleaseAssetUrlName {
     )
 }
 
+function ConvertTo-GitHubRepoSlug {
+    param([string]$Remote)
+    if ([string]::IsNullOrWhiteSpace($Remote)) {
+        return ""
+    }
+
+    $text = $Remote.Trim()
+    if ($text -match '^git@github\.com:(?<repo>.+)$') {
+        return ($Matches["repo"] -replace '\.git$', '').Trim("/")
+    }
+
+    try {
+        $uri = [System.Uri]::new($text)
+    } catch {
+        return ""
+    }
+
+    if (-not $uri.Host.Equals("github.com", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return ""
+    }
+
+    return ($uri.AbsolutePath.Trim("/") -replace '\.git$', '')
+}
+
+function Test-GitHubRepoRemote {
+    param(
+        [string]$Remote,
+        [string]$Repo
+    )
+
+    $remoteSlug = ConvertTo-GitHubRepoSlug -Remote $Remote
+    $expectedSlug = $Repo.Trim().Trim("/") -replace '\.git$', ''
+    return (
+        -not [string]::IsNullOrWhiteSpace($remoteSlug) -and
+        $remoteSlug.Equals($expectedSlug, [System.StringComparison]::Ordinal)
+    )
+}
+
 function Get-TextFileSha256 {
     param([string]$Path)
     if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) {
@@ -299,6 +337,9 @@ $fileMaterialsWithInvalidSha256 = @(
 $repoMaterialsWithInvalidGitCommit = @(
     $repoMaterials | Where-Object { [string]$_.digest.gitCommit -notmatch $canonicalGitCommitPattern }
 )
+$repoMaterialsWithUnexpectedUri = @(
+    $repoMaterials | Where-Object { -not (Test-GitHubRepoRemote -Remote ([string]$_.uri) -Repo $Repo) }
+)
 
 Add-Gate $gates "asset manifest ok" ([bool]$manifest.ok) "ok=$($manifest.ok)"
 Add-Gate $gates "asset manifest tag matches" ([string]$manifest.tag -eq $Tag) "tag=$($manifest.tag)"
@@ -323,6 +364,7 @@ Add-Gate $gates "all materials have digest evidence" ($materialsMissingDigest.Co
 Add-Gate $gates "all file materials have canonical sha256" ($fileMaterials.Count -gt 0 -and $fileMaterialsWithInvalidSha256.Count -eq 0) "fileMaterials=$($fileMaterials.Count), invalid=$($fileMaterialsWithInvalidSha256.Count)"
 Add-Gate $gates "all file materials reference expected docs JSON" ($unexpectedFileMaterialUris.Count -eq 0 -and $missingExpectedFileMaterialUris.Count -eq 0) "fileMaterials=$($fileMaterials.Count), expected=$($expectedFileMaterialUris.Count), unexpected=$($unexpectedFileMaterialUris.Count), missing=$($missingExpectedFileMaterialUris.Count)"
 Add-Gate $gates "repo material has canonical git commit" ($repoMaterials.Count -eq 1 -and $repoMaterialsWithInvalidGitCommit.Count -eq 0) "repoMaterials=$($repoMaterials.Count), invalid=$($repoMaterialsWithInvalidGitCommit.Count)"
+Add-Gate $gates "repo material URI matches configured repo" ($repoMaterials.Count -eq 1 -and $repoMaterialsWithUnexpectedUri.Count -eq 0) "repoMaterials=$($repoMaterials.Count), invalid=$($repoMaterialsWithUnexpectedUri.Count), repo=$Repo"
 
 $gateArray = @(foreach ($gate in $gates) { $gate })
 $failures = @($gateArray | Where-Object { -not [bool]$_.ok })
