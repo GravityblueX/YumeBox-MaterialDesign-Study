@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-15T23:17:48.2646264+08:00
+Generated: 2026-07-19T03:34:56.6730807+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 288 |
+| Check count | 300 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -93,6 +93,7 @@ Status: `OK`
 | release health code-spans repository header | OK | repository header code span |
 | release health code-spans version header | OK | version header code span |
 | release health code-spans tag header | OK | tag header code span |
+| release health writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | installability report escapes markdown table cells | OK | table cell escaping |
 | installability report escapes APK status cells | OK | status escaping |
 | installability report escapes metadata labels | OK | label escaping |
@@ -130,6 +131,7 @@ Status: `OK`
 | release provenance gates unique subject URIs | OK | subject URI uniqueness |
 | release provenance gates release-tag subject URIs | OK | subject URI release tag |
 | release provenance gates GitHub HTTPS subject URIs | OK | subject URI GitHub HTTPS |
+| release provenance gates decoded subject URI filenames | OK | subject URI filename match |
 | release provenance gates positive subject sizes | OK | subject size gate |
 | release provenance gates canonical subject SHA-256 | OK | subject digest format |
 | release asset manifest escapes markdown table cells | OK | table cell escaping |
@@ -152,9 +154,11 @@ Status: `OK`
 | release asset manifest gates canonical asset digests | OK | asset digest gate |
 | release asset manifest gates release-tag asset URLs | OK | asset URL tag gate |
 | release asset manifest gates GitHub HTTPS asset URLs | OK | GitHub HTTPS asset URL gate |
+| release asset manifest gates decoded asset URL filenames | OK | asset URL filename match |
 | release asset manifest gates canonical APK digests | OK | canonical digest gate |
 | release asset manifest gates release-tag APK URLs | OK | release URL gate |
 | release asset manifest gates GitHub HTTPS APK URLs | OK | GitHub HTTPS APK URL gate |
+| release asset manifest gates decoded APK URL filenames | OK | APK URL filename match |
 | release asset manifest writes UTF-8 without BOM | OK | UTF-8 no BOM writer |
 | build environment report escapes markdown table cells | OK | table cell escaping |
 | build environment report escapes newlines | OK | newline escaping |
@@ -296,6 +300,14 @@ Status: `OK`
 | release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
 | release provenance repo material commit is canonical | OK | repoMaterials=1, canonical=1 |
 | release provenance repo material commit matches source commit | OK | material=10d4e935495007135469ad93baf533345f54427a, source=10d4e935495007135469ad93baf533345f54427a |
+| release provenance source branch recorded | OK | branch=Yume |
+| release provenance source remote matches repo | OK | remote=git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git |
+| release provenance build type matches study release | OK | buildType=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/study-apk-release |
+| release provenance external tag matches | OK | tag=v0.5.4-study.9 |
+| release provenance external package matches gradle | OK | package=com.github.yizuka17.yumebox.md3 |
+| release provenance external version matches gradle | OK | 0.5.4-study.9/5409 |
+| release provenance timestamps parse | OK | generated=07/15/2026 23:17:47, started=07/15/2026 22:32:18, finished=07/15/2026 23:17:47 |
+| release provenance timeline is ordered | OK | started=07/15/2026 22:32:18 +08:00, generated=07/15/2026 23:17:47 +08:00, finished=07/15/2026 23:17:47 +08:00 |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance file materials match expected evidence | OK | fileMaterials=3 |

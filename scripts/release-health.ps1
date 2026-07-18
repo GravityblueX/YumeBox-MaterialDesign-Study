@@ -52,6 +52,19 @@ function Format-MarkdownCodeSpan {
     return "$fence$padded$fence"
 }
 
+function Write-Utf8NoBom {
+    param(
+        [string]$Path,
+        [string]$Content
+    )
+    $normalized = $Content -replace "`r`n?", "`n"
+    if (-not $normalized.EndsWith("`n")) {
+        $normalized += "`n"
+    }
+    $encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+    [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
+}
+
 function Read-LocalProperty {
     param([string]$Name)
     $localProperties = Join-Path $ProjectRoot 'local.properties'
@@ -331,7 +344,7 @@ $lines += @(
 )
 
 $outputPath = Join-Path $ProjectRoot $OutputName
-$lines -join "`n" | Set-Content -LiteralPath $outputPath -Encoding UTF8
+Write-Utf8NoBom -Path $outputPath -Content ($lines -join "`n")
 Write-Host "Wrote $outputPath"
 
 $failedChecks = @($checks | Where-Object { -not [bool]$_.Ok })

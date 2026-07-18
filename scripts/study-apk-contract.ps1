@@ -267,6 +267,7 @@ Add-Check "release health pads boundary code span backticks" (Test-CodeSpanPadsB
 Add-Check "release health code-spans repository header" (Test-FileContains -Path $releaseHealthScriptPath -Needle 'Format-MarkdownCodeSpan -Value $Repo') "repository header code span"
 Add-Check "release health code-spans version header" (Test-FileContains -Path $releaseHealthScriptPath -Needle 'Format-MarkdownCodeSpan -Value $versionName') "version header code span"
 Add-Check "release health code-spans tag header" (Test-FileContains -Path $releaseHealthScriptPath -Needle 'Format-MarkdownCodeSpan -Value $Tag') "tag header code span"
+Add-Check "release health writes UTF-8 without BOM" (Test-FileContains -Path $releaseHealthScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $installabilityReportScriptPath = Join-Path $ProjectRoot "scripts\apk-installability-report.ps1"
 Add-Check "installability report escapes markdown table cells" (Test-FileContains -Path $installabilityReportScriptPath -Needle 'function Escape-MarkdownTableCell') "table cell escaping"
