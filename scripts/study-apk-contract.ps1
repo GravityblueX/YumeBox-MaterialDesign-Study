@@ -232,6 +232,7 @@ Add-Check "study contract normalizes SHA-256 digests" (Test-FileContains -Path $
 Add-Check "study contract cross-checks provenance APK names" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK subjects match release asset names') "provenance asset name parity"
 Add-Check "study contract cross-checks provenance APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'provenance APK digests match release assets') "provenance asset digest parity"
 Add-Check "study contract cross-checks provenance material digests" (Test-FileContains -Path $PSCommandPath -Needle 'release provenance material digest matches release asset manifest') "provenance material digest parity"
+Add-Check "study contract validates release provenance dirty count" (Test-FileContains -Path $PSCommandPath -Needle 'release provenance dirty count is nonnegative integer') "provenance dirty count"
 Add-Check "study contract checks release health markdown" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown tag matches') "release health markdown"
 Add-Check "study contract cross-checks release health APK digests" (Test-FileContains -Path $PSCommandPath -Needle 'release health markdown lists APK digests') "release health APK digests"
 
@@ -611,6 +612,9 @@ if (Test-Path -LiteralPath $provenancePath) {
     $sourceBranch = [string]$internalParameters.sourceBranch
     $sourceCommit = [string]$provenance.predicate.buildDefinition.internalParameters.sourceCommit
     $sourceRemote = [string]$internalParameters.sourceRemote
+    $dirtyCountValue = $provenance.dirtyCountWhenGenerated
+    $dirtyCount = [int64]0
+    $dirtyCountIsInteger = ($null -ne $dirtyCountValue -and [int64]::TryParse([string]$dirtyCountValue, [ref]$dirtyCount))
     $generatedAt = ConvertTo-DateTimeOffsetOrNull $provenance.generatedAt
     $startedOn = ConvertTo-DateTimeOffsetOrNull $provenance.predicate.runDetails.metadata.startedOn
     $finishedOn = ConvertTo-DateTimeOffsetOrNull $provenance.predicate.runDetails.metadata.finishedOn
@@ -623,6 +627,7 @@ if (Test-Path -LiteralPath $provenancePath) {
     Add-Check "release provenance external tag matches" ([string]$externalParameters.tag -eq $Tag) "tag=$($externalParameters.tag)"
     Add-Check "release provenance external package matches gradle" ([string]$externalParameters.packageName -eq $applicationId) "package=$($externalParameters.packageName)"
     Add-Check "release provenance external version matches gradle" ([string]$externalParameters.versionName -eq $versionName -and [string]$externalParameters.versionCode -eq $versionCode) "$($externalParameters.versionName)/$($externalParameters.versionCode)"
+    Add-Check "release provenance dirty count is nonnegative integer" ($dirtyCountIsInteger -and $dirtyCount -ge 0) "dirtyCountWhenGenerated=$dirtyCountValue"
     Add-Check "release provenance timestamps parse" ($null -ne $generatedAt -and $null -ne $startedOn -and $null -ne $finishedOn) "generated=$($provenance.generatedAt), started=$($provenance.predicate.runDetails.metadata.startedOn), finished=$($provenance.predicate.runDetails.metadata.finishedOn)"
     Add-Check "release provenance timeline is ordered" ($null -ne $generatedAt -and $null -ne $startedOn -and $null -ne $finishedOn -and $startedOn -le $generatedAt -and $generatedAt -le $finishedOn) "started=$startedOn, generated=$generatedAt, finished=$finishedOn"
     Add-Check "release provenance links build environment" (@($materialUris | Where-Object { $_ -like "*build-environment-$Tag.json" }).Count -ge 1) "build-environment-$Tag.json"

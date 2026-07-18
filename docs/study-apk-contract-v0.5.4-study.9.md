@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-19T03:34:56.6730807+08:00
+Generated: 2026-07-19T04:40:58.2104427+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 300 |
+| Check count | 302 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -62,6 +62,7 @@ Status: `OK`
 | study contract cross-checks provenance APK names | OK | provenance asset name parity |
 | study contract cross-checks provenance APK digests | OK | provenance asset digest parity |
 | study contract cross-checks provenance material digests | OK | provenance material digest parity |
+| study contract validates release provenance dirty count | OK | provenance dirty count |
 | study contract checks release health markdown | OK | release health markdown |
 | study contract cross-checks release health APK digests | OK | release health APK digests |
 | strict build filters APKs by Gradle task | OK | Get-ApkNamePatternForGradleTask |
@@ -306,6 +307,7 @@ Status: `OK`
 | release provenance external tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance external package matches gradle | OK | package=com.github.yizuka17.yumebox.md3 |
 | release provenance external version matches gradle | OK | 0.5.4-study.9/5409 |
+| release provenance dirty count is nonnegative integer | OK | dirtyCountWhenGenerated=2 |
 | release provenance timestamps parse | OK | generated=07/15/2026 23:17:47, started=07/15/2026 22:32:18, finished=07/15/2026 23:17:47 |
 | release provenance timeline is ordered | OK | started=07/15/2026 22:32:18 +08:00, generated=07/15/2026 23:17:47 +08:00, finished=07/15/2026 23:17:47 +08:00 |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
