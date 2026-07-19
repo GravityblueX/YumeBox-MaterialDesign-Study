@@ -57,6 +57,29 @@ function Get-AssetKind {
     return "supporting"
 }
 
+function Get-ExpectedContentTypes {
+    param([string]$Kind)
+    switch ($Kind) {
+        "installability-json" { return @("application/json") }
+        "installability-md" { return @("application/octet-stream", "text/markdown", "text/plain") }
+        "release-health" { return @("application/octet-stream", "text/markdown", "text/plain") }
+        default { return @() }
+    }
+}
+
+function Test-AllowedContentType {
+    param(
+        [string]$ContentType,
+        [string[]]$Allowed
+    )
+    foreach ($candidate in @($Allowed)) {
+        if ($ContentType.Equals($candidate, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+    return $false
+}
+
 function Escape-Md {
     param([object]$Value)
     if ($null -eq $Value) { return "" }
@@ -306,6 +329,10 @@ $apkUrlNameFailures = @($apkAssets | Where-Object {
 $apkContentTypeFailures = @($apkAssets | Where-Object {
     -not ([string]$_.contentType).Equals("application/vnd.android.package-archive", [System.StringComparison]::OrdinalIgnoreCase)
 })
+$supportReportContentTypeFailures = @($uploadedReports | Where-Object {
+    $expectedContentTypes = @(Get-ExpectedContentTypes -Kind ([string]$_.kind))
+    $expectedContentTypes.Count -gt 0 -and -not (Test-AllowedContentType -ContentType ([string]$_.contentType) -Allowed $expectedContentTypes)
+})
 
 Add-Gate $gates "all release assets have names" ($assetsMissingName.Count -eq 0) "assets=$($assets.Count), missing=$($assetsMissingName.Count)"
 Add-Gate $gates "release asset names are unique" ($duplicateAssetNames.Count -eq 0) "assets=$($assets.Count), duplicates=$($duplicateAssetNames.Count)"
@@ -320,6 +347,7 @@ Add-Gate $gates "all release asset URL filenames match asset names" ($assetUrlNa
 Add-Gate $gates "debug APK asset present" ($debugApks.Count -ge 1) "$($debugApks.Count) debug APK asset(s)"
 Add-Gate $gates "release APK asset present" ($releaseApks.Count -ge 1) "$($releaseApks.Count) release APK asset(s)"
 Add-Gate $gates "support reports uploaded" ($uploadedReports.Count -ge 3) "$($uploadedReports.Count) report asset(s)"
+Add-Gate $gates "support report asset content types match formats" ($supportReportContentTypeFailures.Count -eq 0) "invalid=$($supportReportContentTypeFailures.Count); json=application/json; markdown=application/octet-stream,text/markdown,text/plain"
 Add-Gate $gates "release APK assets uploaded" (($apkAssets | Where-Object { $_.state -ne "uploaded" }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "APK asset digests are canonical SHA-256" ($apkDigestFormatFailures.Count -eq 0) "invalid=$($apkDigestFormatFailures.Count); apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "APK asset URLs match release tag" ($apkUrlFailures.Count -eq 0) "invalid=$($apkUrlFailures.Count); tag=$Tag"

@@ -1,6 +1,6 @@
 # Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-07-19T12:36:32.6283906+08:00
+Generated: 2026-07-19T13:47:25.7063325+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
 Published: 2026-06-23T23:55:21.0000000+08:00
@@ -29,7 +29,7 @@ Status: `OK`
 | release tag matches | OK | tag=v0.5.4-study.9 |
 | release is not draft | OK | isDraft=False |
 | release published timestamp recorded | OK | publishedAt=06/23/2026 23:55:21 |
-| release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T12:36:32.6283906+08:00 |
+| release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T13:47:25.7063325+08:00 |
 | all release assets have names | OK | assets=5, missing=0 |
 | release asset names are unique | OK | assets=5, duplicates=0 |
 | all release assets have URLs | OK | assets=5, missing=0 |
@@ -43,6 +43,7 @@ Status: `OK`
 | debug APK asset present | OK | 1 debug APK asset(s) |
 | release APK asset present | OK | 1 release APK asset(s) |
 | support reports uploaded | OK | 3 report asset(s) |
+| support report asset content types match formats | OK | invalid=0; json=application/json; markdown=application/octet-stream,text/markdown,text/plain |
 | release APK assets uploaded | OK | apkAssets=2 |
 | APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |

@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-19T12:36:54.7222123+08:00
+Generated: 2026-07-19T13:47:43.4168123+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 310 |
+| Check count | 311 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -261,7 +261,7 @@ Status: `OK`
 | release asset manifest ok flag | OK | ok=True |
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
-| release asset manifest gates recorded | OK | 35 gates |
+| release asset manifest gates recorded | OK | 36 gates |
 | release asset manifest gate passes: all release assets have names | OK | assets=5, missing=0 |
 | release asset manifest gate passes: release asset names are unique | OK | assets=5, duplicates=0 |
 | release asset manifest gate passes: all release assets have URLs | OK | assets=5, missing=0 |
@@ -270,13 +270,14 @@ Status: `OK`
 | release asset manifest gate passes: all release assets are uploaded | OK | assets=5, invalid=0 |
 | release asset manifest gate passes: all release asset digests are canonical SHA-256 | OK | assets=5, invalid=0 |
 | release asset manifest gate passes: release published timestamp recorded | OK | publishedAt=06/23/2026 23:55:21 |
-| release asset manifest gate passes: release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T12:36:32.6283906+08:00 |
+| release asset manifest gate passes: release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T13:47:25.7063325+08:00 |
 | release asset manifest gate passes: all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: all release asset URLs use GitHub HTTPS downloads | OK | assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest gate passes: APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest gate passes: APK asset content types are Android package archives | OK | invalid=0; expected=application/vnd.android.package-archive |
+| release asset manifest gate passes: support report asset content types match formats | OK | invalid=0; json=application/json; markdown=application/octet-stream,text/markdown,text/plain |
 | release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |
 | release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
 | release health asset URL matches tag | OK | https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/release-health-v0.5.4-study.9.md |
@@ -308,7 +309,7 @@ Status: `OK`
 | release provenance gate passes: all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
 | release provenance repo material commit is canonical | OK | repoMaterials=1, canonical=1 |
-| release provenance repo material commit matches source commit | OK | material=a6183f2519ea031108a00cce426f4dad6d79d004, source=a6183f2519ea031108a00cce426f4dad6d79d004 |
+| release provenance repo material commit matches source commit | OK | material=7839c4356418a4077d0a1e6559ff124b16f72bd6, source=7839c4356418a4077d0a1e6559ff124b16f72bd6 |
 | release provenance source branch recorded | OK | branch=Yume |
 | release provenance source remote matches repo | OK | remote=git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git |
 | release provenance build type matches study release | OK | buildType=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/study-apk-release |
@@ -316,12 +317,12 @@ Status: `OK`
 | release provenance external package matches gradle | OK | package=com.github.yizuka17.yumebox.md3 |
 | release provenance external version matches gradle | OK | 0.5.4-study.9/5409 |
 | release provenance dirty count is nonnegative integer | OK | dirtyCountWhenGenerated=4 |
-| release provenance timestamps parse | OK | generated=07/19/2026 12:36:35, started=07/19/2026 12:36:32, finished=07/19/2026 12:36:35 |
-| release provenance timeline is ordered | OK | started=07/19/2026 12:36:32 +08:00, generated=07/19/2026 12:36:35 +08:00, finished=07/19/2026 12:36:35 +08:00 |
+| release provenance timestamps parse | OK | generated=07/19/2026 13:47:34, started=07/19/2026 13:47:25, finished=07/19/2026 13:47:34 |
+| release provenance timeline is ordered | OK | started=07/19/2026 13:47:25 +08:00, generated=07/19/2026 13:47:34 +08:00, finished=07/19/2026 13:47:34 +08:00 |
 | release provenance links build environment | OK | build-environment-v0.5.4-study.9.json |
 | release provenance links permission justification | OK | apk-permission-justification-v0.5.4-study.9.json |
 | release provenance file materials match expected evidence | OK | fileMaterials=3 |
-| release provenance material digest matches release asset manifest | OK | recorded=6233b593ea42f519a55b40143ef5b02becd4ddb7dda288cec21d733af182a097, actual=6233b593ea42f519a55b40143ef5b02becd4ddb7dda288cec21d733af182a097 |
+| release provenance material digest matches release asset manifest | OK | recorded=f108b2c94ebd2ff12715d92182adc4edd8fa3b460be726851f29cda273a5ffda, actual=f108b2c94ebd2ff12715d92182adc4edd8fa3b460be726851f29cda273a5ffda |
 | release provenance material digest matches build environment | OK | recorded=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b, actual=29d4d88fc9d071042b7d0bf3954185eb8287ffc2afbb438394bfa6cc15286c1b |
 | release provenance material digest matches permission justification | OK | recorded=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b, actual=38fdb803ebae0fc50412335dabc289a02c8f9c81b816b55e71afad5d4e5fa08b |
 | build environment ok flag | OK | ok=True |

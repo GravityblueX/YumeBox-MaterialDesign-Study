@@ -520,7 +520,8 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "APK asset digests are canonical SHA-256",
         "APK asset URLs match release tag",
         "APK asset URLs use GitHub HTTPS downloads",
-        "APK asset content types are Android package archives"
+        "APK asset content types are Android package archives",
+        "support report asset content types match formats"
     )) {
         $gate = $assetManifestGateByName[$requiredGateName]
         $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }
