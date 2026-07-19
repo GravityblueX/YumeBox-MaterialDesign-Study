@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-19T13:47:43.4168123+08:00
+Generated: 2026-07-19T14:39:52.7637499+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 311 |
+| Check count | 313 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -273,9 +273,11 @@ Status: `OK`
 | release asset manifest gate passes: release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T13:47:25.7063325+08:00 |
 | release asset manifest gate passes: all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: all release asset URLs use GitHub HTTPS downloads | OK | assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
+| release asset manifest gate passes: all release asset URL filenames match asset names | OK | assets=5, invalid=0 |
 | release asset manifest gate passes: APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
+| release asset manifest gate passes: APK asset URL filenames match names | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset content types are Android package archives | OK | invalid=0; expected=application/vnd.android.package-archive |
 | release asset manifest gate passes: support report asset content types match formats | OK | invalid=0; json=application/json; markdown=application/octet-stream,text/markdown,text/plain |
 | release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |

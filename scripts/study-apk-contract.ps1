@@ -517,9 +517,11 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "release published timestamp is not in the future",
         "all release asset URLs match release tag",
         "all release asset URLs use GitHub HTTPS downloads",
+        "all release asset URL filenames match asset names",
         "APK asset digests are canonical SHA-256",
         "APK asset URLs match release tag",
         "APK asset URLs use GitHub HTTPS downloads",
+        "APK asset URL filenames match names",
         "APK asset content types are Android package archives",
         "support report asset content types match formats"
     )) {
