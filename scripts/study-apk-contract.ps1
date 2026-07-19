@@ -413,6 +413,8 @@ Add-Check "release evidence contract asserts markdown report exists" (Test-FileC
 Add-Check "release evidence contract asserts JSON report type" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.reportType') "JSON reportType"
 Add-Check "release evidence contract asserts summary check count" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.summary.checkCount') "summary check count parity"
 Add-Check "release evidence contract asserts zero failure summary" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.summary.failureCount') "summary failure count"
+Add-Check "release evidence contract asserts nonblank check names" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'blank study APK contract check names') "check name presence"
+Add-Check "release evidence contract asserts unique check names" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'duplicate study APK contract check names') "check name uniqueness"
 Add-Check "release evidence contract asserts markdown title tag" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$expectedTitle = "# Study APK Contract - $($report.tag)"') "markdown title/tag parity"
 Add-Check "release evidence contract asserts markdown OK status" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'Status:\s+`OK`') "markdown OK status"
 Add-Check "release evidence contract asserts markdown check count" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$expectedCheckCountRow = "| Check count | $checkCount |"') "markdown check count parity"
@@ -739,6 +741,22 @@ if ($hasCrossCheckEvidence) {
     }
     Add-Check "provenance APK digests match release assets" ($digestMismatches.Count -eq 0) $digestDetail
 }
+
+$checkNames = @($Checks | ForEach-Object { [string]$_.name })
+$blankCheckNameCount = @($checkNames | Where-Object { [string]::IsNullOrWhiteSpace($_) }).Count
+$duplicateCheckNames = @(
+    $checkNames |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Group-Object |
+        Where-Object { $_.Count -gt 1 } |
+        ForEach-Object { $_.Name }
+)
+$checkNameDetail = if ($blankCheckNameCount -eq 0 -and $duplicateCheckNames.Count -eq 0) {
+    "$($checkNames.Count) check name(s)"
+} else {
+    "blank=$blankCheckNameCount; duplicates=$($duplicateCheckNames -join ', ')"
+}
+Add-Check "study contract check names are unique" ($blankCheckNameCount -eq 0 -and $duplicateCheckNames.Count -eq 0) $checkNameDetail
 
 $checkArray = @()
 foreach ($check in $Checks) {

@@ -103,6 +103,20 @@ jobs:
             throw "study APK contract produced too few checks: $checkCount"
           }
 
+          $blankCheckNames = @($report.checks | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.name) })
+          if ($blankCheckNames.Count -gt 0) {
+            throw "blank study APK contract check names: $($blankCheckNames.Count)"
+          }
+          $duplicateCheckNames = @(
+            $report.checks |
+              Group-Object -Property name |
+              Where-Object { $_.Count -gt 1 } |
+              ForEach-Object { [string]$_.Name }
+          )
+          if ($duplicateCheckNames.Count -gt 0) {
+            throw "duplicate study APK contract check names: $($duplicateCheckNames -join ', ')"
+          }
+
           $markdown = Get-Content -LiteralPath $markdownOut -Raw
           $expectedTitle = "# Study APK Contract - $($report.tag)"
           if (-not $markdown.StartsWith($expectedTitle)) {
