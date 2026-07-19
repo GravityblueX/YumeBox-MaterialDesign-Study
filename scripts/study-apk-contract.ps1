@@ -411,6 +411,7 @@ Add-Check "release evidence contract accumulates script parse failures" (Test-Fi
 Add-Check "release evidence contract reports parse error locations" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'startLineNumber') "parse error location"
 Add-Check "release evidence contract asserts markdown report exists" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle "study APK contract Markdown was not generated") "markdown report existence"
 Add-Check "release evidence contract asserts JSON report type" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.reportType') "JSON reportType"
+Add-Check "release evidence contract asserts JSON tag format" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'study APK contract JSON tag is invalid') "JSON tag format"
 Add-Check "release evidence contract asserts summary check count" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.summary.checkCount') "summary check count parity"
 Add-Check "release evidence contract asserts zero failure summary" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.summary.failureCount') "summary failure count"
 Add-Check "release evidence contract asserts failure count parity" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$failedChecks = @($report.checks | Where-Object { -not [bool]$_.ok })') "failure count parity"

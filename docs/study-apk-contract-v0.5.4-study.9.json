@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-19T19:16:19.8076917+08:00",
+  "generatedAt": "2026-07-19T19:59:55.9259779+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 352,
+    "checkCount": 353,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -1001,6 +1001,11 @@
       "detail": "JSON reportType"
     },
     {
+      "name": "release evidence contract asserts JSON tag format",
+      "ok": true,
+      "detail": "JSON tag format"
+    },
+    {
       "name": "release evidence contract asserts summary check count",
       "ok": true,
       "detail": "summary check count parity"
@@ -1773,7 +1778,7 @@
     {
       "name": "study contract check names are unique",
       "ok": true,
-      "detail": "351 check name(s)"
+      "detail": "352 check name(s)"
     }
   ],
   "failures": []

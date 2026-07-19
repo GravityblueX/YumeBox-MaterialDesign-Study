@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-19T19:16:19.8076917+08:00
+Generated: 2026-07-19T19:59:55.9259779+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 352 |
+| Check count | 353 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -218,6 +218,7 @@ Status: `OK`
 | release evidence contract reports parse error locations | OK | parse error location |
 | release evidence contract asserts markdown report exists | OK | markdown report existence |
 | release evidence contract asserts JSON report type | OK | JSON reportType |
+| release evidence contract asserts JSON tag format | OK | JSON tag format |
 | release evidence contract asserts summary check count | OK | summary check count parity |
 | release evidence contract asserts zero failure summary | OK | summary failure count |
 | release evidence contract asserts failure count parity | OK | failure count parity |
@@ -372,4 +373,4 @@ Status: `OK`
 | study contract check ok values are boolean | OK | nonBoolean=0 |
 | study contract check details are strings | OK | nonString=0 |
 | study contract check names are strings | OK | nonString=0 |
-| study contract check names are unique | OK | 351 check name(s) |
+| study contract check names are unique | OK | 352 check name(s) |

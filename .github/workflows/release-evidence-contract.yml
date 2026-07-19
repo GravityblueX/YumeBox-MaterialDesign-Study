@@ -85,6 +85,10 @@ jobs:
             throw "study APK contract JSON had unexpected reportType: $($report.reportType)"
           }
 
+          if ([string]::IsNullOrWhiteSpace([string]$report.tag) -or [string]$report.tag -notmatch '^v\d+\.\d+\.\d+-study\.\d+$') {
+            throw "study APK contract JSON tag is invalid: $($report.tag)"
+          }
+
           if (-not [bool]$report.ok) {
             $failures = @($report.failures | ForEach-Object { "- $($_.name): $($_.detail)" })
             throw "study APK contract failed:`n$($failures -join "`n")"
