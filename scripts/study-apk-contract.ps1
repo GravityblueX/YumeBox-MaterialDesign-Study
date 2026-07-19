@@ -513,6 +513,7 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "all release assets are uploaded",
         "all release asset digests are canonical SHA-256",
         "release published timestamp recorded",
+        "release published timestamp is not in the future",
         "all release asset URLs match release tag",
         "all release asset URLs use GitHub HTTPS downloads",
         "APK asset digests are canonical SHA-256",

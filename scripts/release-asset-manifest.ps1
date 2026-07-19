@@ -166,6 +166,7 @@ if ([string]::IsNullOrWhiteSpace($MarkdownOut)) {
     $MarkdownOut = Join-Path $ProjectRoot "docs\release-asset-manifest-$Tag.md"
 }
 
+$generatedAt = [System.DateTimeOffset]::Now
 $gates = New-Object System.Collections.Generic.List[object]
 Add-Gate $gates "installability report exists" (Test-Path -LiteralPath $InstallabilityJson) $InstallabilityJson
 Add-Gate $gates "permission review exists" (Test-Path -LiteralPath $PermissionReviewJson) $PermissionReviewJson
@@ -193,6 +194,7 @@ $publishedAt = ConvertTo-DateTimeOffsetOrNull $release.publishedAt
 Add-Gate $gates "release tag matches" ([string]$release.tagName -eq $Tag) "tag=$($release.tagName)"
 Add-Gate $gates "release is not draft" (-not [bool]$release.isDraft) "isDraft=$($release.isDraft)"
 Add-Gate $gates "release published timestamp recorded" ($null -ne $publishedAt) "publishedAt=$($release.publishedAt)"
+Add-Gate $gates "release published timestamp is not in the future" ($null -ne $publishedAt -and $publishedAt -le $generatedAt) "publishedAt=$($release.publishedAt), generatedAt=$($generatedAt.ToString("o"))"
 
 $installabilityByName = @{}
 foreach ($apk in @($installability.apks)) {
@@ -333,7 +335,7 @@ $gateArray = @(foreach ($gate in $gates) { $gate })
 $failures = @($gateArray | Where-Object { -not [bool]$_.ok })
 $payload = [pscustomobject]@{
     reportType = "yumebox_release_asset_manifest"
-    generatedAt = (Get-Date).ToString("o")
+    generatedAt = $generatedAt.ToString("o")
     repo = $Repo
     tag = $Tag
     release = [pscustomobject]@{
