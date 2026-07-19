@@ -1,6 +1,6 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-19T08:30:40.6055056+08:00",
+  "generatedAt": "2026-07-19T08:37:59.1058118+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -1258,7 +1258,7 @@
     {
       "name": "release asset manifest gate passes: release published timestamp is not in the future",
       "ok": true,
-      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T08:30:25.8560853+08:00"
+      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T08:37:54.7681837+08:00"
     },
     {
       "name": "release asset manifest gate passes: all release asset URLs match release tag",
@@ -1443,7 +1443,7 @@
     {
       "name": "release provenance repo material commit matches source commit",
       "ok": true,
-      "detail": "material=1f25040351937285dd8e7f1c355e0454d0cf3192, source=1f25040351937285dd8e7f1c355e0454d0cf3192"
+      "detail": "material=f2d4a990d7993413e14a1cc93d5bfbd8520f4b74, source=f2d4a990d7993413e14a1cc93d5bfbd8520f4b74"
     },
     {
       "name": "release provenance source branch recorded",
@@ -1478,17 +1478,17 @@
     {
       "name": "release provenance dirty count is nonnegative integer",
       "ok": true,
-      "detail": "dirtyCountWhenGenerated=8"
+      "detail": "dirtyCountWhenGenerated=2"
     },
     {
       "name": "release provenance timestamps parse",
       "ok": true,
-      "detail": "generated=07/19/2026 08:30:34, started=07/19/2026 08:30:25, finished=07/19/2026 08:30:34"
+      "detail": "generated=07/19/2026 08:37:57, started=07/19/2026 08:37:54, finished=07/19/2026 08:37:57"
     },
     {
       "name": "release provenance timeline is ordered",
       "ok": true,
-      "detail": "started=07/19/2026 08:30:25 +08:00, generated=07/19/2026 08:30:34 +08:00, finished=07/19/2026 08:30:34 +08:00"
+      "detail": "started=07/19/2026 08:37:54 +08:00, generated=07/19/2026 08:37:57 +08:00, finished=07/19/2026 08:37:57 +08:00"
     },
     {
       "name": "release provenance links build environment",
@@ -1508,7 +1508,7 @@
     {
       "name": "release provenance material digest matches release asset manifest",
       "ok": true,
-      "detail": "recorded=e89b728a65f5ed01a6b353da4da3f790389cc2d21eb842b56ee0f95b92609e5f, actual=e89b728a65f5ed01a6b353da4da3f790389cc2d21eb842b56ee0f95b92609e5f"
+      "detail": "recorded=8412237a1b715408349d783200927b53cf6df9ea3ff673dffc435d8faa9f9584, actual=8412237a1b715408349d783200927b53cf6df9ea3ff673dffc435d8faa9f9584"
     },
     {
       "name": "release provenance material digest matches build environment",
