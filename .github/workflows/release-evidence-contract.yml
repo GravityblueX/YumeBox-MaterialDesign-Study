@@ -95,8 +95,12 @@ jobs:
             throw "study APK contract summary check count does not match checks array: summary=$($report.summary.checkCount), checks=$checkCount"
           }
           $failureCount = @($report.failures).Count
-          if ([int]$report.summary.failureCount -ne 0 -or $failureCount -ne 0) {
-            throw "study APK contract recorded failures despite ok=true: summary=$($report.summary.failureCount), failures=$failureCount"
+          $failedChecks = @($report.checks | Where-Object { -not [bool]$_.ok })
+          if ([int]$report.summary.failureCount -ne $failedChecks.Count -or $failureCount -ne $failedChecks.Count) {
+            throw "study APK contract failure count does not match failed checks: summary=$($report.summary.failureCount), failures=$failureCount, failedChecks=$($failedChecks.Count)"
+          }
+          if ($failedChecks.Count -ne 0) {
+            throw "study APK contract recorded failures despite ok=true: failedChecks=$($failedChecks.Count)"
           }
 
           if ($checkCount -lt 190) {
