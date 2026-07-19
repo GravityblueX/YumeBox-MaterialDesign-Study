@@ -1,6 +1,6 @@
 {
   "reportType": "yumebox_release_asset_manifest",
-  "generatedAt": "2026-07-19T08:37:54.7681837+08:00",
+  "generatedAt": "2026-07-19T12:36:32.6283906+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "release": {
@@ -69,7 +69,7 @@
     {
       "name": "release published timestamp is not in the future",
       "ok": true,
-      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T08:37:54.7681837+08:00"
+      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T12:36:32.6283906+08:00"
     },
     {
       "name": "all release assets have names",
@@ -160,6 +160,11 @@
       "name": "APK asset URL filenames match names",
       "ok": true,
       "detail": "invalid=0; apkAssets=2"
+    },
+    {
+      "name": "APK asset content types are Android package archives",
+      "ok": true,
+      "detail": "invalid=0; expected=application/vnd.android.package-archive"
     },
     {
       "name": "all release APKs in installability report",

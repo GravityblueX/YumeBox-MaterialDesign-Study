@@ -1,6 +1,6 @@
 # Release Asset Manifest - v0.5.4-study.9
 
-Generated: 2026-07-19T08:37:54.7681837+08:00
+Generated: 2026-07-19T12:36:32.6283906+08:00
 Repo: `GravityblueX/YumeBox-MaterialDesign-Study`
 Release: `YumeBox Study v0.5.4-study.9`
 Published: 2026-06-23T23:55:21.0000000+08:00
@@ -29,7 +29,7 @@ Status: `OK`
 | release tag matches | OK | tag=v0.5.4-study.9 |
 | release is not draft | OK | isDraft=False |
 | release published timestamp recorded | OK | publishedAt=06/23/2026 23:55:21 |
-| release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T08:37:54.7681837+08:00 |
+| release published timestamp is not in the future | OK | publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T12:36:32.6283906+08:00 |
 | all release assets have names | OK | assets=5, missing=0 |
 | release asset names are unique | OK | assets=5, duplicates=0 |
 | all release assets have URLs | OK | assets=5, missing=0 |
@@ -48,6 +48,7 @@ Status: `OK`
 | APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | APK asset URL filenames match names | OK | invalid=0; apkAssets=2 |
+| APK asset content types are Android package archives | OK | invalid=0; expected=application/vnd.android.package-archive |
 | all release APKs in installability report | OK | apkAssets=2 |
 | all installability APKs in release | OK | reportApks=2 |
 | APK asset digests match report | OK | apkAssets=2 |

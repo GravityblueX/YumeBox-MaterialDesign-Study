@@ -342,6 +342,7 @@ Add-Check "release asset manifest gates canonical APK digests" (Test-FileContain
 Add-Check "release asset manifest gates release-tag APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs match release tag') "release URL gate"
 Add-Check "release asset manifest gates GitHub HTTPS APK URLs" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URLs use GitHub HTTPS downloads') "GitHub HTTPS APK URL gate"
 Add-Check "release asset manifest gates decoded APK URL filenames" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset URL filenames match names') "APK URL filename match"
+Add-Check "release asset manifest gates APK content types" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'APK asset content types are Android package archives') "APK contentType gate"
 Add-Check "release asset manifest writes UTF-8 without BOM" (Test-FileContains -Path $releaseAssetManifestScriptPath -Needle 'Write-Utf8NoBom') "UTF-8 no BOM writer"
 
 $buildEnvironmentReportScriptPath = Join-Path $ProjectRoot "scripts\build-environment-report.ps1"
@@ -518,7 +519,8 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "all release asset URLs use GitHub HTTPS downloads",
         "APK asset digests are canonical SHA-256",
         "APK asset URLs match release tag",
-        "APK asset URLs use GitHub HTTPS downloads"
+        "APK asset URLs use GitHub HTTPS downloads",
+        "APK asset content types are Android package archives"
     )) {
         $gate = $assetManifestGateByName[$requiredGateName]
         $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }

@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-19T08:37:59.1058118+08:00",
+  "generatedAt": "2026-07-19T12:36:54.7222123+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 308,
+    "checkCount": 310,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -721,6 +721,11 @@
       "detail": "APK URL filename match"
     },
     {
+      "name": "release asset manifest gates APK content types",
+      "ok": true,
+      "detail": "APK contentType gate"
+    },
+    {
       "name": "release asset manifest writes UTF-8 without BOM",
       "ok": true,
       "detail": "UTF-8 no BOM writer"
@@ -1213,7 +1218,7 @@
     {
       "name": "release asset manifest gates recorded",
       "ok": true,
-      "detail": "34 gates"
+      "detail": "35 gates"
     },
     {
       "name": "release asset manifest gate passes: all release assets have names",
@@ -1258,7 +1263,7 @@
     {
       "name": "release asset manifest gate passes: release published timestamp is not in the future",
       "ok": true,
-      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T08:37:54.7681837+08:00"
+      "detail": "publishedAt=06/23/2026 23:55:21, generatedAt=2026-07-19T12:36:32.6283906+08:00"
     },
     {
       "name": "release asset manifest gate passes: all release asset URLs match release tag",
@@ -1284,6 +1289,11 @@
       "name": "release asset manifest gate passes: APK asset URLs use GitHub HTTPS downloads",
       "ok": true,
       "detail": "invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/"
+    },
+    {
+      "name": "release asset manifest gate passes: APK asset content types are Android package archives",
+      "ok": true,
+      "detail": "invalid=0; expected=application/vnd.android.package-archive"
     },
     {
       "name": "release asset manifest includes release health report",
@@ -1443,7 +1453,7 @@
     {
       "name": "release provenance repo material commit matches source commit",
       "ok": true,
-      "detail": "material=f2d4a990d7993413e14a1cc93d5bfbd8520f4b74, source=f2d4a990d7993413e14a1cc93d5bfbd8520f4b74"
+      "detail": "material=a6183f2519ea031108a00cce426f4dad6d79d004, source=a6183f2519ea031108a00cce426f4dad6d79d004"
     },
     {
       "name": "release provenance source branch recorded",
@@ -1478,17 +1488,17 @@
     {
       "name": "release provenance dirty count is nonnegative integer",
       "ok": true,
-      "detail": "dirtyCountWhenGenerated=2"
+      "detail": "dirtyCountWhenGenerated=4"
     },
     {
       "name": "release provenance timestamps parse",
       "ok": true,
-      "detail": "generated=07/19/2026 08:37:57, started=07/19/2026 08:37:54, finished=07/19/2026 08:37:57"
+      "detail": "generated=07/19/2026 12:36:35, started=07/19/2026 12:36:32, finished=07/19/2026 12:36:35"
     },
     {
       "name": "release provenance timeline is ordered",
       "ok": true,
-      "detail": "started=07/19/2026 08:37:54 +08:00, generated=07/19/2026 08:37:57 +08:00, finished=07/19/2026 08:37:57 +08:00"
+      "detail": "started=07/19/2026 12:36:32 +08:00, generated=07/19/2026 12:36:35 +08:00, finished=07/19/2026 12:36:35 +08:00"
     },
     {
       "name": "release provenance links build environment",
@@ -1508,7 +1518,7 @@
     {
       "name": "release provenance material digest matches release asset manifest",
       "ok": true,
-      "detail": "recorded=8412237a1b715408349d783200927b53cf6df9ea3ff673dffc435d8faa9f9584, actual=8412237a1b715408349d783200927b53cf6df9ea3ff673dffc435d8faa9f9584"
+      "detail": "recorded=6233b593ea42f519a55b40143ef5b02becd4ddb7dda288cec21d733af182a097, actual=6233b593ea42f519a55b40143ef5b02becd4ddb7dda288cec21d733af182a097"
     },
     {
       "name": "release provenance material digest matches build environment",

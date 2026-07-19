@@ -1,7 +1,7 @@
 {
   "reportType": "yumebox_release_provenance",
   "predicateType": "https://slsa.dev/provenance/v1",
-  "generatedAt": "2026-07-19T08:37:57.4153591+08:00",
+  "generatedAt": "2026-07-19T12:36:35.4428064+08:00",
   "repo": "GravityblueX/YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
@@ -49,7 +49,7 @@
       },
       "internalParameters": {
         "sourceBranch": "Yume",
-        "sourceCommit": "f2d4a990d7993413e14a1cc93d5bfbd8520f4b74",
+        "sourceCommit": "a6183f2519ea031108a00cce426f4dad6d79d004",
         "sourceRemote": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git"
       }
     },
@@ -59,21 +59,21 @@
       },
       "metadata": {
         "invocationId": "manual-local-v0.5.4-study.9",
-        "startedOn": "2026-07-19T08:37:54.7681837+08:00",
-        "finishedOn": "2026-07-19T08:37:57.4191929+08:00"
+        "startedOn": "2026-07-19T12:36:32.6283906+08:00",
+        "finishedOn": "2026-07-19T12:36:35.4467753+08:00"
       }
     },
     "materials": [
       {
         "uri": "git@github.com:GravityblueX/YumeBox-MaterialDesign-Study.git",
         "digest": {
-          "gitCommit": "f2d4a990d7993413e14a1cc93d5bfbd8520f4b74"
+          "gitCommit": "a6183f2519ea031108a00cce426f4dad6d79d004"
         }
       },
       {
         "uri": "file://docs/release-asset-manifest-v0.5.4-study.9.json",
         "digest": {
-          "sha256": "8412237a1b715408349d783200927b53cf6df9ea3ff673dffc435d8faa9f9584"
+          "sha256": "6233b593ea42f519a55b40143ef5b02becd4ddb7dda288cec21d733af182a097"
         }
       },
       {
@@ -174,7 +174,7 @@
     {
       "name": "git commit available",
       "ok": true,
-      "detail": "f2d4a990d7993413e14a1cc93d5bfbd8520f4b74"
+      "detail": "a6183f2519ea031108a00cce426f4dad6d79d004"
     },
     {
       "name": "release is not draft",
@@ -228,7 +228,7 @@
     }
   ],
   "failures": [],
-  "dirtyCountWhenGenerated": 2,
+  "dirtyCountWhenGenerated": 4,
   "referenceBasis": [
     "SLSA provenance style subject and material digest mapping",
     "GitHub Release assets remain the downloadable APK source of truth",

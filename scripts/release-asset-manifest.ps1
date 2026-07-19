@@ -303,6 +303,9 @@ $apkGithubDownloadUrlFailures = @($apkAssets | Where-Object {
 $apkUrlNameFailures = @($apkAssets | Where-Object {
     -not (Test-GitHubReleaseAssetUrlName -Url ([string]$_.url) -Repo $Repo -Tag $Tag -Name ([string]$_.name))
 })
+$apkContentTypeFailures = @($apkAssets | Where-Object {
+    -not ([string]$_.contentType).Equals("application/vnd.android.package-archive", [System.StringComparison]::OrdinalIgnoreCase)
+})
 
 Add-Gate $gates "all release assets have names" ($assetsMissingName.Count -eq 0) "assets=$($assets.Count), missing=$($assetsMissingName.Count)"
 Add-Gate $gates "release asset names are unique" ($duplicateAssetNames.Count -eq 0) "assets=$($assets.Count), duplicates=$($duplicateAssetNames.Count)"
@@ -322,6 +325,7 @@ Add-Gate $gates "APK asset digests are canonical SHA-256" ($apkDigestFormatFailu
 Add-Gate $gates "APK asset URLs match release tag" ($apkUrlFailures.Count -eq 0) "invalid=$($apkUrlFailures.Count); tag=$Tag"
 Add-Gate $gates "APK asset URLs use GitHub HTTPS downloads" ($apkGithubDownloadUrlFailures.Count -eq 0) "invalid=$($apkGithubDownloadUrlFailures.Count); prefix=$expectedAssetUrlPrefix"
 Add-Gate $gates "APK asset URL filenames match names" ($apkUrlNameFailures.Count -eq 0) "invalid=$($apkUrlNameFailures.Count); apkAssets=$($apkAssets.Count)"
+Add-Gate $gates "APK asset content types are Android package archives" ($apkContentTypeFailures.Count -eq 0) "invalid=$($apkContentTypeFailures.Count); expected=application/vnd.android.package-archive"
 Add-Gate $gates "all release APKs in installability report" (($apkAssets | Where-Object { -not $_.installability.present }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
 Add-Gate $gates "all installability APKs in release" ((@($installability.apks | Where-Object { -not (@($apkAssets.name) -contains [string]$_.name) })).Count -eq 0) "reportApks=$(@($installability.apks).Count)"
 Add-Gate $gates "APK asset digests match report" (($apkAssets | Where-Object { $_.installability.present -and -not $_.installability.digestMatches }).Count -eq 0) "apkAssets=$($apkAssets.Count)"
