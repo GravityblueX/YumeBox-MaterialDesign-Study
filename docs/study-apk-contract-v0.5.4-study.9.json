@@ -1,11 +1,11 @@
 {
   "reportType": "study_apk_contract",
-  "generatedAt": "2026-07-19T14:39:52.7637499+08:00",
+  "generatedAt": "2026-07-19T15:25:13.7866506+08:00",
   "projectRoot": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study",
   "tag": "v0.5.4-study.9",
   "ok": true,
   "summary": {
-    "checkCount": 313,
+    "checkCount": 342,
     "failureCount": 0,
     "requiredFileCount": 28,
     "apkEvidenceCount": 2,
@@ -1221,6 +1221,46 @@
       "detail": "36 gates"
     },
     {
+      "name": "release asset manifest gate passes: installability report exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-installability-report-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release asset manifest gate passes: permission review exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-review-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release asset manifest gate passes: installability report ok",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "release asset manifest gate passes: installability tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release asset manifest gate passes: permission review ok",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "release asset manifest gate passes: permission review tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release asset manifest gate passes: release tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release asset manifest gate passes: release is not draft",
+      "ok": true,
+      "detail": "isDraft=False"
+    },
+    {
       "name": "release asset manifest gate passes: all release assets have names",
       "ok": true,
       "detail": "assets=5, missing=0"
@@ -1281,6 +1321,26 @@
       "detail": "assets=5, invalid=0"
     },
     {
+      "name": "release asset manifest gate passes: debug APK asset present",
+      "ok": true,
+      "detail": "1 debug APK asset(s)"
+    },
+    {
+      "name": "release asset manifest gate passes: release APK asset present",
+      "ok": true,
+      "detail": "1 release APK asset(s)"
+    },
+    {
+      "name": "release asset manifest gate passes: support reports uploaded",
+      "ok": true,
+      "detail": "3 report asset(s)"
+    },
+    {
+      "name": "release asset manifest gate passes: release APK assets uploaded",
+      "ok": true,
+      "detail": "apkAssets=2"
+    },
+    {
       "name": "release asset manifest gate passes: APK asset digests are canonical SHA-256",
       "ok": true,
       "detail": "invalid=0; apkAssets=2"
@@ -1304,6 +1364,36 @@
       "name": "release asset manifest gate passes: APK asset content types are Android package archives",
       "ok": true,
       "detail": "invalid=0; expected=application/vnd.android.package-archive"
+    },
+    {
+      "name": "release asset manifest gate passes: all release APKs in installability report",
+      "ok": true,
+      "detail": "apkAssets=2"
+    },
+    {
+      "name": "release asset manifest gate passes: all installability APKs in release",
+      "ok": true,
+      "detail": "reportApks=2"
+    },
+    {
+      "name": "release asset manifest gate passes: APK asset digests match report",
+      "ok": true,
+      "detail": "apkAssets=2"
+    },
+    {
+      "name": "release asset manifest gate passes: APK asset sizes match report",
+      "ok": true,
+      "detail": "apkAssets=2"
+    },
+    {
+      "name": "release asset manifest gate passes: APK tooling checks passed",
+      "ok": true,
+      "detail": "zipalign/badging/signature/digest"
+    },
+    {
+      "name": "release asset manifest gate passes: permission review covers APKs",
+      "ok": true,
+      "detail": "apkAssets=2"
     },
     {
       "name": "release asset manifest gate passes: support report asset content types match formats",
@@ -1377,6 +1467,41 @@
     },
     {
       "name": "release provenance APK subjects",
+      "ok": true,
+      "detail": "2 subject(s)"
+    },
+    {
+      "name": "release provenance gate passes: asset manifest exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\release-asset-manifest-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release provenance gate passes: build environment exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\build-environment-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release provenance gate passes: permission justification exists",
+      "ok": true,
+      "detail": "C:\\Users\\123\\Desktop\\YumeBox-MaterialDesign-Study\\docs\\apk-permission-justification-v0.5.4-study.9.json"
+    },
+    {
+      "name": "release provenance gate passes: asset manifest ok",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "release provenance gate passes: asset manifest tag matches",
+      "ok": true,
+      "detail": "tag=v0.5.4-study.9"
+    },
+    {
+      "name": "release provenance gate passes: debug and release APK subjects",
+      "ok": true,
+      "detail": "2 subject(s)"
+    },
+    {
+      "name": "release provenance gate passes: all subjects have sha256",
       "ok": true,
       "detail": "2 subject(s)"
     },
@@ -1459,6 +1584,26 @@
       "name": "release provenance gate passes: all subjects have canonical sha256",
       "ok": true,
       "detail": "subjects=2, invalid=0"
+    },
+    {
+      "name": "release provenance gate passes: git commit available",
+      "ok": true,
+      "detail": "7839c4356418a4077d0a1e6559ff124b16f72bd6"
+    },
+    {
+      "name": "release provenance gate passes: release is not draft",
+      "ok": true,
+      "detail": "isDraft=False"
+    },
+    {
+      "name": "release provenance gate passes: package id recorded",
+      "ok": true,
+      "detail": "com.github.yizuka17.yumebox.md3"
+    },
+    {
+      "name": "release provenance gate passes: version recorded",
+      "ok": true,
+      "detail": "0.5.4-study.9/5409"
     },
     {
       "name": "release provenance repo material commit is canonical",

@@ -506,6 +506,14 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         }
     }
     foreach ($requiredGateName in @(
+        "installability report exists",
+        "permission review exists",
+        "installability report ok",
+        "installability tag matches",
+        "permission review ok",
+        "permission review tag matches",
+        "release tag matches",
+        "release is not draft",
         "all release assets have names",
         "release asset names are unique",
         "all release assets have URLs",
@@ -518,11 +526,21 @@ if (Test-Path -LiteralPath $assetManifestPath) {
         "all release asset URLs match release tag",
         "all release asset URLs use GitHub HTTPS downloads",
         "all release asset URL filenames match asset names",
+        "debug APK asset present",
+        "release APK asset present",
+        "support reports uploaded",
+        "release APK assets uploaded",
         "APK asset digests are canonical SHA-256",
         "APK asset URLs match release tag",
         "APK asset URLs use GitHub HTTPS downloads",
         "APK asset URL filenames match names",
         "APK asset content types are Android package archives",
+        "all release APKs in installability report",
+        "all installability APKs in release",
+        "APK asset digests match report",
+        "APK asset sizes match report",
+        "APK tooling checks passed",
+        "permission review covers APKs",
         "support report asset content types match formats"
     )) {
         $gate = $assetManifestGateByName[$requiredGateName]
@@ -576,6 +594,13 @@ if (Test-Path -LiteralPath $provenancePath) {
         }
     }
     foreach ($requiredGateName in @(
+        "asset manifest exists",
+        "build environment exists",
+        "permission justification exists",
+        "asset manifest ok",
+        "asset manifest tag matches",
+        "debug and release APK subjects",
+        "all subjects have sha256",
         "all materials have URIs",
         "material URIs are unique",
         "all materials have digest evidence",
@@ -591,7 +616,11 @@ if (Test-Path -LiteralPath $provenancePath) {
         "all subjects use GitHub HTTPS release downloads",
         "all subject URI filenames match names",
         "all subjects have positive sizes",
-        "all subjects have canonical sha256"
+        "all subjects have canonical sha256",
+        "git commit available",
+        "release is not draft",
+        "package id recorded",
+        "version recorded"
     )) {
         $gate = $provenanceGateByName[$requiredGateName]
         $gateDetail = if ($null -eq $gate) { "missing gate" } else { [string]$gate.detail }

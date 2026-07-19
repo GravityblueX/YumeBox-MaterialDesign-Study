@@ -1,6 +1,6 @@
 # Study APK Contract - v0.5.4-study.9
 
-Generated: 2026-07-19T14:39:52.7637499+08:00
+Generated: 2026-07-19T15:25:13.7866506+08:00
 ProjectRoot: `C:\Users\123\Desktop\YumeBox-MaterialDesign-Study`
 Status: `OK`
 
@@ -8,7 +8,7 @@ Status: `OK`
 
 | Field | Value |
 |---|---|
-| Check count | 313 |
+| Check count | 342 |
 | Failure count | 0 |
 | Required files | 28 |
 | APK evidence count | 2 |
@@ -262,6 +262,14 @@ Status: `OK`
 | release asset manifest tag matches | OK | tag=v0.5.4-study.9 |
 | release asset manifest APK assets | OK | debug=1, release=1 |
 | release asset manifest gates recorded | OK | 36 gates |
+| release asset manifest gate passes: installability report exists | OK | C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\apk-installability-report-v0.5.4-study.9.json |
+| release asset manifest gate passes: permission review exists | OK | C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\apk-permission-review-v0.5.4-study.9.json |
+| release asset manifest gate passes: installability report ok | OK | ok=True |
+| release asset manifest gate passes: installability tag matches | OK | tag=v0.5.4-study.9 |
+| release asset manifest gate passes: permission review ok | OK | ok=True |
+| release asset manifest gate passes: permission review tag matches | OK | tag=v0.5.4-study.9 |
+| release asset manifest gate passes: release tag matches | OK | tag=v0.5.4-study.9 |
+| release asset manifest gate passes: release is not draft | OK | isDraft=False |
 | release asset manifest gate passes: all release assets have names | OK | assets=5, missing=0 |
 | release asset manifest gate passes: release asset names are unique | OK | assets=5, duplicates=0 |
 | release asset manifest gate passes: all release assets have URLs | OK | assets=5, missing=0 |
@@ -274,11 +282,21 @@ Status: `OK`
 | release asset manifest gate passes: all release asset URLs match release tag | OK | assets=5, invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: all release asset URLs use GitHub HTTPS downloads | OK | assets=5, invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest gate passes: all release asset URL filenames match asset names | OK | assets=5, invalid=0 |
+| release asset manifest gate passes: debug APK asset present | OK | 1 debug APK asset(s) |
+| release asset manifest gate passes: release APK asset present | OK | 1 release APK asset(s) |
+| release asset manifest gate passes: support reports uploaded | OK | 3 report asset(s) |
+| release asset manifest gate passes: release APK assets uploaded | OK | apkAssets=2 |
 | release asset manifest gate passes: APK asset digests are canonical SHA-256 | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset URLs match release tag | OK | invalid=0; tag=v0.5.4-study.9 |
 | release asset manifest gate passes: APK asset URLs use GitHub HTTPS downloads | OK | invalid=0; prefix=https://github.com/GravityblueX/YumeBox-MaterialDesign-Study/releases/download/v0.5.4-study.9/ |
 | release asset manifest gate passes: APK asset URL filenames match names | OK | invalid=0; apkAssets=2 |
 | release asset manifest gate passes: APK asset content types are Android package archives | OK | invalid=0; expected=application/vnd.android.package-archive |
+| release asset manifest gate passes: all release APKs in installability report | OK | apkAssets=2 |
+| release asset manifest gate passes: all installability APKs in release | OK | reportApks=2 |
+| release asset manifest gate passes: APK asset digests match report | OK | apkAssets=2 |
+| release asset manifest gate passes: APK asset sizes match report | OK | apkAssets=2 |
+| release asset manifest gate passes: APK tooling checks passed | OK | zipalign/badging/signature/digest |
+| release asset manifest gate passes: permission review covers APKs | OK | apkAssets=2 |
 | release asset manifest gate passes: support report asset content types match formats | OK | invalid=0; json=application/json; markdown=application/octet-stream,text/markdown,text/plain |
 | release asset manifest includes release health report | OK | release-health-v0.5.4-study.9.md |
 | release health asset digest recorded | OK | sha256:b141938019ba12b74aa87d0601e2056a4750f16ecb167a0c31036180bf16b630 |
@@ -294,6 +312,13 @@ Status: `OK`
 | release provenance tag matches | OK | tag=v0.5.4-study.9 |
 | release provenance predicate recorded | OK | https://slsa.dev/provenance/v1 |
 | release provenance APK subjects | OK | 2 subject(s) |
+| release provenance gate passes: asset manifest exists | OK | C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\release-asset-manifest-v0.5.4-study.9.json |
+| release provenance gate passes: build environment exists | OK | C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\build-environment-v0.5.4-study.9.json |
+| release provenance gate passes: permission justification exists | OK | C:\Users\123\Desktop\YumeBox-MaterialDesign-Study\docs\apk-permission-justification-v0.5.4-study.9.json |
+| release provenance gate passes: asset manifest ok | OK | ok=True |
+| release provenance gate passes: asset manifest tag matches | OK | tag=v0.5.4-study.9 |
+| release provenance gate passes: debug and release APK subjects | OK | 2 subject(s) |
+| release provenance gate passes: all subjects have sha256 | OK | 2 subject(s) |
 | release provenance gate passes: all materials have URIs | OK | materials=4, missing=0 |
 | release provenance gate passes: material URIs are unique | OK | materials=4, duplicates=0 |
 | release provenance gate passes: all materials have digest evidence | OK | materials=4, missing=0 |
@@ -310,6 +335,10 @@ Status: `OK`
 | release provenance gate passes: all subject URI filenames match names | OK | subjects=2, invalid=0 |
 | release provenance gate passes: all subjects have positive sizes | OK | subjects=2, invalid=0 |
 | release provenance gate passes: all subjects have canonical sha256 | OK | subjects=2, invalid=0 |
+| release provenance gate passes: git commit available | OK | 7839c4356418a4077d0a1e6559ff124b16f72bd6 |
+| release provenance gate passes: release is not draft | OK | isDraft=False |
+| release provenance gate passes: package id recorded | OK | com.github.yizuka17.yumebox.md3 |
+| release provenance gate passes: version recorded | OK | 0.5.4-study.9/5409 |
 | release provenance repo material commit is canonical | OK | repoMaterials=1, canonical=1 |
 | release provenance repo material commit matches source commit | OK | material=7839c4356418a4077d0a1e6559ff124b16f72bd6, source=7839c4356418a4077d0a1e6559ff124b16f72bd6 |
 | release provenance source branch recorded | OK | branch=Yume |
