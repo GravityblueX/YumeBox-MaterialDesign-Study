@@ -107,6 +107,13 @@ jobs:
             throw "study APK contract produced too few checks: $checkCount"
           }
 
+          $nonBooleanCheckOkValues = @($report.checks | Where-Object {
+            $null -eq $_.ok -or $_.ok.GetType().FullName -ne "System.Boolean"
+          })
+          if ($nonBooleanCheckOkValues.Count -gt 0) {
+            throw "non-boolean study APK contract check ok values: $($nonBooleanCheckOkValues.Count)"
+          }
+
           $blankCheckNames = @($report.checks | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.name) })
           if ($blankCheckNames.Count -gt 0) {
             throw "blank study APK contract check names: $($blankCheckNames.Count)"
