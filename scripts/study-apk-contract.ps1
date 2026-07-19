@@ -415,6 +415,7 @@ Add-Check "release evidence contract asserts summary check count" (Test-FileCont
 Add-Check "release evidence contract asserts zero failure summary" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'report.summary.failureCount') "summary failure count"
 Add-Check "release evidence contract asserts failure count parity" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$failedChecks = @($report.checks | Where-Object { -not [bool]$_.ok })') "failure count parity"
 Add-Check "release evidence contract asserts boolean check ok values" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'non-boolean study APK contract check ok values') "check ok value type"
+Add-Check "release evidence contract asserts string check details" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'non-string study APK contract check details') "check detail type"
 Add-Check "release evidence contract asserts nonblank check names" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'blank study APK contract check names') "check name presence"
 Add-Check "release evidence contract asserts unique check names" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle 'duplicate study APK contract check names') "check name uniqueness"
 Add-Check "release evidence contract asserts markdown title tag" (Test-FileContains -Path $releaseEvidenceWorkflowPath -Needle '$expectedTitle = "# Study APK Contract - $($report.tag)"') "markdown title/tag parity"
@@ -746,6 +747,9 @@ if ($hasCrossCheckEvidence) {
 
 $nonBooleanCheckOkCount = @($Checks | Where-Object { $null -eq $_.ok -or $_.ok.GetType().FullName -ne "System.Boolean" }).Count
 Add-Check "study contract check ok values are boolean" ($nonBooleanCheckOkCount -eq 0) "nonBoolean=$nonBooleanCheckOkCount"
+
+$nonStringCheckDetailCount = @($Checks | Where-Object { $null -eq $_.detail -or $_.detail.GetType().FullName -ne "System.String" }).Count
+Add-Check "study contract check details are strings" ($nonStringCheckDetailCount -eq 0) "nonString=$nonStringCheckDetailCount"
 
 $checkNames = @($Checks | ForEach-Object { [string]$_.name })
 $blankCheckNameCount = @($checkNames | Where-Object { [string]::IsNullOrWhiteSpace($_) }).Count

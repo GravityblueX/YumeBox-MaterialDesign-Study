@@ -114,6 +114,13 @@ jobs:
             throw "non-boolean study APK contract check ok values: $($nonBooleanCheckOkValues.Count)"
           }
 
+          $nonStringCheckDetails = @($report.checks | Where-Object {
+            $null -eq $_.detail -or $_.detail.GetType().FullName -ne "System.String"
+          })
+          if ($nonStringCheckDetails.Count -gt 0) {
+            throw "non-string study APK contract check details: $($nonStringCheckDetails.Count)"
+          }
+
           $blankCheckNames = @($report.checks | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.name) })
           if ($blankCheckNames.Count -gt 0) {
             throw "blank study APK contract check names: $($blankCheckNames.Count)"
